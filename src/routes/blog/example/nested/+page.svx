@@ -6,7 +6,7 @@ publishDate: "10 May 2024"
 draft: true
 tags: ["draft", "example"]
 coverImage:
-  src: "/example.svg"
+  src: "/images/cover.svg"
   alt: "Example"
 ---
 this is a nested post...

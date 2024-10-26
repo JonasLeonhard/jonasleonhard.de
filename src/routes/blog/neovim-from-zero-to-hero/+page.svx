@@ -5,7 +5,7 @@ description: "Neovim - from basic setup, to advanced functionality, to writing y
 publishDate: "10 May 2024"
 tags: ["neovim", "lua"]
 coverImage:
-  src: "/neovim-from-zero-to-hero.svg"
+  src: "/images/cover.svg"
   alt: "Neovim, from zero to hero cover"
 ---
 ## TODO
@@ -71,7 +71,7 @@ nvim optionally-provide-a-filepath-or-directory-or-nothing-at-all-and-run-just-n
 
 If we ran nvim without any option, we will be greeting by the iconic starting screen:
 
-![NvimTutor](./NvimTutor.webp)
+![NvimTutor](/images/NvimTutor.webp)
 
 Congratulations. You now entered neovim! Before we go into configuration, we should learn the basics of neovim.
 If you press `:` and write `Tutor` and press enter, you will be greeted by neovims tutorial that will teach you the basics of neovim.

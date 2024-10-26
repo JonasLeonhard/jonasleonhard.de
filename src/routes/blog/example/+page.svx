@@ -6,7 +6,7 @@ publishDate: 01 Apr 2024
 updatedDate: 06 Apr 2024
 tags: ["draft", "markdown"]
 coverImage:
-  src: "/example.svg"
+  src: "/images/cover.svg"
   alt: "Mdsvex logo"
 draft: true
 ---
@@ -149,9 +149,7 @@ Right aligned columns
 
 Image in the same folder: `src/content/post/markdown-elements/cover.svg`
 
-![cover placeholder](./cover.svg)
-
-Image in the aliased assets folder: `src/assets/cover.svg`
+![cover placeholder](/images/cover.svg)
 
 ## Links
 
