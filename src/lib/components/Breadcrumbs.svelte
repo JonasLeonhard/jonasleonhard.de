@@ -107,6 +107,7 @@
 			href={item.href}
 			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium text-gray-700 dark:text-foreground"
 			class:hover:dark:text-accent={item.href}
+			class:hover:underline={item.href}
 			class:hover:text-accent={item.href}
 		>
 			{#if index === 0}
