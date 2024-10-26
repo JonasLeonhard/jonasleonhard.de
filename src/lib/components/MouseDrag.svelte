@@ -24,7 +24,7 @@
 <div
 	role="presentation"
 	aria-hidden="true"
-	class={`bg-bg-accent-light cursor-pointer rounded-md ${mouseOverClasses}`}
+	class={`bg-bg-accent-light w-max cursor-pointer rounded-md ${mouseOverClasses}`}
 	onfocus={() => {
 		mouseOver = true;
 	}}
