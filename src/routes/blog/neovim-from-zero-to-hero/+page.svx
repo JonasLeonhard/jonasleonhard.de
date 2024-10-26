@@ -1,3 +1,13 @@
+---
+title: "Neovim, from zero to hero"
+author: "Jonas Leonhard"
+description: "Neovim - from basic setup, to advanced functionality, to writing your own config and plugins. The ultimate getting started guide."
+publishDate: "10 May 2024"
+tags: ["neovim", "lua"]
+coverImage:
+  src: "/neovim-from-zero-to-hero.svg"
+  alt: "Neovim, from zero to hero cover"
+---
 ## TODO
 
 ## Why Neovim

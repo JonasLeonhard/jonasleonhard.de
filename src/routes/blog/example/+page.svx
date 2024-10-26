@@ -6,8 +6,8 @@ publishDate: 01 Apr 2024
 updatedDate: 06 Apr 2024
 tags: ["draft", "markdown"]
 coverImage:
-  src: "./cover.svg"
-  alt: "Cover Image example"
+  src: "/example.svg"
+  alt: "Mdsvex logo"
 draft: true
 ---
 

@@ -1,1 +1,12 @@
+---
+title: "Nested Post"
+author: "Jonas Leonhard"
+description: "draft example of nested post"
+publishDate: "10 May 2024"
+draft: true
+tags: ["draft", "example"]
+coverImage:
+  src: "/example.svg"
+  alt: "Example"
+---
 this is a nested post...

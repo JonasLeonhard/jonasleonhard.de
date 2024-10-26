@@ -1,8 +1,14 @@
 <script lang="ts">
 	import '../app.css';
+
 	import { Header, Footer } from '$lib';
 
-	let { children } = $props();
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		children: Snippet;
+	}
+	let { children }: Props = $props();
 </script>
 
 <div class="box-border flex h-fit min-h-screen flex-col gap-y-6 font-sans antialiased">

@@ -1,14 +1,30 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	type Item = {
 		text: string;
 		href?: string;
 	};
 
-	interface Props {
-		items: Item[];
-	}
+	let items = $derived(generateBreadcrumbs($page.url.pathname));
 
-	const { items }: Props = $props();
+	function generateBreadcrumbs(path: string): Item[] {
+		const segments = path.split('/');
+
+		return segments.reduce(
+			(acc, segment, index) => {
+				if (!segment) return acc; // skip first empty one as we already started with jonas
+
+				acc.push({
+					text: segment,
+					href:
+						index === segments.length - 1 ? undefined : `${segments.slice(0, index + 1).join('/')}` // the last item is the current page and should not have a href
+				});
+
+				return acc;
+			},
+			[{ text: 'jonas', href: '/' } as Item]
+		);
+	}
 </script>
 
 {#snippet pacMan()}
