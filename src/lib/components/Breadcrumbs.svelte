@@ -102,10 +102,10 @@
 {/snippet}
 
 {#snippet liItem(item: Item, index: number)}
-	<li class="inline-flex items-center">
+	<li class="inline-flex flex-wrap items-center">
 		<a
 			href={item.href}
-			class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400"
+			class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400 overflow-ellipsis w-full"
 			class:dark:hover:text-white={item.href}
 			class:hover:text-blue-600={item.href}
 		>
@@ -128,7 +128,7 @@
 {/snippet}
 
 <nav class="flex" aria-label="Breadcrumb">
-	<ol class="pacman inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+	<ol class="pacman inline-flex flex-wrap items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
 		{#each items as item, index}
 			{@render liItem(item, index)}
 		{/each}
