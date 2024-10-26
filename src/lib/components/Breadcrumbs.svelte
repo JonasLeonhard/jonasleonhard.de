@@ -105,9 +105,9 @@
 	<li class="inline-flex flex-wrap items-center">
 		<a
 			href={item.href}
-			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium text-gray-700 dark:text-gray-400"
-			class:dark:hover:text-white={item.href}
-			class:hover:text-blue-600={item.href}
+			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium text-gray-700 dark:text-foreground"
+			class:hover:dark:text-accent={item.href}
+			class:hover:text-accent={item.href}
 		>
 			{#if index === 0}
 				{@render pacMan()}
