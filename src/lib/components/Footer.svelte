@@ -119,9 +119,9 @@
 		class="border border-b-muted-foreground border-t-muted-foreground/10 bg-muted px-4 py-2 md:flex md:items-center md:justify-between"
 	>
 		<div class="flex w-max pr-4 text-sm text-foreground/30">
-			<span class="w-max">© {date} Jonas Leonhard - </span>
+			<span class="w-max">© {date} Jonas Leonhard -</span>
 			<a
-				class="hover:text-accent"
+				class="pl-2 hover:text-accent"
 				href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
 				target="_blank"
 				>{currentGitHash?.slice(0, 7)}
