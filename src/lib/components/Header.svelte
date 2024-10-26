@@ -4,16 +4,16 @@
 </script>
 
 <Headroom offset={40} tolerance={180}>
-	<div class="container px-4 relative mx-auto flex flex-wrap h-20 items-center">
+	<div class="container relative mx-auto flex h-20 flex-wrap items-center px-4">
 		<BreadCrumbs
 			items={[{ href: '/', text: 'jonas' }, { href: '/blog', text: 'blog' }, { text: 'postname' }]}
 		/>
-		<div class="group flex-col ml-auto flex items-center justify-center gap-4">
-			<button aria-label="Open Menu" title="Open Menu" class="md:hidden cursor-pointer">
+		<div class="group ml-auto flex flex-col items-center justify-center gap-4">
+			<button aria-label="Open Menu" title="Open Menu" class="cursor-pointer md:hidden">
 				<Menu />
 			</button>
 			<div
-				class="absolute right-0 top-0 hidden border-muted-foreground border-2 border-solid group-focus-within:flex group-hover:flex flex-col items-end gap-8 bg-white dark:bg-muted py-4 px-2 shadow-lg md:flex md:flex-row md:relative md:right-auto md:dark:bg-transparent md:bg-transparent md:border-none md:shadow-none"
+				class="absolute right-0 top-0 hidden flex-col items-end gap-8 border-2 border-solid border-muted-foreground bg-white px-2 py-4 shadow-lg group-focus-within:flex group-hover:flex dark:bg-muted md:relative md:right-auto md:flex md:flex-row md:border-none md:bg-transparent md:shadow-none md:dark:bg-transparent"
 			>
 				<ClipboardCopy clipboard={`TODO->rss.xml`}>
 					{#snippet copy()}

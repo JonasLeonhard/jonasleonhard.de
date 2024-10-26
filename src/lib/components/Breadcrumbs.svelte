@@ -42,7 +42,7 @@
 {/snippet}
 
 {#snippet blinky()}
-	<svg class="w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 		<!-- Ghost body -->
 		<path
 			d="M15,60 Q15,30 50,30 Q85,30 85,60 L85,75 Q85,80 80,80 L75,75 L70,80 L65,75 L60,80 L55,75 L50,80 L45,75 L40,80 L35,75 L30,80 L25,75 L20,80 Q15,80 15,75 Z"
@@ -57,7 +57,7 @@
 {/snippet}
 
 {#snippet pinky()}
-	<svg class="w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 		<!-- Ghost body -->
 		<path
 			d="M15,60 Q15,30 50,30 Q85,30 85,60 L85,75 Q85,80 80,80 L75,75 L70,80 L65,75 L60,80 L55,75 L50,80 L45,75 L40,80 L35,75 L30,80 L25,75 L20,80 Q15,80 15,75 Z"
@@ -72,7 +72,7 @@
 {/snippet}
 
 {#snippet inky()}
-	<svg class="w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 		<!-- Ghost body -->
 		<path
 			d="M15,60 Q15,30 50,30 Q85,30 85,60 L85,75 Q85,80 80,80 L75,75 L70,80 L65,75 L60,80 L55,75 L50,80 L45,75 L40,80 L35,75 L30,80 L25,75 L20,80 Q15,80 15,75 Z"
@@ -87,7 +87,7 @@
 {/snippet}
 
 {#snippet clyde()}
-	<svg class="w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 		<!-- Ghost body -->
 		<path
 			d="M15,60 Q15,30 50,30 Q85,30 85,60 L85,75 Q85,80 80,80 L75,75 L70,80 L65,75 L60,80 L55,75 L50,80 L45,75 L40,80 L35,75 L30,80 L25,75 L20,80 Q15,80 15,75 Z"
@@ -105,7 +105,7 @@
 	<li class="inline-flex flex-wrap items-center">
 		<a
 			href={item.href}
-			class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400 overflow-ellipsis w-full"
+			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium text-gray-700 dark:text-gray-400"
 			class:dark:hover:text-white={item.href}
 			class:hover:text-blue-600={item.href}
 		>

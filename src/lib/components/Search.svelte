@@ -4,7 +4,7 @@
 </script>
 
 <MouseDrag>
-	<div class="flex justify-center items-center h-8 w-8" title="Search">
+	<div class="flex h-8 w-8 items-center justify-center" title="Search">
 		<Search />
 	</div>
 </MouseDrag>
