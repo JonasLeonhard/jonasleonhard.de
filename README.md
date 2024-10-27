@@ -1,28 +1,15 @@
-# create-svelte
-
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+Once you've created a project and installed dependencies with `bun install`), start a development server:
 ```bash
-npm run dev
+bun run dev
+```
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+## Search (Pagefind)
+In order for the search functionality to work. pagefind needs to build a search index, that will be copied to static/pagefind.
+```
+bun run build
 ```
 
 ## Building
@@ -30,9 +17,8 @@ npm run dev -- --open
 To create a production version of your app:
 
 ```bash
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `bun run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
