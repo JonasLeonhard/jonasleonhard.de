@@ -2,7 +2,10 @@
 ## Developing
 
 Once you've created a project and installed dependencies with `bun install`), start a development server:
+
+NOTE: you need to run 'bun run build' atleast once before running in dev mode. This will build your pagefind index!
 ```bash
+bun run build
 bun run dev
 ```
 

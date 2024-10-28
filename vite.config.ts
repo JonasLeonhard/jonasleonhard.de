@@ -5,5 +5,10 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	define: {
 		'import.meta.env.VITE_CURRENT_GIT_HASH': JSON.stringify(process.env.CURRENT_GIT_HASH)
+	},
+	build: {
+		rollupOptions: {
+			external: ['/pagefind/pagefind.js?url']
+		}
 	}
 });
