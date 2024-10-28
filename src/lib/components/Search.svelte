@@ -30,7 +30,11 @@
 	});
 </script>
 
-<Drawer.Root shouldScaleBackground onOpenChange={(open) => (isOpen = open)}>
+<Drawer.Root
+	backgroundColor="transparent"
+	shouldScaleBackground
+	onOpenChange={(open) => (isOpen = open)}
+>
 	<Drawer.Trigger>
 		<div class="flex h-8 w-8 items-center justify-center">
 			<MouseDrag>
