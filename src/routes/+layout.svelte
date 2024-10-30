@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 
-	import { Header, Footer } from '$lib';
+	import { Header, Footer, Toaster } from '$lib';
 
 	import type { Snippet } from 'svelte';
 
@@ -20,4 +20,5 @@
 		{@render children()}
 	</main>
 	<Footer />
+	<Toaster />
 </div>

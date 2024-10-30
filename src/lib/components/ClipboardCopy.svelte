@@ -2,6 +2,7 @@
 	import { scale } from 'svelte/transition';
 	import type { Snippet } from 'svelte';
 	import { MouseDrag } from '$lib';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		clipboard: string;
@@ -16,6 +17,8 @@
 	const onCopyToClipboard = () => {
 		navigator.clipboard.writeText(clipboard);
 		copiedToClipboard = true;
+		// @ts-expect-error type works
+		toast('Copied to Clipboard: ', { icon: copy, description: clipboard });
 
 		setTimeout(() => {
 			copiedToClipboard = false;
