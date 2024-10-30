@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Search } from 'lucide-svelte';
-	import { MouseDrag } from '$lib';
+	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { MouseDrag, Drawer, Input, Label, Skeleton, Pagination } from '$lib';
 	import { X } from 'lucide-svelte';
 	import { page } from '$app/stores';
-	import * as Drawer from '$lib/components/ui/drawer';
+	import { MediaQuery } from 'runed';
 
 	interface PagefindResult {
 		id: string;
@@ -31,11 +31,22 @@
 		search: (query: string) => PagefindSearchResult;
 	}
 
+	const paginationPageSize = 10;
+	const isDesktop = new MediaQuery('(min-width: 768px)');
+
 	let isOpen = $state(false);
 	let pagefind: Pagefind | null = $state(null);
 	let searchInput = $state('');
+	let searchIsLoading = $state(false);
 	let searchResults: PagefindResult[] = $state([]);
-	let isLoading = $state(false);
+	let paginationPage = $state(1);
+	const paginationSiblingCount = $derived(isDesktop.matches ? 1 : 0);
+	let paginatedSearchResults: PagefindResult[] = $derived(
+		searchResults.slice(
+			(paginationPage - 1) * paginationPageSize,
+			(paginationPage - 1) * paginationPageSize + paginationPageSize
+		)
+	);
 
 	async function lazyLoadPagefind(open: boolean, initialized: Pagefind | null) {
 		if (!open || initialized) {
@@ -59,7 +70,7 @@
 			return;
 		}
 
-		isLoading = true;
+		searchIsLoading = true;
 		try {
 			const result = await pagefind.search(searchInput);
 			searchResults = result.results;
@@ -67,12 +78,8 @@
 			console.error('Search failed:', error);
 			searchResults = [];
 		} finally {
-			isLoading = false;
+			searchIsLoading = false;
 		}
-	}
-
-	function debug(some: any) {
-		console.log(some);
 	}
 
 	$effect(() => {
@@ -104,33 +111,31 @@
 
 	<Drawer.Content>
 		<Drawer.Header>
-			<Drawer.Title>Search</Drawer.Title>
+			<Drawer.Title class="mb-4">Search</Drawer.Title>
 			<Drawer.Description>
-				<input
-					bind:value={searchInput}
-					placeholder="Type to search..."
-					class="mb-8 w-full rounded-md border p-2"
-				/>
+				<div class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label for="search">Search Query</Label>
+					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
+				</div>
 			</Drawer.Description>
 		</Drawer.Header>
 
-		<div class="h-[30vh] overflow-y-auto p-4">
-			{#if isLoading}
-				<div class="flex justify-center">
-					<span class="animate-spin">⌛</span>
-				</div>
+		<div class="h-[50vh] overflow-y-auto p-4">
+			{#if searchIsLoading}
+				<Skeleton class="h-8 w-[33%]" />
 			{:else if searchResults.length === 0}
-				<div class="text-center text-gray-500">
+				<div class="text-center text-muted-foreground">
 					{searchInput ? 'No results found' : 'Start typing to search'}
 				</div>
 			{:else}
-				{#each searchResults as result (result.id)}
-					{#await result.data() then data}
-						{debug(data)}
+				{#each paginatedSearchResults as result (result.id)}
+					{#await result.data()}
+						<Skeleton class="h-8 w-[33%]" />
+					{:then data}
 						<a
 							href={data.meta?.url || data.url?.replace('.html', '')}
 							onclick={() => (isOpen = false)}
-							class="mb-4 block rounded-lg border p-4 hover:bg-gray-50"
+							class="mb-4 block border p-4 hover:bg-gray-50"
 						>
 							<h3 class="font-bold">{data.meta.title}</h3>
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -144,6 +149,45 @@
 		</div>
 
 		<Drawer.Footer>
+			{#if searchResults.length > paginationPageSize}
+				<Pagination.Root
+					bind:page={paginationPage}
+					count={searchResults.length}
+					perPage={paginationPageSize}
+					siblingCount={paginationSiblingCount}
+				>
+					{#snippet children({ pages, currentPage })}
+						<Pagination.Content>
+							<Pagination.Item>
+								<Pagination.PrevButton>
+									<ChevronLeft class="size-4" />
+									<span class="hidden sm:block">Previous</span>
+								</Pagination.PrevButton>
+							</Pagination.Item>
+							{#each pages as page (page.key)}
+								{#if page.type === 'ellipsis'}
+									<Pagination.Item>
+										<Pagination.Ellipsis />
+									</Pagination.Item>
+								{:else}
+									<Pagination.Item>
+										<Pagination.Link {page} isActive={currentPage === page.value}>
+											{page.value}
+										</Pagination.Link>
+									</Pagination.Item>
+								{/if}
+							{/each}
+							<Pagination.Item>
+								<Pagination.NextButton>
+									<span class="hidden sm:block">Next</span>
+									<ChevronRight class="size-4" />
+								</Pagination.NextButton>
+							</Pagination.Item>
+						</Pagination.Content>
+					{/snippet}
+				</Pagination.Root>
+			{/if}
+
 			<Drawer.Close class="m-auto flex w-max items-center justify-center gap-2">
 				<span>Cancel</span>
 				<X />
