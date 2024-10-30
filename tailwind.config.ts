@@ -61,6 +61,21 @@ const config: Config = {
 				sans: ['Commit Mono', ...fontFamily.sans],
 				mono: ['Hubot Sans', ...fontFamily.mono]
 			}
+		},
+		animation: {
+			'border-width': 'border-width 9s infinite alternate'
+		},
+		keyframes: {
+			'border-width': {
+				from: {
+					width: '10%',
+					opacity: '0'
+				},
+				to: {
+					width: '100%',
+					opacity: '1'
+				}
+			}
 		}
 	},
 	plugins: [typography, containerQueries]

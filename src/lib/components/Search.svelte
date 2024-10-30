@@ -109,7 +109,7 @@
 				<input
 					bind:value={searchInput}
 					placeholder="Type to search..."
-					class="w-full rounded-md border p-2"
+					class="mb-8 w-full rounded-md border p-2"
 				/>
 			</Drawer.Description>
 		</Drawer.Header>
@@ -133,7 +133,8 @@
 							class="mb-4 block rounded-lg border p-4 hover:bg-gray-50"
 						>
 							<h3 class="font-bold">{data.meta.title}</h3>
-							<p class="mt-2 text-sm text-gray-600">{data.excerpt}</p>
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
 						</a>
 					{:catch error}
 						{error}
