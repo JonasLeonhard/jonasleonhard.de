@@ -1,37 +1,9 @@
-import { mdsvex, escapeSvelte } from 'mdsvex';
-import { enhancedImages, defaultResolverFactory } from 'mdsvex-enhanced-images';
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import { createHighlighter } from 'shiki';
-
-const theme = 'github-dark';
-const highlighter = await createHighlighter({
-	themes: [theme],
-	langs: ['javascript', 'typescript', 'bash']
-});
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: [
-		vitePreprocess(),
-		mdsvex({
-			smartypants: true,
-			highlight: {
-				highlighter: async (code, lang = 'text') => {
-					const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
-					return `{@html \`${html}\` }`;
-				}
-			},
-			remarkPlugins: [
-				[
-					enhancedImages,
-					{
-						resolve: defaultResolverFactory((path) => path)
-					}
-				]
-			]
-		})
-	],
+	preprocess: [vitePreprocess()],
 
 	kit: {
 		adapter: adapter()

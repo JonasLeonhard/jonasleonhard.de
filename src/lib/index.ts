@@ -15,6 +15,7 @@ import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 
+import type { MetaData } from './types.d.ts';
 export {
 	BreadCrumbs,
 	Button,
@@ -30,5 +31,6 @@ export {
 	Search,
 	Skeleton,
 	ThemeToggle,
-	Toaster
+	Toaster,
+	type MetaData
 };
