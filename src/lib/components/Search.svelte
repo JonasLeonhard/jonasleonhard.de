@@ -5,7 +5,7 @@
 	import { page } from '$app/stores';
 	import { MediaQuery } from 'runed';
 
-	interface PagefindResult {
+	interface PagefindResultItem {
 		id: string;
 		score: number;
 		words: number[];
@@ -19,16 +19,17 @@
 		}>;
 	}
 
-	type PagefindSearchResult = Promise<{
+	interface PagefindResult {
 		filters: unknown;
-		results: PagefindResult[];
+		results: PagefindResultItem[];
 		timings: { preload: number; search: number; total: number }[];
-	}>;
+		unfilteredResultCount: number;
+	}
 
 	interface Pagefind {
 		options: (opts: { baseUrl: string; bundlePath: string }) => Promise<void>;
 		init: () => Promise<void>;
-		search: (query: string) => PagefindSearchResult;
+		search: (query: string) => Promise<PagefindResult>;
 	}
 
 	const paginationPageSize = 10;
@@ -38,14 +39,14 @@
 	let pagefind: Pagefind | null = $state(null);
 	let searchInput = $state('');
 	let searchIsLoading = $state(false);
-	let searchResults: PagefindResult[] = $state([]);
+	let searchResult: PagefindResult | undefined = $state();
 	let paginationPage = $state(1);
 	const paginationSiblingCount = $derived(isDesktop.matches ? 1 : 0);
-	let paginatedSearchResults: PagefindResult[] = $derived(
-		searchResults.slice(
+	let paginatedSearchResults: PagefindResultItem[] = $derived(
+		searchResult?.results?.slice(
 			(paginationPage - 1) * paginationPageSize,
 			(paginationPage - 1) * paginationPageSize + paginationPageSize
-		)
+		) || []
 	);
 
 	async function lazyLoadPagefind(open: boolean, initialized: Pagefind | null) {
@@ -66,17 +67,16 @@
 
 	async function performSearch() {
 		if (!pagefind || !searchInput.trim()) {
-			searchResults = [];
+			searchResult = undefined;
 			return;
 		}
 
 		searchIsLoading = true;
 		try {
-			const result = await pagefind.search(searchInput);
-			searchResults = result.results;
+			searchResult = await pagefind.search(searchInput);
 		} catch (error) {
 			console.error('Search failed:', error);
-			searchResults = [];
+			searchResult = undefined;
 		} finally {
 			searchIsLoading = false;
 		}
@@ -111,7 +111,10 @@
 
 	<Drawer.Content>
 		<Drawer.Header>
-			<Drawer.Title class="mb-4">Search</Drawer.Title>
+			<Drawer.Title class="mb-4"
+				>Search
+				{searchResult ? `- ${searchResult?.unfilteredResultCount} Results` : ''}
+			</Drawer.Title>
 			<Drawer.Description>
 				<div class="flex w-full max-w-sm flex-col gap-1.5">
 					<Label for="search">Search Query</Label>
@@ -123,7 +126,7 @@
 		<div class="h-[50vh] overflow-y-auto p-4">
 			{#if searchIsLoading}
 				<Skeleton class="h-8 w-[33%]" />
-			{:else if searchResults.length === 0}
+			{:else if !searchResult?.results?.length}
 				<div class="text-center text-muted-foreground">
 					{searchInput ? 'No results found' : 'Start typing to search'}
 				</div>
@@ -132,6 +135,7 @@
 					{#await result.data()}
 						<Skeleton class="h-8 w-[33%]" />
 					{:then data}
+						{console.log(searchResult)}
 						<a
 							href={data.meta?.url || data.url?.replace('.html', '')}
 							onclick={() => (isOpen = false)}
@@ -149,10 +153,10 @@
 		</div>
 
 		<Drawer.Footer>
-			{#if searchResults.length > paginationPageSize}
+			{#if (searchResult?.results?.length || 0) > paginationPageSize}
 				<Pagination.Root
 					bind:page={paginationPage}
-					count={searchResults.length}
+					count={searchResult?.results?.length || 0}
 					perPage={paginationPageSize}
 					siblingCount={paginationSiblingCount}
 				>
