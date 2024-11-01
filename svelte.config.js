@@ -1,4 +1,5 @@
 import { mdsvex, escapeSvelte } from 'mdsvex';
+import { enhancedImages, defaultResolverFactory } from 'mdsvex-enhanced-images';
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { createHighlighter } from 'shiki';
@@ -20,7 +21,15 @@ const config = {
 					const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
 					return `{@html \`${html}\` }`;
 				}
-			}
+			},
+			remarkPlugins: [
+				[
+					enhancedImages,
+					{
+						resolve: defaultResolverFactory((path) => path)
+					}
+				]
+			]
 		})
 	],
 

@@ -14,7 +14,9 @@
 			excerpt: string;
 			meta: {
 				title: string;
-				[key: string]: string;
+				url?: string;
+				image?: string;
+				image_alt?: string;
 			};
 		}>;
 	}
@@ -135,15 +137,26 @@
 					{#await result.data()}
 						<Skeleton class="h-8 w-[33%]" />
 					{:then data}
-						{console.log(searchResult)}
 						<a
 							href={data.meta?.url || data.url?.replace('.html', '')}
 							onclick={() => (isOpen = false)}
-							class="mb-4 block border p-4 hover:bg-gray-50"
+							class="mb-4 block gap-4 border p-4 hover:bg-gray-50"
+							class:flex={data.meta?.image}
 						>
-							<h3 class="font-bold">{data.meta.title}</h3>
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
+							{#if data.meta?.image}
+								<img
+									src={data.meta.image}
+									alt={data.meta.image_alt || 'Teaser Image'}
+									class="h-auto w-[150px] border border-muted-foreground"
+									width="150px"
+									loading="lazy"
+								/>
+							{/if}
+							<div>
+								<h3 class="font-bold">{data.meta.title}</h3>
+								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+								<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
+							</div>
 						</a>
 					{:catch error}
 						{error}
