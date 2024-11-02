@@ -30,7 +30,7 @@
 			<Home />
 		</div>
 		<div
-			class="pointer-events-none relative mx-auto -mt-[18.8rem] h-[50rem] animate-pulse overflow-hidden transition-all [--color:#FD9644] [animation-duration:_8s] [mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)] before:absolute before:inset-0 before:size-full before:opacity-60 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)] after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[50%] after:border-t after:border-[hsl(var(--border))] after:bg-background"
+			class="pointer-events-none relative mx-auto -mt-[18.8rem] h-[50rem] animate-pulse overflow-hidden transition-all [--color:#FD9644] [animation-duration:_8s] [mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)] before:absolute before:inset-0 before:size-full before:opacity-100 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_100%)] after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[50%] after:border-t after:border-[hsl(var(--border))] after:bg-background dark:before:opacity-60 dark:before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)]"
 		></div>
 	</div>
 	<br />
