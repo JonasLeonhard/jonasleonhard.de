@@ -5,13 +5,13 @@
 <div class="container mx-auto">
 	<h2 class="font-mono text-3xl">Headline</h2>
 
-	<p
-		class="animate-fade-up relative mb-80 mt-32 [--animation-delay:400ms] [perspective:2000px] after:absolute after:inset-0 after:z-50 after:[background:linear-gradient(to_top,hsl(var(--background))_30%,transparent)]"
+	<div
+		class="text- mb-14 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
 	>
-		Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat quisquam vel perspiciatis,
-		modi ullam odio eligendi! Error amet maxime, iusto, repudiandae incidunt sed sunt quo, delectus
-		animi dolorem ad natus!
-	</p>
+		Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
+		ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt
+		aliquid vel perspiciatis praesentium vitae.
+	</div>
 
 	<div>
 		<a
