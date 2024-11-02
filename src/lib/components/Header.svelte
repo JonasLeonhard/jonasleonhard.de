@@ -4,7 +4,7 @@
 </script>
 
 <Headroom offset={40} tolerance={180}>
-	<div class="container relative mx-auto flex h-20 flex-wrap items-center px-4">
+	<div class="container relative mx-auto flex h-20 flex-wrap items-center">
 		<BreadCrumbs />
 		<div class="group ml-auto flex flex-col items-center justify-center gap-4">
 			<button aria-label="Open Menu" title="Open Menu" class="cursor-pointer md:hidden">

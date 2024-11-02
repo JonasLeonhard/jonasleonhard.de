@@ -119,7 +119,7 @@
 		class="relative border border-b-muted-foreground border-t-muted-foreground/10 bg-muted px-4 py-2 md:flex md:items-center md:justify-between"
 	>
 		<div
-			class="animate-border-width absolute left-[50%] top-0 h-[1px] -translate-x-[50%] rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
+			class="absolute left-[50%] top-0 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 		></div>
 
 		<div class="flex w-max pr-4 text-sm text-foreground/30">
@@ -166,7 +166,7 @@
 		</div>
 	</div>
 	<div class="container mx-auto w-full">
-		<div class="grid grid-cols-2 gap-8 px-4 py-6 md:grid-cols-4 lg:py-8">
+		<div class="grid grid-cols-2 gap-8 py-6 md:grid-cols-4 lg:py-8">
 			<div>
 				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">About Me</h2>
 				<ul class="font-medium text-foreground/60">

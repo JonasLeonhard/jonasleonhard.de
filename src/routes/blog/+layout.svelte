@@ -2,6 +2,6 @@
 	let { children } = $props();
 </script>
 
-<article class="container mx-auto">
+<article class="!container prose mx-auto max-w-full dark:prose-invert">
 	{@render children()}
 </article>
