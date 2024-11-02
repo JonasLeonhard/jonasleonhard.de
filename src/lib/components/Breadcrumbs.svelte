@@ -8,21 +8,19 @@
 	let items = $derived(generateBreadcrumbs($page.url.pathname));
 
 	function generateBreadcrumbs(path: string): Item[] {
-		const segments = path.split('/');
+		const segments = path.split('/').filter((el) => el);
 
 		return segments.reduce(
 			(acc, segment, index) => {
-				if (!segment) return acc; // skip first empty one as we already started with jonas
-
 				acc.push({
 					text: segment,
 					href:
-						index === segments.length - 1 ? undefined : `${segments.slice(0, index + 1).join('/')}` // the last item is the current page and should not have a href
+						index === segments.length - 1 ? undefined : `/${segments.slice(0, index + 1).join('/')}` // the last item is the current page and should not have a href
 				});
 
 				return acc;
 			},
-			[{ text: 'jonas', href: '/' } as Item]
+			[{ text: 'jonas', href: segments.length > 0 ? '/' : undefined } as Item]
 		);
 	}
 </script>
