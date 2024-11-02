@@ -98,7 +98,7 @@
 </svelte:head>
 
 <Drawer.Root
-	backgroundColor="transparent"
+	setBackgroundColorOnScale={false}
 	shouldScaleBackground
 	onOpenChange={(open) => (isOpen = open)}
 	open={isOpen}
