@@ -12,7 +12,7 @@
 			src: '/src/assets/images/cover.png',
 			alt: 'Neovim, from zero to hero cover'
 		},
-		draft: true
+		draft: false
 	};
 </script>
 

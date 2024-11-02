@@ -8,9 +8,12 @@
 </script>
 
 {#each data.posts as post}
-	<a class="block underline hover:text-accent" href={post.href}
-		>{post.title} - {post.publishDate.toLocaleDateString()}</a
-	>
+	<a class="block underline hover:text-accent" href={post.href}>
+		{post.title} - {post.publishDate.toLocaleDateString()}
+		{#if post.draft}
+			THIS IS A DRAFT!
+		{/if}
+	</a>
 {/each}
 
 blog page overview TODO

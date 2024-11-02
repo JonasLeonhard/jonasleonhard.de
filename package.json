@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "CURRENT_GIT_HASH=$(git rev-parse HEAD) vite dev",
 		"build": "CURRENT_GIT_HASH=$(git rev-parse HEAD) vite build && bun run postbuild",
-		"postbuild": "pagefind --site build; cp -r build/pagefind static/pagefind",
+		"postbuild": "pagefind --site build; rm -r static/pagefind; cp -r build/pagefind static/pagefind",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -28,8 +28,6 @@
 		"eslint-plugin-svelte": "^2.45.1",
 		"globals": "^15.0.0",
 		"lucide-svelte": "^0.454.0",
-		"mdsvex": "^0.11.2",
-		"mdsvex-enhanced-images": "^0.2.3",
 		"mode-watcher": "^0.4.1",
 		"pagefind": "^1.1.1",
 		"prettier": "^3.3.2",
