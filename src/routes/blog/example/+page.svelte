@@ -19,18 +19,29 @@
 <script lang="ts">
 	import { MouseDrag } from '$lib';
 	import { Home } from 'lucide-svelte';
+
+	import type { PageData } from './$types';
+
+	interface Props {
+		data: PageData;
+	}
+	let { data }: Props = $props();
 </script>
 
 <p>// Example markdown file</p>
 
-<p>
+<div>
 	# Using a Svelte component
 	<MouseDrag>
 		<Home />
 	</MouseDrag>
-</p>
+</div>
 
-<p># Using a Code block ```javascript const a = 0; ```</p>
+<div>
+	# Using a Code prerendered html-code-block - look at +layout.server.ts
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html data.rendered.example.c1}
+</div>
 
 <h2>## This is a H2 Heading</h2>
 
