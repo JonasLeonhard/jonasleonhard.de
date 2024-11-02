@@ -1,4 +1,6 @@
 export const prerender = true;
+export const trailingSlash = 'always';
+
 import type { LayoutServerLoad } from './$types';
 import { type MetaData } from '$lib';
 import { codeToHtml } from 'shiki';
