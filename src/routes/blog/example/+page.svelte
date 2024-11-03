@@ -1,21 +1,3 @@
-<script module lang="ts">
-	import { type MetaData } from '$lib';
-
-	export const metadata: MetaData = {
-		title: 'Example Post',
-		author: 'Jonas Leonhard',
-		description:
-			'Neovim - from basic setup, to advanced functionality, to writing your own config and plugins. The ultimate getting started guide.',
-		publishDate: new Date('10 May 2024'),
-		tags: ['neovim', 'lua'],
-		coverImage: {
-			src: '/src/assets/images/cover.png',
-			alt: 'Neovim, from zero to hero cover'
-		},
-		draft: true
-	};
-</script>
-
 <script lang="ts">
 	import { MouseDrag } from '$lib';
 	import { Home } from 'lucide-svelte';
@@ -36,10 +18,10 @@
 </section>
 
 <section>
-	<h2>Code</h2>
+	<h2>Code for {data.metadata.title}</h2>
 	<p># Using a Code prerendered html-code-block - look at +layout.server.ts</p>
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	{@html data.rendered.example.c1}
+	{@html data.codeExample}
 </section>
 
 <section>

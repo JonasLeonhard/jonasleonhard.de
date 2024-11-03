@@ -10,6 +10,9 @@ export type MetaData = {
 	draft: boolean;
 	tags: string[];
 
-	// optional data:
+	/**
+	 * This will be set in getAllMetaData, and will not be set for a single pages metadata
+	 **/
+	href?: string;
 	updatedDate?: Date;
 };

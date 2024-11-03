@@ -1,20 +1,15 @@
-<script module lang="ts">
-	import { type MetaData } from '$lib';
+<script lang="ts">
+	import type { PageData } from './$types';
 
-	export const metadata: MetaData = {
-		title: 'Example Nested Post',
-		author: 'Jonas Leonhard',
-		description:
-			'Neovim - from basic setup, to advanced functionality, to writing your own config and plugins. The ultimate getting started guide.',
-		publishDate: new Date('10 May 2024'),
-		tags: ['neovim', 'lua'],
-		coverImage: {
-			src: '/src/assets/images/cover.png',
-			alt: 'Neovim, from zero to hero cover'
-		},
-		draft: true
-	};
+	interface Props {
+		data: PageData;
+	}
+	let { data }: Props = $props();
 </script>
+
+METADATA: {data.metadata.title}
+
+<br />
 
 --- title: "Nested Post" author: "Jonas Leonhard" description: "draft example of nested post"
 publishDate: "10 May 2024" draft: true tags: ["draft", "example"] coverImage: src:
