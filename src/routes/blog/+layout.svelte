@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { Hero } from '$lib';
 	import type { PageData } from '../$types';
 
 	interface Props {
@@ -10,9 +11,14 @@
 </script>
 
 <article
-	data-pagefind-body={!data.metadata?.draft ? true : undefined}
-	data-pagefind-ignore={data.metadata?.draft ? 'all' : undefined}
-	class="!container prose mx-auto max-w-full dark:prose-invert"
+	data-pagefind-body={!data.post?.draft ? true : undefined}
+	data-pagefind-ignore={data.post?.draft ? 'all' : undefined}
 >
-	{@render children()}
+	{#if data.post}
+		<Hero metadata={data.post} />
+	{/if}
+
+	<div class="prose mx-auto dark:prose-invert">
+		{@render children()}
+	</div>
 </article>

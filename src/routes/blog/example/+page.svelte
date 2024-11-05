@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { MouseDrag } from '$lib';
 	import { Home } from 'lucide-svelte';
+	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
 
 	import type { PageData } from './$types';
 
@@ -68,7 +69,7 @@
 	<p>
 		Images Static Image that will automatically be optimized by enhanced:img: `src/assets/images`
 	</p>
-	<enhanced:img src="/src/assets/images/cover.png" alt="describe what can be seeon here!" />
+	<enhanced:img src={someStaticImage} alt="describe what can be seeon here!" />
 </section>
 
 <section>

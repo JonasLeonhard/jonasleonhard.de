@@ -1,4 +1,5 @@
 import type { MetaData } from '$lib';
+import cover from '$lib/assets/images/cover.png?enhanced';
 
 export const metadata: MetaData = {
 	title: 'Example Nested Post',
@@ -8,7 +9,7 @@ export const metadata: MetaData = {
 	publishDate: new Date('10 May 2024'),
 	tags: ['neovim', 'lua'],
 	coverImage: {
-		src: '/src/assets/images/cover.png',
+		src: cover,
 		alt: 'Neovim, from zero to hero cover'
 	},
 	draft: true

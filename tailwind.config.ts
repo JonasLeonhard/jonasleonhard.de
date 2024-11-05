@@ -75,6 +75,13 @@ const config: Config = {
 						opacity: '1'
 					}
 				}
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						maxWidth: '75ch'
+					}
+				}
 			}
 		}
 	},

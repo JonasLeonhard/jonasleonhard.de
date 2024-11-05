@@ -6,6 +6,7 @@ import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Footer from './components/Footer.svelte';
 import Header from './components/Header.svelte';
 import Headroom from './components/Headroom.svelte';
+import Hero from './components/Hero.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import Search from './components/Search.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
@@ -14,6 +15,7 @@ import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
+import { Badge, badgeVariants } from './components/ui/badge';
 
 import type { MetaData } from './types.d.ts';
 export {
@@ -24,6 +26,7 @@ export {
 	Footer,
 	Header,
 	Headroom,
+	Hero,
 	Input,
 	Label,
 	MouseDrag,
@@ -32,5 +35,7 @@ export {
 	Skeleton,
 	ThemeToggle,
 	Toaster,
+	Badge,
+	badgeVariants,
 	type MetaData
 };

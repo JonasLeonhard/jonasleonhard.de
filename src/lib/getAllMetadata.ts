@@ -1,4 +1,5 @@
 import type { MetaData } from '$lib';
+import { metadata } from '../routes/blog/example/metadata';
 
 export async function getAllMetadata() {
 	const modules = import.meta.glob<MetaData>('/src/routes/**/metadata.ts', {
@@ -22,4 +23,29 @@ export async function getAllMetadata() {
 	}
 
 	return metadata.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());
+}
+
+export async function getMetadata(url: URL) {
+	const pathname = url.pathname;
+	const modules = import.meta.glob<MetaData>('/src/routes/**/metadata.ts', {
+		import: 'metadata'
+	});
+
+	// Construct the expected path to the metadata file
+	const metadataPath = `/src/routes${pathname}metadata.ts`;
+
+	try {
+		// Check if the metadata file exists for this path
+		if (metadataPath in modules) {
+			const modMetadata = await modules[metadataPath]();
+			return {
+				...modMetadata,
+				href: pathname || '/'
+			};
+		}
+		return null; // Return null if no metadata found for this URL
+	} catch (error) {
+		console.error(`Error loading metadata for ${pathname}:`, error);
+		return null;
+	}
 }

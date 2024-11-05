@@ -1,10 +1,16 @@
+import { type Picture } from '@sveltejs/enhanced-img';
+
 export type MetaData = {
 	title: string;
 	description: string;
 	author: string;
 	publishDate: Date;
 	coverImage: {
-		src: string;
+		/**
+		 * You can import a enhanced-img Picture like this:
+		 * 'import coverImage from '$lib/assets/images/cover.png?enhanced';'
+		 * */
+		src: Picture;
 		alt: string;
 	};
 	draft: boolean;
