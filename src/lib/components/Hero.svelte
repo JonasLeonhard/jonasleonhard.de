@@ -34,7 +34,7 @@
 			{/if}
 
 			{#each metadata.tags as tag}
-				<a href={`/tags/${tag}`} class={badgeVariants({ variant: 'secondary' })}>#{tag}</a>
+				<a href={`/blog?tag=${tag}`} class={badgeVariants({ variant: 'secondary' })}>#{tag}</a>
 			{/each}
 		</div>
 	</div>
