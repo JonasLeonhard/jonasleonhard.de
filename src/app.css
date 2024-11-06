@@ -7,7 +7,7 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url(/fonts/CommitMono/CommitMono-400-Regular.otf) format('openType');
+	src: url(/fonts/CommitMono-400-Regular.woff2) format('woff2');
 }
 
 @font-face {
@@ -15,7 +15,7 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url(/fonts/Hubot Sans/OTF/HubotSans-Medium.otf) format('openType');
+	src: url(/fonts/HubotSans-Medium.woff2) format('woff2');
 }
 
 @layer base {
