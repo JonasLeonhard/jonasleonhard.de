@@ -18,7 +18,7 @@
 		<Hero metadata={data.post} />
 	{/if}
 
-	<div class="prose mx-auto dark:prose-invert">
+	<div class="prose mx-auto mb-52 dark:prose-invert">
 		{@render children()}
 	</div>
 </article>

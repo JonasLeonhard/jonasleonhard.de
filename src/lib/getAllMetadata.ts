@@ -1,5 +1,4 @@
 import type { MetaData } from '$lib';
-import { metadata } from '../routes/blog/example/metadata';
 
 export async function getAllMetadata() {
 	const modules = import.meta.glob<MetaData>('/src/routes/**/metadata.ts', {
@@ -11,7 +10,10 @@ export async function getAllMetadata() {
 	for (const path in modules) {
 		try {
 			const modMetadata = await modules[path]();
-			const routePath = path.replace('/src/routes', '').replace('/metadata.ts', '');
+			const routePath = path
+				.replace('/src/routes', '')
+				.replace('/(article)', '')
+				.replace('/metadata.ts', '');
 
 			metadata.push({
 				...modMetadata,
@@ -32,7 +34,7 @@ export async function getMetadata(url: URL) {
 	});
 
 	// Construct the expected path to the metadata file
-	const metadataPath = `/src/routes${pathname}metadata.ts`;
+	const metadataPath = `/src/routes${pathname.replace('/blog', '/blog/(article)')}metadata.ts`;
 
 	try {
 		// Check if the metadata file exists for this path
