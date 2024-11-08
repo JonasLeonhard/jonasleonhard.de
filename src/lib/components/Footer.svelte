@@ -170,7 +170,7 @@
 	<div class="container mx-auto w-full">
 		<div class="grid grid-cols-2 gap-8 py-6 md:grid-cols-4 lg:py-8">
 			<div>
-				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">About Me</h2>
+				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">About Me</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
@@ -187,7 +187,7 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">Contact</h2>
+				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">Contact</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a
@@ -205,7 +205,7 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">Boring</h2>
+				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">Boring</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a use:useLink href="/credits" class="hover:text-accent hover:underline">Credits</a>
@@ -217,7 +217,7 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 text-lg font-semibold uppercase text-foreground/80">Read More</h2>
+				<h2 class="mb-6 font-mono text-lg font-semibold uppercase text-foreground/80">Read More</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a use:useLink href="/blog" class="hover:text-accent hover:underline">Blog</a>

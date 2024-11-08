@@ -1,10 +1,13 @@
 // place files you want to import through the `$lib` alias in this folder.
 import * as Drawer from './components/ui/drawer';
 import * as Pagination from './components/ui/pagination';
+import BentoCard from './components/BentoCard.svelte';
+import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Footer from './components/Footer.svelte';
 import GridPattern from './components/GridPattern.svelte';
+import HackedText from './components/HackedText.svelte';
 import Header from './components/Header.svelte';
 import Headroom from './components/Headroom.svelte';
 import Hero from './components/Hero.svelte';
@@ -22,12 +25,15 @@ import { useLink } from './useLink.svelte';
 import type { MetaData } from './types.d.ts';
 export {
 	Badge,
+	BentoCard,
+	BentoGrid,
 	BreadCrumbs,
 	Button,
 	ClipboardCopy,
 	Drawer,
 	Footer,
 	GridPattern,
+	HackedText,
 	Header,
 	Headroom,
 	Hero,
