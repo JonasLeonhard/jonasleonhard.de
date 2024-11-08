@@ -4,6 +4,7 @@ import * as Pagination from './components/ui/pagination';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Footer from './components/Footer.svelte';
+import GridPattern from './components/GridPattern.svelte';
 import Header from './components/Header.svelte';
 import Headroom from './components/Headroom.svelte';
 import Hero from './components/Hero.svelte';
@@ -26,6 +27,7 @@ export {
 	ClipboardCopy,
 	Drawer,
 	Footer,
+	GridPattern,
 	Header,
 	Headroom,
 	Hero,

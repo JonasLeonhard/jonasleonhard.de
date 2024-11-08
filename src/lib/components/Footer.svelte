@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { spring } from 'svelte/motion';
-	import { ClipboardCopy, MouseDrag, useLink } from '$lib';
+	import { ClipboardCopy, MouseDrag, GridPattern, cn, useLink } from '$lib';
 	import { Rss, Check } from 'lucide-svelte';
 
 	const currentGitHash = import.meta.env.VITE_CURRENT_GIT_HASH;
@@ -19,7 +19,7 @@
 	});
 </script>
 
-<svelte:window bind:outerWidth on:mousemove={(e) => (clientX = e.clientX)} />
+<svelte:window bind:outerWidth onmousemove={(e) => (clientX = e.clientX)} />
 
 {#snippet GithubIcon()}
 	<svg
@@ -114,7 +114,7 @@
 	</svg>
 {/snippet}
 
-<footer class="bg-background">
+<footer class="relative">
 	<div
 		class="relative border border-b-muted-foreground border-t-muted-foreground/10 bg-muted px-4 py-2 md:flex md:items-center md:justify-between"
 	>
@@ -231,5 +231,13 @@
 				</ul>
 			</div>
 		</div>
+
+		<GridPattern
+			width={60}
+			height={60}
+			class={cn(
+				'mx-auto max-w-[1500px] [mask-image:linear-gradient(to_top_left,white,transparent,transparent)] '
+			)}
+		/>
 	</div>
 </footer>
