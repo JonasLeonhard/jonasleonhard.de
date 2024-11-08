@@ -17,10 +17,10 @@
 >
 	<Header />
 	<GridPattern
-		width={60}
-		height={60}
+		width={35}
+		height={35}
 		class={cn(
-			'mx-auto max-w-[1500px] [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] '
+			'mx-auto [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] '
 		)}
 	/>
 
