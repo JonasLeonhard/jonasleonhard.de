@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MouseDrag } from '$lib';
+	import { MouseDrag, useLink } from '$lib';
 	import { Home } from 'lucide-svelte';
 	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
 
@@ -74,5 +74,7 @@
 
 <section>
 	<h2>Links</h2>
-	<a target="_blank" href="https://dyf-tfh.github.io/" referrerpolicy="no-referrer">link</a>
+	<a use:useLink target="_blank" href="https://dyf-tfh.github.io/" referrerpolicy="no-referrer"
+		>link</a
+	>
 </section>

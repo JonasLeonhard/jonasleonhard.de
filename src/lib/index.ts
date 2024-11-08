@@ -16,6 +16,7 @@ import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 import { Badge, badgeVariants } from './components/ui/badge';
+import { useLink } from './useLink.svelte';
 
 import type { MetaData } from './types.d.ts';
 export {
@@ -37,5 +38,7 @@ export {
 	Toaster,
 	Badge,
 	badgeVariants,
+	useLink,
 	type MetaData
 };
+export * from './utils';

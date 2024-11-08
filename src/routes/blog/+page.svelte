@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { useLink } from '$lib';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -8,7 +9,7 @@
 </script>
 
 {#each data.posts as post}
-	<a class="block underline hover:text-accent" href={post.href}>
+	<a use:useLink class="block underline hover:text-accent" href={post.href}>
 		{post.title} - {post.publishDate.toLocaleDateString()}
 		{#if post.draft}
 			[Draft]

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { spring } from 'svelte/motion';
-	import { ClipboardCopy, MouseDrag } from '$lib';
+	import { ClipboardCopy, MouseDrag, useLink } from '$lib';
 	import { Rss, Check } from 'lucide-svelte';
 
 	const currentGitHash = import.meta.env.VITE_CURRENT_GIT_HASH;
@@ -125,6 +125,7 @@
 		<div class="flex w-max pr-4 text-sm text-foreground">
 			<span class="w-max">© {date} Jonas Leonhard -</span>
 			<a
+				use:useLink
 				class="pl-2 hover:text-accent"
 				href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
 				target="_blank"
@@ -146,6 +147,7 @@
 		<div class="ml-auto mt-4 flex space-x-5 pl-4 sm:justify-center md:mt-0 rtl:space-x-reverse">
 			<MouseDrag>
 				<a
+					use:useLink
 					href="https://github.com/JonasLeonhard"
 					target="_blank"
 					class="text-foreground hover:text-accent"
@@ -171,13 +173,15 @@
 				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">About Me</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
-						<a href="/about" class=" hover:text-accent hover:underline">About</a>
+						<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
 					</li>
 					<li class="mb-4">
-						<a href="/about#career" class="hover:text-accent hover:underline">Career</a>
+						<a use:useLink href="/about#career" class="hover:text-accent hover:underline">Career</a>
 					</li>
 					<li class="mb-4">
-						<a href="/about#projects" class="hover:text-accent hover:underline">Projects</a>
+						<a use:useLink href="/about#projects" class="hover:text-accent hover:underline"
+							>Projects</a
+						>
 					</li>
 				</ul>
 			</div>
@@ -187,13 +191,15 @@
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a
+							use:useLink
 							href="https://discord.com/users/519622137351372816"
 							target="_blank"
 							class="hover:text-accent hover:underline">Write me on Discord</a
 						>
 					</li>
 					<li class="mb-4">
-						<a href="/contact" class="hover:text-accent hover:underline">Contact Form</a>
+						<a use:useLink href="/contact" class="hover:text-accent hover:underline">Contact Form</a
+						>
 					</li>
 				</ul>
 			</div>
@@ -202,10 +208,10 @@
 				<h2 class="mb-6 text-sm font-semibold uppercase text-foreground/80">Boring</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
-						<a href="/credits" class="hover:text-accent hover:underline">Credits</a>
+						<a use:useLink href="/credits" class="hover:text-accent hover:underline">Credits</a>
 					</li>
 					<li class="mb-4">
-						<a href="/impressum" class="hover:text-accent hover:underline">Impressum</a>
+						<a use:useLink href="/impressum" class="hover:text-accent hover:underline">Impressum</a>
 					</li>
 				</ul>
 			</div>
@@ -214,13 +220,13 @@
 				<h2 class="mb-6 text-lg font-semibold uppercase text-foreground/80">Read More</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
-						<a href="/blog" class="hover:text-accent hover:underline">Blog</a>
+						<a use:useLink href="/blog" class="hover:text-accent hover:underline">Blog</a>
 					</li>
 					<li class="mb-4">
-						<a href="/resources" class="hover:text-accent hover:underline">Resources</a>
+						<a use:useLink href="/resources" class="hover:text-accent hover:underline">Resources</a>
 					</li>
 					<li class="mb-4 text-accent">
-						<a href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
+						<a use:useLink href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
 					</li>
 				</ul>
 			</div>

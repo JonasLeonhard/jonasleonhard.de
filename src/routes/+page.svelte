@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { useLink } from '$lib';
 	import { Home, ChevronRight } from 'lucide-svelte';
 </script>
 
@@ -15,6 +16,7 @@
 
 	<div>
 		<a
+			use:useLink
 			href="/about#projects"
 			class="group mx-auto mb-6 flex justify-center text-center text-muted-foreground hover:text-accent hover:underline"
 		>
@@ -34,5 +36,5 @@
 		></div>
 	</div>
 	<br />
-	<a href="/blog">Blog -></a>
+	<a use:useLink href="/blog">Blog -></a>
 </div>

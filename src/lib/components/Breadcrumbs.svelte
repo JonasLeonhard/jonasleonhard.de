@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { useLink } from '$lib';
+
 	type Item = {
 		text: string;
 		href?: string;
@@ -118,6 +120,7 @@
 {#snippet liItem(item: Item, index: number)}
 	<li class="inline-flex flex-wrap items-center">
 		<a
+			use:useLink
 			href={item.href}
 			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
 			class:hover:dark:text-accent={item.href}

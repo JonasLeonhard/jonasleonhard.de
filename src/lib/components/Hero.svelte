@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type MetaData, Badge, badgeVariants } from '$lib';
+	import { type MetaData, Badge, badgeVariants, useLink } from '$lib';
 
 	interface Props {
 		metadata: MetaData;
@@ -34,7 +34,9 @@
 			{/if}
 
 			{#each metadata.tags as tag}
-				<a href={`/blog?tag=${tag}`} class={badgeVariants({ variant: 'secondary' })}>#{tag}</a>
+				<a use:useLink href={`/blog?tag=${tag}`} class={badgeVariants({ variant: 'secondary' })}>
+					#{tag}
+				</a>
 			{/each}
 		</div>
 	</div>

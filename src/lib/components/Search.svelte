@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import { MouseDrag, Drawer, Input, Label, Skeleton, Pagination } from '$lib';
+	import { MouseDrag, Drawer, Input, Label, Skeleton, Pagination, useLink } from '$lib';
 	import { X } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { MediaQuery } from 'runed';
@@ -138,6 +138,7 @@
 						<Skeleton class="h-8 w-[33%]" />
 					{:then data}
 						<a
+							use:useLink
 							href={data.meta?.url || data.url?.replace('.html', '')}
 							onclick={() => (isOpen = false)}
 							class="mb-4 block gap-4 border p-4 hover:bg-gray-50"
