@@ -115,9 +115,7 @@
 {/snippet}
 
 <footer class="relative">
-	<div
-		class="relative border border-b-muted-foreground border-t-muted-foreground/10 bg-muted px-4 py-2 md:flex md:items-center md:justify-between"
-	>
+	<div class="relative px-4 py-2 pt-8 md:flex md:items-center md:justify-between">
 		<div
 			class="absolute left-[50%] top-0 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 		></div>
