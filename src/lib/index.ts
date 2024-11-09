@@ -4,6 +4,7 @@ import * as Pagination from './components/ui/pagination';
 import BentoCard from './components/BentoCard.svelte';
 import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
+import Circuit from './components/Circuit.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Footer from './components/Footer.svelte';
 import GridPattern from './components/GridPattern.svelte';
@@ -20,6 +21,7 @@ import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
+import { lerp } from './lerp';
 import { useLink } from './useLink.svelte';
 
 import type { MetaData } from './types.d.ts';
@@ -29,6 +31,7 @@ export {
 	BentoGrid,
 	BreadCrumbs,
 	Button,
+	Circuit,
 	ClipboardCopy,
 	Drawer,
 	Footer,
@@ -46,6 +49,7 @@ export {
 	ThemeToggle,
 	Toaster,
 	badgeVariants,
+	lerp,
 	useLink,
 	type MetaData
 };

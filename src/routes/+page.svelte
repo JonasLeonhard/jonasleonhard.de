@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { useLink, BentoGrid, BentoCard, HackedText } from '$lib';
+	import { Canvas } from '@threlte/core';
+	import { T } from '@threlte/core';
+
+	import { useLink, BentoGrid, BentoCard, HackedText, Circuit, lerp } from '$lib';
+	import circuitSvg from '../../static/three/circuit.svg?raw';
+
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
 
@@ -7,7 +12,12 @@
 		data: PageData;
 	}
 	let { data }: Props = $props();
+
+	let svgWrapper = $state();
+	let scrollY = $state(0);
 </script>
+
+<svelte:window bind:scrollY />
 
 <div class="container mx-auto">
 	<div class="mb-40 flex flex-col gap-8 lg:flex-row">
@@ -17,8 +27,21 @@
 			<HackedText class="relative z-10 w-max text-8xl" text="FULLSTACK," animationDelay={750} />
 			<HackedText class="relative z-10 w-max text-8xl" text="DEVEL0PER" animationDelay={1000} />
 		</div>
-		<div class="min-h-[400px] flex-1 border shadow-lg">
-			...TODO Circuit + card moves on hover...
+		<div class="relative min-h-[400px] flex-1 border bg-black shadow-lg">
+			<div class="absolute inset-0 h-full w-full">
+				<div class="aria-hidden hidden" bind:this={svgWrapper}>
+					{@html circuitSvg}
+				</div>
+				<Canvas>
+					<Circuit {svgWrapper} />
+					<T.PerspectiveCamera
+						makeDefault
+						position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
+						fov={50}
+						rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
+					/>
+				</Canvas>
+			</div>
 		</div>
 	</div>
 
