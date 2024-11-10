@@ -3,7 +3,6 @@
 	import { T } from '@threlte/core';
 
 	import { useLink, BentoGrid, BentoCard, HackedText, Circuit, lerp } from '$lib';
-	import circuitSvg from '../../static/three/circuit.svg?raw';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
@@ -13,7 +12,6 @@
 	}
 	let { data }: Props = $props();
 
-	let svgWrapper = $state();
 	let scrollY = $state(0);
 </script>
 
@@ -29,11 +27,8 @@
 		</div>
 		<div class="relative min-h-[400px] flex-1 border bg-black shadow-lg">
 			<div class="absolute inset-0 h-full w-full">
-				<div class="aria-hidden hidden" bind:this={svgWrapper}>
-					{@html circuitSvg}
-				</div>
 				<Canvas>
-					<Circuit {svgWrapper} />
+					<Circuit />
 					<T.PerspectiveCamera
 						makeDefault
 						position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}

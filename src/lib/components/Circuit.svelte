@@ -2,48 +2,15 @@
 	import { T, useTask } from '@threlte/core';
 	import vertexShader from '$lib/three/circuitPointVertex.glsl?raw';
 	import fragmentShader from '$lib/three/circuitPointFragment.glsl?raw';
-	import { writable } from 'svelte/store';
+	import computedSvg from '$lib/three/precomputedSvg';
 
-	export let svgWrapper: HTMLDivElement;
-
-	const count = 20909; // lineIndex amount
-	const positions = new Float32Array(count * 3);
-	const bloomOpacity = new Float32Array(count);
-	const lineIndexes = new Float32Array(count);
-
-	let svgWidth: number | null = null;
-	let svgHeight: number | null = null;
-	const time = writable(0);
-
-	$: {
-		const svg = svgWrapper?.querySelector('svg') as SVGElement | null;
-		svgWidth = svg?.getAttribute('width') as number | null;
-		svgHeight = svg?.getAttribute('height') as number | null;
-
-		if (svg && svgWidth && svgHeight) {
-			const paths = Array.from(svg.querySelectorAll('path'));
-			let positionIndex = 0;
-			let opacityIndex = 0;
-			let lineIndex = 0;
-			paths.forEach((path) => {
-				const length = path.getTotalLength();
-				const numPoints = Math.floor(length / 5);
-
-				for (let i = 0; i < numPoints; i++) {
-					const point = path.getPointAtLength((i / numPoints) * length);
-
-					positions[positionIndex++] = point.x - svgWidth! / 2;
-					positions[positionIndex++] = point.y - svgHeight! / 2;
-					positions[positionIndex++] = 0; // z-coordinate, assuming 2D SVG
-					bloomOpacity[opacityIndex++] = Math.random();
-					lineIndexes[lineIndex++] = i;
-				}
-			});
-		}
-	}
+	const positions = $state(new Float32Array(computedSvg.positions));
+	const bloomOpacity = $state(new Float32Array(computedSvg.bloomOpacity));
+	const lineIndexes = $state(new Float32Array(computedSvg.lineIndexes));
+	let time = $state(0);
 
 	useTask((delta) => {
-		time.update((t) => t + delta);
+		time += delta;
 	});
 </script>
 
@@ -89,6 +56,6 @@
 		uniforms={{
 			time: { value: 0 }
 		}}
-		uniforms.time.value={$time}
+		uniforms.time.value={time}
 	/>
 </T.Points>
