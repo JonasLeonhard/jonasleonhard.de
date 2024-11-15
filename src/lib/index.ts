@@ -6,6 +6,8 @@ import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
 import Circuit from './components/Circuit.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
+import Collapsible from './components/Collapsible.svelte';
+import Folder from './components/Folder.svelte';
 import Footer from './components/Footer.svelte';
 import GridPattern from './components/GridPattern.svelte';
 import HackedText from './components/HackedText.svelte';
@@ -33,7 +35,9 @@ export {
 	Button,
 	Circuit,
 	ClipboardCopy,
+	Collapsible,
 	Drawer,
+	Folder,
 	Footer,
 	GridPattern,
 	HackedText,

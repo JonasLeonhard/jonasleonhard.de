@@ -1,6 +1,16 @@
 <script lang="ts">
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import { MouseDrag, Drawer, Input, Label, Skeleton, Pagination, useLink } from '$lib';
+	import {
+		MouseDrag,
+		Drawer,
+		Input,
+		Label,
+		Skeleton,
+		Pagination,
+		Folder,
+		useLink,
+		Collapsible
+	} from '$lib';
 	import { X } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { MediaQuery } from 'runed';
@@ -117,53 +127,101 @@
 				>Search
 				{searchResult ? `- ${searchResult?.unfilteredResultCount} Results` : ''}
 			</Drawer.Title>
-			<Drawer.Description>
-				<div class="flex w-full max-w-sm flex-col gap-1.5">
-					<Label for="search">Search Query</Label>
-					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
-				</div>
-			</Drawer.Description>
 		</Drawer.Header>
 
-		<div class="h-[50vh] overflow-y-auto p-4">
-			{#if searchIsLoading}
-				<Skeleton class="h-8 w-[33%]" />
-			{:else if !searchResult?.results?.length}
-				<div class="text-center text-muted-foreground">
-					{searchInput ? 'No results found' : 'Start typing to search'}
+		<!-- Filter Left -->
+		<div class="flex gap-4">
+			<div class="p-4">
+				<div
+					class="mb-4 flex w-max justify-between border-b border-muted-foreground pb-2 font-mono text-xs"
+				>
+					<div class="col-span-1 pr-20">/Filter</div>
+					<div class="col-span-10">clear filters</div>
 				</div>
-			{:else}
-				{#each paginatedSearchResults as result (result.id)}
-					{#await result.data()}
-						<Skeleton class="h-8 w-[33%]" />
-					{:then data}
-						<a
-							use:useLink
-							href={data.meta?.url || data.url?.replace('.html', '')}
-							onclick={() => (isOpen = false)}
-							class="mb-4 block gap-4 border p-4 hover:bg-gray-50"
-							class:flex={data.meta?.image}
-						>
-							{#if data.meta?.image}
-								<img
-									src={data.meta.image}
-									alt={data.meta.image_alt || 'Teaser Image'}
-									class="h-auto w-[150px] border border-muted-foreground"
-									width="150px"
-									loading="lazy"
-								/>
-							{/if}
-							<div>
-								<h3 class="font-bold">{data.meta.title}</h3>
-								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-								<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
-							</div>
-						</a>
-					{:catch error}
-						{error}
-					{/await}
-				{/each}
-			{/if}
+				<div class="mb-4 flex w-full max-w-sm flex-col gap-1.5">
+					<Label class="flex items-center gap-1" for="search">
+						<Search class="w-4" />
+						/Query
+					</Label>
+					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
+				</div>
+
+				<Folder class="mb-4" expanded name="/Type">
+					<div>checkboxes</div>
+				</Folder>
+
+				<Folder expanded name="/Topic">
+					<div>checkboxes</div>
+				</Folder>
+			</div>
+
+			<!-- Results Right -->
+			<div
+				class="grid h-[50vh] w-full grid-cols-12 grid-rows-[max-content] overflow-y-auto p-4 font-mono text-xs"
+			>
+				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Date</div>
+				<div class="col-span-10 h-max border-b border-muted-foreground pb-2">/Name</div>
+				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Type</div>
+
+				{#if searchIsLoading}
+					<Skeleton class="col-span-12 h-8 w-[33%]" />
+				{:else if !searchResult?.results?.length}
+					<div class="col-span-12 text-center text-muted-foreground">
+						{searchInput ? 'No results found' : 'Start typing to search'}
+					</div>
+				{:else}
+					{#each paginatedSearchResults as result (result.id)}
+						{#await result.data()}
+							<Skeleton class="h-8 w-[33%]" />
+						{:then data}
+							<Collapsible class="col-span-12 mb-4 grid grid-cols-subgrid pb-2 pt-2 text-left">
+								<span
+									class="col-span-1 flex h-max items-center gap-2 pt-2.5 before:block before:h-[8px] before:w-[8px] before:bg-black dark:before:bg-white"
+									>TODO: date</span
+								>
+
+								<div class="col-span-10">
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+									<h3 class="font-mono text-3xl font-bold">{data.meta.title}</h3>
+									<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
+								</div>
+
+								<div class="col-span-1 mt-2 h-max w-max border border-dashed p-1">TODO: type</div>
+
+								{#snippet expanded()}
+									<!-- info -->
+									{#if data.meta?.image}
+										<span>TEASER:</span>
+										<img
+											src={data.meta.image}
+											alt={data.meta.image_alt || 'Teaser Image'}
+											class="col-span-12 h-auto w-[150px] border border-muted-foreground"
+											width="150px"
+											loading="lazy"
+										/>
+									{/if}
+
+									<p class="mb-4">AUTHOR: TODO</p>
+
+									<p class="mb-4">TOPIC: TODO</p>
+
+									<a
+										class="w-full"
+										use:useLink
+										href={data.meta?.url || data.url?.replace('.html', '')}
+										onclick={() => (isOpen = false)}
+										class:flex={data.meta?.image}
+									>
+										READ
+									</a>
+								{/snippet}
+							</Collapsible>
+						{:catch error}
+							{error}
+						{/await}
+					{/each}
+				{/if}
+			</div>
 		</div>
 
 		<Drawer.Footer>

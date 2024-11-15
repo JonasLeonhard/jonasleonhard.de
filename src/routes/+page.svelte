@@ -41,7 +41,7 @@
 	</div>
 
 	<section class="mb-40">
-		<h2 class="mb-8 text-3xl">Blog Articles</h2>
+		<h2 class="mb-8 text-5xl">Latest</h2>
 
 		<div class="mb-6 flex items-center justify-center">
 			<BentoGrid>
@@ -74,9 +74,7 @@
 			</BentoGrid>
 		</div>
 
-		<a use:useLink href="/blog" class="hover:text-accent hover:underline"
-			>View all {data.posts.length} blog articles</a
-		>
+		<a use:useLink href="/blog" class="hover:text-accent hover:underline">Open Search</a>
 	</section>
 
 	<div
