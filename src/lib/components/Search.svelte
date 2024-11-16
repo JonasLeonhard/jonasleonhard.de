@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import {
-		MouseDrag,
+		Checkbox,
+		Collapsible,
 		Drawer,
+		Folder,
 		Input,
 		Label,
-		Skeleton,
+		MouseDrag,
 		Pagination,
-		Folder,
-		useLink,
-		Collapsible
+		Skeleton,
+		useLink
 	} from '$lib';
 	import { X } from 'lucide-svelte';
 	import { page } from '$app/stores';
@@ -147,11 +148,25 @@
 				</div>
 
 				<Folder class="mb-4" expanded name="/Type">
-					<div>checkboxes</div>
+					<div class="flex flex-col">
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+					</div>
 				</Folder>
 
 				<Folder expanded name="/Topic">
-					<div>checkboxes</div>
+					<div class="flex flex-col">
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+						<Checkbox checked label="Topic01" />
+					</div>
 				</Folder>
 			</div>
 

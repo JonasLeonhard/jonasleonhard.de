@@ -4,6 +4,7 @@ import * as Pagination from './components/ui/pagination';
 import BentoCard from './components/BentoCard.svelte';
 import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
+import Checkbox from './components/Checkbox.svelte';
 import Circuit from './components/Circuit.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Collapsible from './components/Collapsible.svelte';
@@ -32,6 +33,7 @@ export {
 	BentoCard,
 	BentoGrid,
 	BreadCrumbs,
+	Checkbox,
 	Button,
 	Circuit,
 	ClipboardCopy,
