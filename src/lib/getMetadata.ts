@@ -1,7 +1,7 @@
 import type { MetaData } from '$lib';
 
-export async function getAllMetadata() {
-	const modules = import.meta.glob<MetaData>('/src/routes/**/metadata.ts', {
+export async function getBlogMetadata() {
+	const modules = import.meta.glob<MetaData>('/src/routes/blog/\\(article\\)/**/metadata.ts', {
 		import: 'metadata'
 	});
 

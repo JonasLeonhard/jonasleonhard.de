@@ -11,11 +11,11 @@
 </script>
 
 <article
-	data-pagefind-body={!data.post?.draft ? true : undefined}
-	data-pagefind-ignore={data.post?.draft ? 'all' : undefined}
+	data-pagefind-body={!data.metadata?.draft ? true : undefined}
+	data-pagefind-ignore={data.metadata?.draft ? 'all' : undefined}
 >
-	{#if data.post}
-		<Hero metadata={data.post} />
+	{#if data.metadata}
+		<Hero metadata={data.metadata} />
 	{/if}
 
 	<div class="prose mx-auto mb-52 px-4 dark:prose-invert lg:px-0">
