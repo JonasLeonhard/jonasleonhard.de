@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-
+	import { page } from '$app/stores';
 	import { cn, Header, Footer, Toaster, GridPattern } from '$lib';
 
 	import type { Snippet } from 'svelte';
@@ -19,6 +19,7 @@
 		name="description"
 		content={data.metadata?.description ?? 'Blog articles and useful resources.'}
 	/>
+	<link rel="canonical" href={`${import.meta.env.VITE_CANONICAL_URL}${$page.url.pathname}`} />
 	{#if data.metadata}
 		<meta name="author" content={data.metadata.author} />
 		<meta property="og:title" content={data.metadata.title} />

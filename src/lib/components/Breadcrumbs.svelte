@@ -119,29 +119,53 @@
 
 {#snippet liItem(item: Item, index: number)}
 	<li class="inline-flex flex-wrap items-center">
-		<a
-			use:useLink
-			href={item.href}
-			class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
-			class:hover:dark:text-accent={item.href}
-			class:hover:underline={item.href}
-			class:hover:text-accent={item.href}
-		>
-			{#if index === 0}
-				{@render pacMan()}
-			{:else if index === 1}
-				{@render blinky()}
-			{:else if index === 2}
-				{@render pinky()}
-			{:else if index === 3}
-				{@render inky()}
-			{:else if index === 4}
-				{@render clyde()}
-			{:else}
-				/
-			{/if}
-			{item.text}
-		</a>
+		{#if item.href}
+			<a
+				use:useLink
+				href={item.href}
+				class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
+				class:hover:dark:text-accent={item.href}
+				class:hover:underline={item.href}
+				class:hover:text-accent={item.href}
+			>
+				{#if index === 0}
+					{@render pacMan()}
+				{:else if index === 1}
+					{@render blinky()}
+				{:else if index === 2}
+					{@render pinky()}
+				{:else if index === 3}
+					{@render inky()}
+				{:else if index === 4}
+					{@render clyde()}
+				{:else}
+					/
+				{/if}
+				{item.text}
+			</a>
+		{:else}
+			<div
+				class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
+				class:hover:dark:text-accent={item.href}
+				class:hover:underline={item.href}
+				class:hover:text-accent={item.href}
+			>
+				{#if index === 0}
+					{@render pacMan()}
+				{:else if index === 1}
+					{@render blinky()}
+				{:else if index === 2}
+					{@render pinky()}
+				{:else if index === 3}
+					{@render inky()}
+				{:else if index === 4}
+					{@render clyde()}
+				{:else}
+					/
+				{/if}
+				{item.text}
+			</div>
+		{/if}
 	</li>
 {/snippet}
 
