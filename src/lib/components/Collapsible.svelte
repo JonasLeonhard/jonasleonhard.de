@@ -16,7 +16,7 @@
 </script>
 
 <button
-	class={cn('h-max border-b border-muted-foreground pb-2 pt-2 hover:bg-gray-50', className)}
+	class={cn('h-max border-b border-muted-foreground pb-2 pt-2 hover:bg-muted', className)}
 	onclick={() => (isExpanded = !isExpanded)}
 >
 	{@render children()}

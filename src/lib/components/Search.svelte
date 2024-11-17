@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import {
 		Checkbox,
@@ -185,52 +186,57 @@
 						{searchInput ? 'No results found' : 'Start typing to search'}
 					</div>
 				{:else}
-					{#each paginatedSearchResults as result (result.id)}
+					{#each paginatedSearchResults as result, i (result.id)}
 						{#await result.data()}
 							<Skeleton class="h-8 w-[33%]" />
 						{:then data}
-							<Collapsible class="col-span-12 mb-4 grid grid-cols-subgrid pb-2 pt-2 text-left">
-								<span
-									class="col-span-1 flex h-max items-center gap-2 pt-2.5 before:block before:h-[8px] before:w-[8px] before:bg-black dark:before:bg-white"
-									>TODO: date</span
-								>
-
-								<div class="col-span-10">
-									<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-									<h3 class="font-mono text-3xl font-bold">{data.meta.title}</h3>
-									<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
-								</div>
-
-								<div class="col-span-1 mt-2 h-max w-max border border-dashed p-1">TODO: type</div>
-
-								{#snippet expanded()}
-									<!-- info -->
-									{#if data.meta?.image}
-										<span>TEASER:</span>
-										<img
-											src={data.meta.image}
-											alt={data.meta.image_alt || 'Teaser Image'}
-											class="col-span-12 h-auto w-[150px] border border-muted-foreground"
-											width="150px"
-											loading="lazy"
-										/>
-									{/if}
-
-									<p class="mb-4">AUTHOR: TODO</p>
-
-									<p class="mb-4">TOPIC: TODO</p>
-
-									<a
-										class="w-full"
-										use:useLink
-										href={data.meta?.url || data.url?.replace('.html', '')}
-										onclick={() => (isOpen = false)}
-										class:flex={data.meta?.image}
+							<div
+								class="col-span-12 mb-4 grid grid-cols-subgrid pb-2 pt-2"
+								transition:fly={{ y: -16, opacity: 0, duration: 80, delay: i * 150 }}
+							>
+								<Collapsible class="col-span-12 grid grid-cols-subgrid text-left">
+									<span
+										class="col-span-1 flex h-max items-center gap-2 pt-2.5 before:block before:h-[8px] before:w-[8px] before:bg-black dark:before:bg-white"
+										>TODO: date</span
 									>
-										READ
-									</a>
-								{/snippet}
-							</Collapsible>
+
+									<div class="col-span-10">
+										<h3 class="font-mono text-3xl font-bold">{data.meta.title}</h3>
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+										<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
+									</div>
+
+									<div class="col-span-1 mt-2 h-max w-max border border-dashed p-1">TODO: type</div>
+
+									{#snippet expanded()}
+										<!-- info -->
+										{#if data.meta?.image}
+											<span>TEASER:</span>
+											<img
+												src={data.meta.image}
+												alt={data.meta.image_alt || 'Teaser Image'}
+												class="col-span-12 h-auto w-[150px] border border-muted-foreground"
+												width="150px"
+												loading="lazy"
+											/>
+										{/if}
+
+										<p class="mb-4">AUTHOR: TODO</p>
+
+										<p class="mb-4">TOPIC: TODO</p>
+
+										<a
+											class="w-full"
+											use:useLink
+											href={data.meta?.url || data.url?.replace('.html', '')}
+											onclick={() => (isOpen = false)}
+											class:flex={data.meta?.image}
+										>
+											READ
+										</a>
+									{/snippet}
+								</Collapsible>
+							</div>
 						{:catch error}
 							{error}
 						{/await}
