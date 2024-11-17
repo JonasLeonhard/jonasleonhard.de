@@ -25,6 +25,7 @@ jobs:
 
             # Setup (workdir + update repo)
             cd ~/jonasleonhard.de;
+            git stash;
             git pull;
 
             # Build
