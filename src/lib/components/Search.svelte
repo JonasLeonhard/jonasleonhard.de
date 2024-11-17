@@ -106,7 +106,7 @@
 </script>
 
 <svelte:head>
-	<link data-pagefind-meta="url[href]" rel="canonical" href={$page.url.pathname} />
+	<link data-pagefind-meta="url[href]" href={$page.url.pathname} />
 </svelte:head>
 
 <Drawer.Root
