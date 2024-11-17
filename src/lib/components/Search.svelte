@@ -173,7 +173,7 @@
 
 			<!-- Results Right -->
 			<div
-				class="grid h-[50vh] w-full grid-cols-12 grid-rows-[max-content] overflow-y-auto p-4 font-mono text-xs"
+				class="grid h-[50vh] w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto p-4 font-mono text-xs"
 			>
 				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Date</div>
 				<div class="col-span-10 h-max border-b border-muted-foreground pb-2">/Name</div>
@@ -191,7 +191,7 @@
 							<Skeleton class="h-8 w-[33%]" />
 						{:then data}
 							<div
-								class="col-span-12 mb-4 grid grid-cols-subgrid pb-2 pt-2"
+								class="col-span-12 mb-4 grid grid-cols-subgrid pt-2"
 								transition:fly={{ y: -16, opacity: 0, duration: 80, delay: i * 150 }}
 							>
 								<Collapsible class="col-span-12 grid grid-cols-subgrid text-left">
