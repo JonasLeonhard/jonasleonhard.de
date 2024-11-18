@@ -8,9 +8,10 @@
 		clipboard: string;
 		copy?: Snippet;
 		copied?: Snippet;
+		toastMsg?: string;
 	}
 
-	const { copy, copied, clipboard }: Props = $props();
+	const { copy, copied, clipboard, toastMsg }: Props = $props();
 
 	let copiedToClipboard = $state(false);
 
@@ -18,7 +19,7 @@
 		navigator.clipboard.writeText(clipboard);
 		copiedToClipboard = true;
 		// @ts-expect-error type works
-		toast('Copied to Clipboard: ', { icon: copy, description: clipboard });
+		toast(toastMsg || 'Copied to Clipboard: ', { icon: copy, description: clipboard });
 
 		setTimeout(() => {
 			copiedToClipboard = false;

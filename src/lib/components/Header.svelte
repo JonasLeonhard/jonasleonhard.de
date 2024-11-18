@@ -13,7 +13,10 @@
 			<div
 				class="absolute right-0 top-0 hidden flex-col items-end gap-8 border-2 border-solid border-muted-foreground bg-white px-2 py-4 group-focus-within:flex group-hover:flex dark:bg-muted md:relative md:right-auto md:flex md:flex-row md:border-none md:bg-transparent md:shadow-none md:dark:bg-transparent"
 			>
-				<ClipboardCopy clipboard={`TODO->rss.xml`}>
+				<ClipboardCopy
+					clipboard={`${import.meta.env.VITE_CANONICAL_URL}/rss`}
+					toastMsg="Copied this RSS feed link to your clipboard:"
+				>
 					{#snippet copy()}
 						<div title="Rss copy to clipboard"><Rss /></div>
 					{/snippet}
