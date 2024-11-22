@@ -1,21 +1,18 @@
-import { type VariantProps, tv } from "tailwind-variants";
-export { default as Badge } from "./badge.svelte";
+import { type VariantProps, tv } from 'tailwind-variants';
+export { default as Badge } from './badge.svelte';
 
 export const badgeVariants = tv({
-	base: "focus:ring-ring inline-flex select-none items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+	base: 'w-max h-max focus:ring-ring inline-flex select-none items-center border border-dashed border-primary px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 no-underline',
 	variants: {
 		variant: {
-			default: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
-			secondary:
-				"bg-secondary text-secondary-foreground hover:bg-secondary/80 border-transparent",
-			destructive:
-				"bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent",
-			outline: "text-foreground",
-		},
+			default:
+				'bg-gradient-to-b from-secondary/10 to-secondary text-secondary-foreground hover:opacity-80',
+			destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80'
+		}
 	},
 	defaultVariants: {
-		variant: "default",
-	},
+		variant: 'default'
+	}
 });
 
-export type Variant = VariantProps<typeof badgeVariants>["variant"];
+export type Variant = VariantProps<typeof badgeVariants>['variant'];

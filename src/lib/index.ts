@@ -4,7 +4,6 @@ import * as Pagination from './components/ui/pagination';
 import BentoCard from './components/BentoCard.svelte';
 import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
-import Checkbox from './components/Checkbox.svelte';
 import Circuit from './components/Circuit.svelte';
 import ClipboardCopy from './components/ClipboardCopy.svelte';
 import Collapsible from './components/Collapsible.svelte';
@@ -26,6 +25,7 @@ import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 import { lerp } from './lerp';
 import { useLink } from './useLink.svelte';
+import { send, receive } from './transition';
 
 import type { MetaData } from './types.d.ts';
 export {
@@ -33,7 +33,6 @@ export {
 	BentoCard,
 	BentoGrid,
 	BreadCrumbs,
-	Checkbox,
 	Button,
 	Circuit,
 	ClipboardCopy,
@@ -57,6 +56,8 @@ export {
 	badgeVariants,
 	lerp,
 	useLink,
+	send,
+	receive,
 	type MetaData
 };
 export * from './utils';

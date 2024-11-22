@@ -43,7 +43,7 @@
 	data-vaul-drawer-wrapper
 	class="box-border flex h-fit min-h-screen flex-col gap-y-6 font-sans antialiased"
 >
-	<Header />
+	<Header posts={data.posts} />
 	<GridPattern
 		width={35}
 		height={35}

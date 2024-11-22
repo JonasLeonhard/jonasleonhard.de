@@ -19,7 +19,7 @@
 <div class={className}>
 	<button
 		class="flex items-center gap-[3px] border-none bg-transparent text-sm font-medium outline-none"
-		onclick={toggle}
+		onmousedown={toggle}
 	>
 		{#if expanded}
 			<svg

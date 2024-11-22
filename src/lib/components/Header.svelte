@@ -1,6 +1,12 @@
 <script lang="ts">
-	import { Headroom, ClipboardCopy, Search, ThemeToggle, BreadCrumbs } from '$lib';
+	import { Headroom, ClipboardCopy, Search, ThemeToggle, BreadCrumbs, type MetaData } from '$lib';
 	import { Rss, Check, Menu } from 'lucide-svelte';
+
+	interface Props {
+		posts: MetaData[];
+	}
+
+	let { posts }: Props = $props();
 </script>
 
 <Headroom offset={40} tolerance={180}>
@@ -25,7 +31,7 @@
 					{/snippet}
 				</ClipboardCopy>
 
-				<Search />
+				<Search {posts} />
 
 				<ThemeToggle />
 			</div>

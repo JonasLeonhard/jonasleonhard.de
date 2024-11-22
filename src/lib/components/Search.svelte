@@ -1,17 +1,21 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import {
-		Checkbox,
 		Collapsible,
 		Drawer,
 		Folder,
 		Input,
+		Badge,
 		Label,
 		MouseDrag,
 		Pagination,
 		Skeleton,
-		useLink
+		useLink,
+		send,
+		receive,
+		type MetaData
 	} from '$lib';
 	import { X } from 'lucide-svelte';
 	import { page } from '$app/stores';
@@ -45,6 +49,15 @@
 		init: () => Promise<void>;
 		search: (query: string) => Promise<PagefindResult>;
 	}
+
+	interface Props {
+		posts: MetaData[];
+	}
+
+	let { posts }: Props = $props();
+
+	let tags = $state(Array.from(new Set(posts.flatMap((post) => post.tags))));
+	let unselectedTags: string[] = $state([]);
 
 	const paginationPageSize = 10;
 	const isDesktop = new MediaQuery('(min-width: 768px)');
@@ -148,25 +161,47 @@
 					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
 				</div>
 
-				<Folder class="mb-4" expanded name="/Type">
-					<div class="flex flex-col">
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
+				<Folder class="mb-4" expanded name="/Selected">
+					<div class="flex flex-col gap-1">
+						{#each tags as tag (tag)}
+							<div
+								animate:flip={{ duration: 600 }}
+								in:receive={{ key: tag }}
+								out:send={{ key: tag }}
+							>
+								<Badge
+									class="cursor-pointer"
+									onmousedown={() => {
+										tags = tags.filter((tagItem) => tagItem !== tag);
+										unselectedTags.push(tag);
+									}}
+								>
+									{tag}
+								</Badge>
+							</div>
+						{/each}
 					</div>
 				</Folder>
 
-				<Folder expanded name="/Topic">
-					<div class="flex flex-col">
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
-						<Checkbox checked label="Topic01" />
+				<Folder class="mb-4" expanded name="/Unselected">
+					<div class="flex flex-col gap-1">
+						{#each unselectedTags as tag (tag)}
+							<div
+								animate:flip={{ duration: 600 }}
+								in:receive={{ key: tag }}
+								out:send={{ key: tag }}
+							>
+								<Badge
+									class="cursor-pointer opacity-50"
+									onmousedown={() => {
+										unselectedTags = unselectedTags.filter((tagItem) => tagItem !== tag);
+										tags.push(tag);
+									}}
+								>
+									{tag}
+								</Badge>
+							</div>
+						{/each}
 					</div>
 				</Folder>
 			</div>
@@ -206,7 +241,7 @@
 										<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
 									</div>
 
-									<div class="col-span-1 mt-2 h-max w-max border border-dashed p-1">TODO: type</div>
+									<Badge class="col-span-1 mt-2">text</Badge>
 
 									{#snippet expanded()}
 										<!-- info -->
