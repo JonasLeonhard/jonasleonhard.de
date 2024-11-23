@@ -5,6 +5,7 @@
 
 	import type { Snippet } from 'svelte';
 	import type { PageData } from './$types';
+	import { metadata } from './metadata';
 
 	interface Props {
 		children: Snippet;
@@ -21,22 +22,43 @@
 	/>
 	<link rel="canonical" href={`${import.meta.env.VITE_CANONICAL_URL}${$page.url.pathname}`} />
 	{#if data.metadata}
-		<meta name="author" content={data.metadata.author} />
+		<meta data-pagefind-meta="author[content]" name="author" content={data.metadata.author} />
 		<meta property="og:title" content={data.metadata.title} />
-		<meta property="og:description" content={data.metadata.description} />
+		<meta
+			data-pagefind-meta="description[content]"
+			property="og:description"
+			content={data.metadata.description}
+		/>
 		<meta property="og:url" content={data.metadata.href} />
 		{#if data.metadata.coverImage}
 			<meta property="og:image" content={data.metadata.coverImage.src?.img?.src} />
 			<meta property="og:image:alt" content={data.metadata.coverImage.alt} />
 		{/if}
-		<meta property="article:published_time" content={data.metadata.publishDate.toISOString()} />
+		<meta
+			data-pagefind-meta="publishDate[content]"
+			property="article:published_time"
+			content={data.metadata.publishDate.toISOString()}
+		/>
 		{#if data.metadata.updatedDate}
-			<meta property="article:modified_time" content={data.metadata.updatedDate.toISOString()} />
+			<meta
+				data-pagefind-meta="updatedDate[content]"
+				property="article:modified_time"
+				content={data.metadata.updatedDate.toISOString()}
+			/>
 		{/if}
 		{#if data.metadata.tags?.length}
-			<meta name="keywords" content={data.metadata.tags.join(', ')} />
+			<meta
+				data-pagefind-meta="tags[content]"
+				name="keywords"
+				content={data.metadata.tags.join(', ')}
+			/>
+			{#each data.metadata.tags as tag}
+				<meta data-pagefind-filter="tag[content]" content={tag} />
+			{/each}
 		{/if}
 	{/if}
+
+	<link data-pagefind-meta="url[href]" href={$page.url.pathname} />
 </svelte:head>
 
 <div

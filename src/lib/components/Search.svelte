@@ -14,11 +14,9 @@
 		Skeleton,
 		useLink,
 		send,
-		receive,
-		type MetaData
+		receive
 	} from '$lib';
 	import { X } from 'lucide-svelte';
-	import { page } from '$app/stores';
 	import { MediaQuery } from 'runed';
 
 	interface PagefindResultItem {
@@ -33,6 +31,11 @@
 				url?: string;
 				image?: string;
 				image_alt?: string;
+				description: string;
+				author?: string;
+				publishDate?: string;
+				updatedDate?: string;
+				tags?: string;
 			};
 		}>;
 	}
@@ -44,20 +47,27 @@
 		unfilteredResultCount: number;
 	}
 
+	interface PagefindFilters {
+		[key: string]: PagefindFilter;
+	}
+
+	interface PagefindFilter {
+		[key: string]: number;
+	}
+
+	interface PagefindSearchOptions {
+		filters: any;
+	}
+
 	interface Pagefind {
 		options: (opts: { baseUrl: string; bundlePath: string }) => Promise<void>;
 		init: () => Promise<void>;
-		search: (query: string) => Promise<PagefindResult>;
+		search: (query: string, options: PagefindSearchOptions) => Promise<PagefindResult>;
+		filters: () => Promise<PagefindFilters>;
 	}
 
-	interface Props {
-		posts: MetaData[];
-	}
-
-	let { posts }: Props = $props();
-
-	let tags = $state(Array.from(new Set(posts.flatMap((post) => post.tags))));
-	let unselectedTags: string[] = $state([]);
+	let tags: PagefindFilter = $state({});
+	let unselectedTags: PagefindFilter = $state({});
 
 	const paginationPageSize = 10;
 	const isDesktop = new MediaQuery('(min-width: 768px)');
@@ -90,6 +100,8 @@
 		});
 		_pagefind.init();
 		pagefind = _pagefind;
+		const filters = await pagefind.filters();
+		unselectedTags = filters.tag || {};
 	}
 
 	async function performSearch() {
@@ -100,7 +112,13 @@
 
 		searchIsLoading = true;
 		try {
-			searchResult = await pagefind.search(searchInput);
+			searchResult = await pagefind.search(searchInput, {
+				filters: {
+					tag: {
+						any: Object.keys(tags)
+					}
+				}
+			});
 		} catch (error) {
 			console.error('Search failed:', error);
 			searchResult = undefined;
@@ -117,10 +135,6 @@
 		performSearch();
 	});
 </script>
-
-<svelte:head>
-	<link data-pagefind-meta="url[href]" href={$page.url.pathname} />
-</svelte:head>
 
 <Drawer.Root
 	setBackgroundColorOnScale={false}
@@ -163,20 +177,17 @@
 
 				<Folder class="mb-4" expanded name="/Selected">
 					<div class="flex flex-col gap-1">
-						{#each tags as tag (tag)}
-							<div
-								animate:flip={{ duration: 600 }}
-								in:receive={{ key: tag }}
-								out:send={{ key: tag }}
-							>
+						{#each Object.entries(tags) as [key, value] (key)}
+							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
 								<Badge
 									class="cursor-pointer"
 									onmousedown={() => {
-										tags = tags.filter((tagItem) => tagItem !== tag);
-										unselectedTags.push(tag);
+										delete tags[key];
+										unselectedTags[key] = value;
 									}}
 								>
-									{tag}
+									{key}
+									{value}
 								</Badge>
 							</div>
 						{/each}
@@ -185,20 +196,17 @@
 
 				<Folder class="mb-4" expanded name="/Unselected">
 					<div class="flex flex-col gap-1">
-						{#each unselectedTags as tag (tag)}
-							<div
-								animate:flip={{ duration: 600 }}
-								in:receive={{ key: tag }}
-								out:send={{ key: tag }}
-							>
+						{#each Object.entries(unselectedTags) as [key, value] (key)}
+							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
 								<Badge
 									class="cursor-pointer opacity-50"
 									onmousedown={() => {
-										unselectedTags = unselectedTags.filter((tagItem) => tagItem !== tag);
-										tags.push(tag);
+										delete unselectedTags[key];
+										tags[key] = value;
 									}}
 								>
-									{tag}
+									{key}
+									{value}
 								</Badge>
 							</div>
 						{/each}
@@ -232,21 +240,47 @@
 								<Collapsible class="col-span-12 grid grid-cols-subgrid text-left">
 									<span
 										class="col-span-1 flex h-max items-center gap-2 pt-2.5 before:block before:h-[8px] before:w-[8px] before:bg-black dark:before:bg-white"
-										>TODO: date</span
 									>
+										{#if data.meta?.publishDate}
+											{new Date(data.meta.publishDate).toLocaleDateString()}
+										{:else}
+											-
+										{/if}
+									</span>
 
 									<div class="col-span-10">
-										<h3 class="font-mono text-3xl font-bold">{data.meta.title}</h3>
-										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-										<p class="mt-2 text-sm text-gray-600">{@html data.excerpt}</p>
+										<h3
+											class="w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-xl text-transparent dark:from-white dark:to-white/40"
+										>
+											{data.meta.title}
+										</h3>
+										<p>
+											<span class="text-muted">[…]</span>
+											<span
+												class="bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+											>
+												<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+												{@html data.excerpt}
+											</span>
+											<span class="text-muted">[…]</span>
+										</p>
 									</div>
 
-									<Badge class="col-span-1 mt-2">text</Badge>
+									{#if data.meta?.tags}
+										<div class="col-span-1 mb-4 mt-2 flex flex-wrap gap-1">
+											{#each data.meta.tags.split(',') as tag}
+												<Badge>
+													{tag}
+												</Badge>
+											{/each}
+										</div>
+									{/if}
 
 									{#snippet expanded()}
+										<div class="col-span-12 pt-6" />
 										<!-- info -->
 										{#if data.meta?.image}
-											<span>TEASER:</span>
+											<span class="font-mono text-muted-foreground">TEASER:</span>
 											<img
 												src={data.meta.image}
 												alt={data.meta.image_alt || 'Teaser Image'}
@@ -256,12 +290,22 @@
 											/>
 										{/if}
 
-										<p class="mb-4">AUTHOR: TODO</p>
+										{#if data.meta?.author}
+											<p class="mb-1 w-max">
+												<span class="font-mono text-muted-foreground">AUTHOR:</span>
+												{data.meta.author}
+											</p>
+										{/if}
 
-										<p class="mb-4">TOPIC: TODO</p>
+										{#if data.meta?.description}
+											<p class="mb-1 w-max">
+												<span class="font-mono text-muted-foreground">DESCRIPTION:</span>
+												{data.meta.description}
+											</p>
+										{/if}
 
 										<a
-											class="w-full"
+											class="mt-3 block w-full text-accent underline"
 											use:useLink
 											href={data.meta?.url || data.url?.replace('.html', '')}
 											onclick={() => (isOpen = false)}
