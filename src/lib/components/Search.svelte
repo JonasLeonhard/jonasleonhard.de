@@ -99,6 +99,7 @@
 		});
 		_pagefind.init();
 		pagefind = _pagefind;
+
 		const filters = await pagefind.filters();
 		unselectedTags = filters.tag || {};
 	}
@@ -124,6 +125,16 @@
 		} finally {
 			searchIsLoading = false;
 		}
+	}
+
+	async function resetSearch() {
+		if (!pagefind) return;
+
+		searchInput = '';
+		const filters = await pagefind.filters();
+		unselectedTags = filters.tag || {};
+		tags = {};
+		performSearch();
 	}
 
 	$effect(() => {
@@ -164,7 +175,7 @@
 					class="mb-4 flex w-max justify-between border-b border-muted-foreground pb-2 font-mono text-xs"
 				>
 					<div class="col-span-1 pr-20">/Filter</div>
-					<div class="col-span-10">clear filters</div>
+					<button onmousedown={resetSearch} class="col-span-10">clear filters</button>
 				</div>
 				<div class="mb-4 flex w-full max-w-sm flex-col gap-1.5">
 					<Label class="flex items-center gap-1" for="search">
@@ -224,7 +235,7 @@
 				{#if searchIsLoading}
 					<Skeleton class="col-span-12 h-8 w-[33%]" />
 				{:else if !searchResult?.results?.length}
-					<div class="col-span-12 text-center text-muted-foreground">
+					<div class="col-span-12 mt-8 text-center text-lg text-muted-foreground">
 						{searchInput ? 'No results found' : 'Start typing to search'}
 					</div>
 				{:else}
