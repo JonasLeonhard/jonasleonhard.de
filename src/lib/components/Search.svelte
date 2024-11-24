@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import {
@@ -220,7 +219,7 @@
 			>
 				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Date</div>
 				<div class="col-span-10 h-max border-b border-muted-foreground pb-2">/Name</div>
-				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Type</div>
+				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Tag</div>
 
 				{#if searchIsLoading}
 					<Skeleton class="col-span-12 h-8 w-[33%]" />
@@ -229,14 +228,11 @@
 						{searchInput ? 'No results found' : 'Start typing to search'}
 					</div>
 				{:else}
-					{#each paginatedSearchResults as result, i (result.id)}
+					{#each paginatedSearchResults as result (result.id)}
 						{#await result.data()}
 							<Skeleton class="h-8 w-[33%]" />
 						{:then data}
-							<div
-								class="col-span-12 mb-4 grid grid-cols-subgrid pt-2"
-								transition:fly={{ y: -16, opacity: 0, duration: 80, delay: i * 150 }}
-							>
+							<div class="col-span-12 mb-4 grid grid-cols-subgrid pt-2">
 								<Collapsible class="col-span-12 grid grid-cols-subgrid text-left">
 									<span
 										class="col-span-1 flex h-max items-center gap-2 pt-2.5 before:block before:h-[8px] before:w-[8px] before:bg-black dark:before:bg-white"
