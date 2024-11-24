@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
-	import { Search, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Search, ChevronLeft, ChevronRight, BookA } from 'lucide-svelte';
 	import {
 		Collapsible,
 		Drawer,
@@ -160,10 +160,29 @@
 		</div>
 	</Drawer.Trigger>
 
-	<Drawer.Content>
+	<Drawer.Content class="h-[93vh]">
 		<Drawer.Header>
-			<Drawer.Title class="mb-4"
-				>Search
+			<Drawer.Title class="pt-12">
+				<div class="mx-auto w-max border border-dashed p-3">
+					<BookA class="h-4 w-4" />
+				</div>
+
+				<h3 class="mx-auto mb-4 mt-4 flex w-max items-center gap-2 text-4xl">
+					<span class="text-accent">Blog</span>,
+					<span class="text-blue-600">Projects</span> &
+					<span class="text-green-600">Shorts</span>
+					<p class="absolute right-0 top-0">TODO: only color selected by tags</p>
+				</h3>
+
+				<span
+					class="relative z-10 mx-auto mb-4 block w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+					>Thoughts, tutorials, explainations and my work. You can find them all here.</span
+				>
+				>
+				<div class="mx-auto mb-4 flex w-full max-w-lg flex-col gap-1.5">
+					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
+				</div>
+
 				{searchResult ? `- ${searchResult?.unfilteredResultCount} Results` : ''}
 			</Drawer.Title>
 		</Drawer.Header>
@@ -176,13 +195,6 @@
 				>
 					<div class="col-span-1 pr-20">/Filter</div>
 					<button onmousedown={resetSearch} class="col-span-10">clear filters</button>
-				</div>
-				<div class="mb-4 flex w-full max-w-sm flex-col gap-1.5">
-					<Label class="flex items-center gap-1" for="search">
-						<Search class="w-4" />
-						/Query
-					</Label>
-					<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
 				</div>
 
 				<Folder class="mb-4" expanded name="/Selected">
@@ -226,7 +238,7 @@
 
 			<!-- Results Right -->
 			<div
-				class="grid h-[50vh] w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto p-4 font-mono text-xs"
+				class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto p-4 font-mono text-xs"
 			>
 				<div class="col-span-1 h-max border-b border-muted-foreground pb-2">/Date</div>
 				<div class="col-span-10 h-max border-b border-muted-foreground pb-2">/Name</div>

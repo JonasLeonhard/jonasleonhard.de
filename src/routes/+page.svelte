@@ -37,7 +37,11 @@
 			<h6
 				class="flex items-center gap-2 before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
 			>
-				Hamburg, Germany
+				Building Experiences at <a
+					class="underline hover:text-accent"
+					href="https://www.fork.de/"
+					target="_blank">Fork</a
+				>
 			</h6>
 			<h3
 				class="relative z-10 w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-8xl text-transparent dark:from-white dark:to-white/40"
