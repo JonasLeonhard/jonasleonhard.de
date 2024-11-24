@@ -17,6 +17,18 @@
 
 <svelte:window bind:scrollY />
 
+<div class="fixed top-0 -z-50 h-full w-full flex-1">
+	<Canvas>
+		<Circuit />
+		<T.PerspectiveCamera
+			makeDefault
+			position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
+			fov={50}
+			rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
+		/>
+	</Canvas>
+</div>
+
 <div class="container mx-auto">
 	<div class="mb-40 flex flex-col gap-8 lg:flex-row">
 		<div class="flex h-max flex-col pt-4">
@@ -24,19 +36,6 @@
 			<HackedText class="relative z-10 w-max text-8xl" text="LE0NHARD" animationDelay={500} />
 			<HackedText class="relative z-10 w-max text-8xl" text="FULLSTACK," animationDelay={750} />
 			<HackedText class="relative z-10 w-max text-8xl" text="DEVEL0PER" animationDelay={1000} />
-		</div>
-		<div class="relative min-h-[400px] flex-1 border bg-black shadow-lg">
-			<div class="absolute inset-0 h-full w-full">
-				<Canvas>
-					<Circuit />
-					<T.PerspectiveCamera
-						makeDefault
-						position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
-						fov={50}
-						rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
-					/>
-				</Canvas>
-			</div>
 		</div>
 	</div>
 

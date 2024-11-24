@@ -5,7 +5,6 @@
 
 	import type { Snippet } from 'svelte';
 	import type { PageData } from './$types';
-	import { metadata } from './metadata';
 
 	interface Props {
 		children: Snippet;

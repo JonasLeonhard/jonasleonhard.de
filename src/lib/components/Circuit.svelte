@@ -7,12 +7,15 @@
 	const positions = $state(new Float32Array(computedSvg.positions));
 	const bloomOpacity = $state(new Float32Array(computedSvg.bloomOpacity));
 	const lineIndexes = $state(new Float32Array(computedSvg.lineIndexes));
+	let scrollY = $state(0);
 	let time = $state(0);
 
 	useTask((delta) => {
 		time += delta;
 	});
 </script>
+
+<svelte:window bind:scrollY />
 
 <T.Points>
 	<T.BufferGeometry>
@@ -54,8 +57,10 @@
 		{vertexShader}
 		{fragmentShader}
 		uniforms={{
-			time: { value: 0 }
+			time: { value: 0 },
+			scrollY: { value: 0 }
 		}}
 		uniforms.time.value={time}
+		uniforms.scrollY.value={scrollY}
 	/>
 </T.Points>
