@@ -17,7 +17,9 @@
 
 <svelte:window bind:scrollY />
 
-<div class="fixed top-0 -z-50 h-full w-full flex-1">
+<div
+	class="pointer-events-none fixed top-0 -z-50 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
+>
 	<Canvas>
 		<Circuit />
 		<T.PerspectiveCamera
@@ -30,12 +32,23 @@
 </div>
 
 <div class="container mx-auto">
-	<div class="mb-40 flex flex-col gap-8 lg:flex-row">
+	<div class="mb-80 flex flex-col gap-8 lg:flex-row">
 		<div class="flex h-max flex-col pt-4">
-			<HackedText class="relative z-10 w-max text-8xl" text="J0NAS" animationDelay={250} />
-			<HackedText class="relative z-10 w-max text-8xl" text="LE0NHARD" animationDelay={500} />
-			<HackedText class="relative z-10 w-max text-8xl" text="FULLSTACK," animationDelay={750} />
-			<HackedText class="relative z-10 w-max text-8xl" text="DEVEL0PER" animationDelay={1000} />
+			<h6
+				class="flex items-center gap-2 before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+			>
+				Hamburg, Germany
+			</h6>
+			<h3
+				class="relative z-10 w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-8xl text-transparent dark:from-white dark:to-white/40"
+			>
+				Fullstack
+			</h3>
+			<h3
+				class="relative z-10 w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-8xl text-transparent dark:from-white dark:to-white/40"
+			>
+				Developer
+			</h3>
 		</div>
 	</div>
 

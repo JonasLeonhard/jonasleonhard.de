@@ -10,7 +10,7 @@
 	const lineIndexes = $state(new Float32Array(computedSvg.lineIndexes));
 	let scrollY = $state(0);
 	let time = $state(0);
-	const fadeoutProgress = spring(0, {
+	const fadeoutProgress = spring(1, {
 		stiffness: 0.01,
 		damping: 0.8
 	});
@@ -25,6 +25,10 @@
 			hasTriggeredFadeout = false;
 			fadeoutProgress.set(0);
 		}
+	});
+
+	$effect(() => {
+		fadeoutProgress.set(0);
 	});
 
 	useTask((delta) => {

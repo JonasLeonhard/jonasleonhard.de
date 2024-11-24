@@ -28,12 +28,6 @@ vec3 getGradientColor(float t) {
 }
 
 void main() {
-    float delay = 0.025 * vLineIndex;
-    float effectiveTime = time - delay;
-    if (effectiveTime <= 0.0) {
-        discard;
-    }
-
     vec2 cUv = 2.0 * vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y) - 1.0;
     float distanceFromCenter = length(cUv);
 
@@ -45,7 +39,7 @@ void main() {
 
     // color calculation
     float angle = atan(cUv.y, cUv.x) / (2.0 * 3.14159) + 0.5;
-    float colorT = fract(angle + effectiveTime * 0.05);
+    float colorT = fract(angle + time * 0.05);
 
     vec3 finalColor = getGradientColor(colorT);
     gl_FragColor = vec4(finalColor, alpha);
