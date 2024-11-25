@@ -28,7 +28,11 @@
 	});
 
 	$effect(() => {
-		fadeoutProgress.set(0);
+		if (scrollY < 400) {
+			fadeoutProgress.set(1);
+		} else if (scrollY >= 400) {
+			fadeoutProgress.set(0);
+		}
 	});
 
 	useTask((delta) => {

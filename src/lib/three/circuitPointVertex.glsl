@@ -19,7 +19,7 @@ vec2 snapToGrid(vec2 position, float cellSize) {
 }
 
 void main() {
-    float scrollFactor = scrollY / 10000.0;
+    float scrollFactor = max(0.0, (scrollY - 400.0) / 10000.0);
     float t = mod(time + lineIndex * 100.0, PI2);
     vec3 newPosition = position;
     float radius = length(position.xy);

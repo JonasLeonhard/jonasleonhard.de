@@ -62,7 +62,7 @@
 
 <div
 	data-vaul-drawer-wrapper
-	class="box-border flex h-fit min-h-screen flex-col gap-y-6 font-sans antialiased"
+	class="box-border flex h-fit min-h-screen flex-col gap-y-6 bg-gradient-to-r from-white to-transparent font-sans antialiased dark:from-black"
 >
 	<Header posts={data.posts} />
 	<GridPattern

@@ -2,7 +2,7 @@
 	import { Canvas } from '@threlte/core';
 	import { T } from '@threlte/core';
 
-	import { useLink, BentoGrid, BentoCard, HackedText, Circuit, lerp } from '$lib';
+	import { useLink, BentoGrid, BentoCard, Circuit, lerp } from '$lib';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
@@ -17,42 +17,60 @@
 
 <svelte:window bind:scrollY />
 
-<div
-	class="pointer-events-none fixed top-0 -z-50 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
->
-	<Canvas>
-		<Circuit />
-		<T.PerspectiveCamera
-			makeDefault
-			position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
-			fov={50}
-			rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
-		/>
-	</Canvas>
-</div>
-
 <div class="container mx-auto">
-	<div class="mb-80 flex flex-col gap-8 lg:flex-row">
-		<div class="flex h-max flex-col pt-4">
-			<h6
-				class="flex items-center gap-2 before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+	<div class="-mt-20 flex flex-col pb-60 pt-4">
+		<h6
+			class="mb-6 flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+		>
+			Building Experiences at <a
+				class="underline hover:text-accent"
+				href="https://www.fork.de/"
+				target="_blank">Fork</a
 			>
-				Building Experiences at <a
-					class="underline hover:text-accent"
-					href="https://www.fork.de/"
-					target="_blank">Fork</a
-				>
-			</h6>
-			<h3
-				class="relative z-10 w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-8xl text-transparent dark:from-white dark:to-white/40"
-			>
-				Fullstack
-			</h3>
-			<h3
-				class="relative z-10 w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-8xl text-transparent dark:from-white dark:to-white/40"
-			>
-				Developer
-			</h3>
+		</h6>
+		<h3
+			class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+		>
+			Fullstack Developer,
+		</h3>
+		<h3
+			class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+		>
+			<!-- TODO: changing funny text, wierd/special -->
+			& bug wizard.
+		</h3>
+	</div>
+
+	<div class="flex w-full justify-between gap-60">
+		<p
+			class:opacity-0={scrollY > 400}
+			class:-translate-y-2={scrollY > 400}
+			class=" w-80 transition-all duration-1000"
+		>
+			I don't know how you found me. But does it matter? You found gold!
+		</p>
+		<p
+			class:opacity-0={scrollY > 400}
+			class:-translate-y-2={scrollY > 400}
+			class="mr-auto mt-auto flex gap-14 transition-all delay-100 duration-1000"
+		>
+			<a href="/blog" class="underline hover:text-accent">blog</a>
+			<a href="/about#projects" class="underline hover:text-accent">projects</a>
+			<a href="/contact" class="underline hover:text-accent">contact</a>
+		</p>
+	</div>
+
+	<div class="h-screen w-screen">
+		<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
+			<Canvas>
+				<Circuit />
+				<T.PerspectiveCamera
+					makeDefault
+					position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
+					fov={50}
+					rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
+				/>
+			</Canvas>
 		</div>
 	</div>
 
