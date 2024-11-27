@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
+	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
 
 	import { useLink, BentoGrid, BentoCard, Circuit, lerp } from '$lib';
@@ -13,6 +14,31 @@
 	let { data }: Props = $props();
 
 	let scrollY = $state(0);
+	let currentDescIndex = $state(0);
+
+	const descriptions = [
+		'Fullstack Developer.',
+		"Works agile, but can't reach his toes",
+		'Actually reads documentation',
+		'Deployed on fridays',
+		'Has a rubber duck',
+		'Believes tabs are superior',
+		'Takes his coffee in Big O notation',
+		'Actually used a binary tree before',
+		'Neovim and a terminal is all i need',
+		'Suck it uncle bob!'
+	];
+
+	$effect(() => {
+		const onInterval = () => {
+			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
+		};
+		const interval = setInterval(onInterval, 4500);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 
 <svelte:window bind:scrollY />
@@ -31,14 +57,21 @@
 		<h3
 			class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
 		>
-			Fullstack Developer,
+			Jonas Leonhard,
 		</h3>
-		<h3
-			class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
-		>
-			<!-- TODO: changing funny text, wierd/special -->
-			& bug wizard.
-		</h3>
+		<div class="relative h-[120px]">
+			{#each descriptions as description, index}
+				{#if index === currentDescIndex}
+					<h3
+						in:fly={{ y: 20, duration: 300 }}
+						out:fade={{ duration: 200 }}
+						class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+					>
+						{description}
+					</h3>
+				{/if}
+			{/each}
+		</div>
 	</div>
 
 	<div class="flex w-full justify-between gap-60">
