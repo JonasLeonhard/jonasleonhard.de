@@ -2,8 +2,9 @@
 	import { Canvas } from '@threlte/core';
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
+	import { inview } from 'svelte-inview';
 
-	import { useLink, BentoGrid, BentoCard, Circuit, lerp } from '$lib';
+	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
@@ -15,6 +16,8 @@
 
 	let scrollY = $state(0);
 	let currentDescIndex = $state(0);
+	let visibleProjectsHeadline = $state(false);
+	let visibleProject01 = $state(false);
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -74,41 +77,73 @@
 		</div>
 	</div>
 
-	<div class="flex w-full justify-between gap-60">
-		<p
-			class:opacity-0={scrollY > 400}
-			class:-translate-y-2={scrollY > 400}
-			class=" w-80 transition-all duration-1000"
-		>
+	<div
+		class="flex w-full justify-between gap-60 transition-all duration-1000"
+		class:opacity-0={scrollY > 250}
+		class:-translate-y-2={scrollY > 250}
+	>
+		<p class="w-80 text-muted-foreground">
 			I don't know how you found me. But does it matter? You found gold!
 		</p>
-		<p
-			class:opacity-0={scrollY > 400}
-			class:-translate-y-2={scrollY > 400}
-			class="mr-auto mt-auto flex gap-14 transition-all delay-100 duration-1000"
-		>
+		<p class="mr-auto mt-auto flex gap-14">
 			<a href="/blog" class="underline hover:text-accent">blog</a>
 			<a href="/about#projects" class="underline hover:text-accent">projects</a>
 			<a href="/contact" class="underline hover:text-accent">contact</a>
 		</p>
 	</div>
 
-	<div class="h-screen w-screen">
-		<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
-			<Canvas>
-				<Circuit />
-				<T.PerspectiveCamera
-					makeDefault
-					position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
-					fov={50}
-					rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
-				/>
-			</Canvas>
-		</div>
+	<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
+		<Canvas>
+			<Circuit />
+			<T.PerspectiveCamera
+				makeDefault
+				position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
+				fov={50}
+				rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
+			/>
+		</Canvas>
 	</div>
 
+	<section class="mb-40 mt-[50vh]">
+		<div
+			class="mb-40 transition-all duration-1000"
+			class:opacity-0={!visibleProjectsHeadline}
+			use:inview={{ threshold: 0, rootMargin: '-60% 0% 50% 0%' }}
+			oninview_change={(event) => {
+				visibleProjectsHeadline = !event.detail.inView;
+			}}
+		>
+			<HackedText
+				class="w-max font-mono text-8xl"
+				text="Projects"
+				scrambled={!visibleProjectsHeadline}
+			/>
+		</div>
+
+		<div class="mb-40 h-screen transition-all duration-1000" class:opacity-0={!visibleProject01}>
+			<h4
+				class="font-mono text-4xl"
+				use:inview={{ threshold: 0, rootMargin: '-50% 0% 50% 0%' }}
+				oninview_change={(event) => {
+					visibleProject01 = !event.detail.inView;
+				}}
+			>
+				Project 01
+			</h4>
+		</div>
+
+		<!-- these enter when in the viewport -->
+		<div class="mb-40 h-screen">Project 01</div>
+
+		<div class="mb-40 h-screen">Project 01</div>
+
+		<div class="mb-40 h-screen">Project 01</div>
+
+		<div class="mb-40 h-screen">Project 01</div>
+	</section>
+
 	<section class="mb-40">
-		<h2 class="mb-8 text-5xl">Latest</h2>
+		<HackedText class="mb-8 w-max font-mono text-8xl" text="Latest Posts" />
 
 		<div class="mb-6 flex items-center justify-center">
 			<BentoGrid>
@@ -141,7 +176,7 @@
 			</BentoGrid>
 		</div>
 
-		<a use:useLink href="/blog" class="hover:text-accent hover:underline">Open Search</a>
+		<a use:useLink href="/blog" class="hover:text-accent hover:underline">View All</a>
 	</section>
 
 	<div
