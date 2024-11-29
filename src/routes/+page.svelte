@@ -4,7 +4,7 @@
 	import { T } from '@threlte/core';
 	import { inview } from 'svelte-inview';
 
-	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
+	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, Marquee, lerp } from '$lib';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
@@ -46,167 +46,187 @@
 
 <svelte:window bind:scrollY />
 
-<div class="container mx-auto">
-	<div class="-mt-20 flex flex-col pb-60 pt-4">
-		<h6
-			class="mb-6 flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
-		>
-			Building Experiences at <a
-				class="underline hover:text-accent"
-				href="https://www.fork.de/"
-				target="_blank">Fork</a
-			>
-		</h6>
-		<h3
-			class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
-		>
-			Jonas Leonhard,
-		</h3>
-		<div class="relative h-[120px]">
-			{#each descriptions as description, index}
-				{#if index === currentDescIndex}
-					<h3
-						in:fly={{ y: 20, duration: 300 }}
-						out:fade={{ duration: 200 }}
-						class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
-					>
-						{description}
-					</h3>
-				{/if}
-			{/each}
-		</div>
-	</div>
-
-	<div
-		class="flex w-full justify-between gap-60 transition-all duration-1000"
-		class:opacity-0={scrollY > 250}
-		class:-translate-y-2={scrollY > 250}
+<section class="container mx-auto -mt-20 flex flex-col pb-60 pt-4">
+	<h6
+		class="mb-6 flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
 	>
-		<p class="w-80 text-muted-foreground">
-			I don't know how you found me. But does it matter? You found gold!
-		</p>
-		<p class="mr-auto mt-auto flex gap-14">
-			<a href="/blog" class="underline hover:text-accent">blog</a>
-			<a href="/about#projects" class="underline hover:text-accent">projects</a>
-			<a href="/contact" class="underline hover:text-accent">contact</a>
-		</p>
+		Building Experiences at <a
+			class="underline hover:text-accent"
+			href="https://www.fork.de/"
+			target="_blank">Fork</a
+		>
+	</h6>
+	<h3
+		class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+	>
+		Jonas Leonhard,
+	</h3>
+	<div class="relative h-[120px]">
+		{#each descriptions as description, index}
+			{#if index === currentDescIndex}
+				<h3
+					in:fly={{ y: 20, duration: 300 }}
+					out:fade={{ duration: 200 }}
+					class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+				>
+					{description}
+				</h3>
+			{/if}
+		{/each}
+	</div>
+</section>
+
+<section
+	class="container mx-auto flex w-full justify-between gap-60 transition-all duration-1000"
+	class:opacity-0={scrollY > 250}
+	class:-translate-y-2={scrollY > 250}
+>
+	<p class="w-80 text-muted-foreground">
+		I don't know how you found me. But does it matter? You found gold!
+	</p>
+	<p class="mr-auto mt-auto flex gap-14">
+		<a href="/blog" class="underline hover:text-accent">blog</a>
+		<a href="/about#projects" class="underline hover:text-accent">projects</a>
+		<a href="/contact" class="underline hover:text-accent">contact</a>
+	</p>
+</section>
+
+<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
+	<Canvas>
+		<Circuit />
+		<T.PerspectiveCamera
+			makeDefault
+			position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
+			fov={50}
+			rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
+		/>
+	</Canvas>
+</div>
+
+<section class="container mx-auto mb-40 mt-[50vh]">
+	<div
+		class="mb-40 transition-all duration-1000"
+		class:opacity-0={!visibleProjectsHeadline}
+		use:inview={{ threshold: 0, rootMargin: '-60% 0% 50% 0%' }}
+		oninview_change={(event) => {
+			visibleProjectsHeadline = !event.detail.inView;
+		}}
+	>
+		<HackedText
+			class="w-max font-mono text-8xl"
+			text="Projects"
+			scrambled={!visibleProjectsHeadline}
+		/>
 	</div>
 
-	<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
-		<Canvas>
-			<Circuit />
-			<T.PerspectiveCamera
-				makeDefault
-				position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
-				fov={50}
-				rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
-			/>
-		</Canvas>
-	</div>
-
-	<section class="mb-40 mt-[50vh]">
-		<div
-			class="mb-40 transition-all duration-1000"
-			class:opacity-0={!visibleProjectsHeadline}
-			use:inview={{ threshold: 0, rootMargin: '-60% 0% 50% 0%' }}
+	<div class="mb-40 h-screen transition-all duration-1000" class:opacity-0={!visibleProject01}>
+		<h4
+			class="font-mono text-4xl"
+			use:inview={{ threshold: 0, rootMargin: '-50% 0% 50% 0%' }}
 			oninview_change={(event) => {
-				visibleProjectsHeadline = !event.detail.inView;
+				visibleProject01 = !event.detail.inView;
 			}}
 		>
-			<HackedText
-				class="w-max font-mono text-8xl"
-				text="Projects"
-				scrambled={!visibleProjectsHeadline}
-			/>
-		</div>
+			Project 01
+		</h4>
+	</div>
 
-		<div class="mb-40 h-screen transition-all duration-1000" class:opacity-0={!visibleProject01}>
-			<h4
-				class="font-mono text-4xl"
-				use:inview={{ threshold: 0, rootMargin: '-50% 0% 50% 0%' }}
-				oninview_change={(event) => {
-					visibleProject01 = !event.detail.inView;
-				}}
-			>
-				Project 01
-			</h4>
-		</div>
+	<!-- these enter when in the viewport -->
+	<div class="mb-40 h-screen">Project 01</div>
 
-		<!-- these enter when in the viewport -->
-		<div class="mb-40 h-screen">Project 01</div>
+	<div class="mb-40 h-screen">Project 01</div>
 
-		<div class="mb-40 h-screen">Project 01</div>
+	<div class="mb-40 h-screen">Project 01</div>
 
-		<div class="mb-40 h-screen">Project 01</div>
+	<div class="mb-40 h-screen">Project 01</div>
+</section>
 
-		<div class="mb-40 h-screen">Project 01</div>
-	</section>
-
-	<section class="mb-40">
-		<HackedText class="mb-8 w-max font-mono text-8xl" text="Latest Posts" />
-
-		<div class="mb-6 flex items-center justify-center">
-			<BentoGrid>
-				{#each data.posts.slice(0, 4) as post, index}
-					<BentoCard
-						name={post.title}
-						description={post.description}
-						href={post.href || '/'}
-						cta="View Post"
-						class="col-span-3 {index % 4 === 0 || index % 4 === 3
-							? 'lg:col-span-1'
-							: 'lg:col-span-2'}"
-					>
-						{#snippet icon()}
-							<MessageSquareMore />
-						{/snippet}
-
-						<div class="m-auto self-center justify-self-center pb-12">
-							<enhanced:img
-								src={post.coverImage.src}
-								alt={post.coverImage.alt}
-								class="h-auto w-12"
-							/>
-							<span class="absolute left-0 top-0 opacity-15"
-								>TODO: image beams circuit like from outside to image</span
-							>
-						</div>
-					</BentoCard>
-				{/each}
-			</BentoGrid>
-		</div>
-
-		<a use:useLink href="/blog" class="hover:text-accent hover:underline">View All</a>
-	</section>
-
+<Marquee
+	class="mb-40 border-b border-t border-muted"
+	direction="left"
+	fade
+	pauseOnHover
+	innerClassName="py-8"
+>
+	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+		<Home /> Buerkert
+	</div>
+	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+		<Home /> Hapeko
+	</div>
+	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+		<Home /> Obi
+	</div>
+	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+		<Home /> Hapeko
+	</div>
 	<div
-		class="text- mb-80 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
+		class="flex gap-1 pr-[10em] text-accent grayscale transition-all duration-1000 hover:grayscale-0"
 	>
-		Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
-		ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt
-		aliquid vel perspiciatis praesentium vitae.
+		<Home /> Landesanstalt für Medien NRW
+	</div>
+</Marquee>
+
+<section class="container mx-auto mb-40">
+	<HackedText class="mb-8 w-max font-mono text-8xl" text="Latest Posts" />
+
+	<div class="mb-6 flex items-center justify-center">
+		<BentoGrid>
+			{#each data.posts.slice(0, 4) as post, index}
+				<BentoCard
+					name={post.title}
+					description={post.description}
+					href={post.href || '/'}
+					cta="View Post"
+					class="col-span-3 {index % 4 === 0 || index % 4 === 3
+						? 'lg:col-span-1'
+						: 'lg:col-span-2'}"
+				>
+					{#snippet icon()}
+						<MessageSquareMore />
+					{/snippet}
+
+					<div class="m-auto self-center justify-self-center pb-12">
+						<enhanced:img src={post.coverImage.src} alt={post.coverImage.alt} class="h-auto w-12" />
+						<span class="absolute left-0 top-0 opacity-15"
+							>TODO: image beams circuit like from outside to image</span
+						>
+					</div>
+				</BentoCard>
+			{/each}
+		</BentoGrid>
 	</div>
 
-	<div>
-		<a
-			use:useLink
-			href="/about#projects"
-			class="group mx-auto mb-6 flex justify-center text-center text-muted-foreground hover:text-accent hover:underline"
-		>
-			Trusted by Teams around the world <ChevronRight
-				class="w-4 transition-all group-hover:translate-x-1.5"
-			/>
-		</a>
-		<div class="mx-auto mb-14 flex w-max gap-24">
-			<Home />
-			<Home />
-			<Home />
-			<Home />
-			<Home />
-		</div>
-		<div
-			class="pointer-events-none relative mx-auto -mt-[18.8rem] h-[50rem] animate-pulse overflow-hidden transition-all [--color:#FD9644] [animation-duration:_8s] [mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)] before:absolute before:inset-0 before:size-full before:opacity-100 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_100%)] after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[50%] after:border-t after:border-[hsl(var(--border))] after:bg-background dark:before:opacity-60 dark:before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)]"
-		></div>
-	</div>
-	<br />
+	<a use:useLink href="/blog" class="hover:text-accent hover:underline">View All</a>
+</section>
+
+<div
+	class="text- mb-80 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
+>
+	Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
+	ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt
+	aliquid vel perspiciatis praesentium vitae.
 </div>
+
+<div>
+	<a
+		use:useLink
+		href="/about#projects"
+		class="group mx-auto mb-6 flex justify-center text-center text-muted-foreground hover:text-accent hover:underline"
+	>
+		Trusted by Teams around the world <ChevronRight
+			class="w-4 transition-all group-hover:translate-x-1.5"
+		/>
+	</a>
+	<div class="mx-auto mb-14 flex w-max gap-24">
+		<Home />
+		<Home />
+		<Home />
+		<Home />
+		<Home />
+	</div>
+	<div
+		class="pointer-events-none relative mx-auto -mt-[18.8rem] h-[50rem] animate-pulse overflow-hidden transition-all [--color:#FD9644] [animation-duration:_8s] [mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)] before:absolute before:inset-0 before:size-full before:opacity-100 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_100%)] after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[50%] after:border-t after:border-[hsl(var(--border))] after:bg-background dark:before:opacity-60 dark:before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)]"
+	></div>
+</div>
+<br />

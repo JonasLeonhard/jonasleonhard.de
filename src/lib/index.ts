@@ -14,6 +14,7 @@ import HackedText from './components/HackedText.svelte';
 import Header from './components/Header.svelte';
 import Headroom from './components/Headroom.svelte';
 import Hero from './components/Hero.svelte';
+import Marquee from './components/Marquee.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import Search from './components/Search.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
@@ -24,8 +25,8 @@ import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 import { lerp } from './lerp';
-import { useLink } from './useLink.svelte';
 import { send, receive } from './transition';
+import { useLink } from './useLink.svelte';
 
 import type { MetaData } from './types.d.ts';
 export {
@@ -47,6 +48,7 @@ export {
 	Hero,
 	Input,
 	Label,
+	Marquee,
 	MouseDrag,
 	Pagination,
 	Search,
@@ -55,9 +57,9 @@ export {
 	Toaster,
 	badgeVariants,
 	lerp,
-	useLink,
-	send,
 	receive,
+	send,
+	useLink,
 	type MetaData
 };
 export * from './utils';

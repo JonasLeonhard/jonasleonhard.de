@@ -7,7 +7,6 @@
 		Folder,
 		Input,
 		Badge,
-		Label,
 		MouseDrag,
 		Pagination,
 		Skeleton,
@@ -296,7 +295,7 @@
 									{/if}
 
 									{#snippet expanded()}
-										<div class="col-span-12 pt-6" />
+										<div class="col-span-12 pt-6"></div>
 										<!-- info -->
 										{#if data.meta?.image}
 											<span class="font-mono text-muted-foreground">TEASER:</span>
