@@ -58,7 +58,7 @@
 					opacity: 0,
 					x: '-100%'
 				}}
-				class="block w-screen bg-gradient-to-r from-accent via-primary/40 to-accent/50 bg-[length:400%_400%] py-[1px] [animation-duration:10s]"
+				class="block w-screen bg-gradient-to-r from-muted via-primary/40 to-muted/50 bg-[length:400%_400%] pb-[1px] [animation-duration:10s]"
 			></div>
 		{/if}
 	</header>
