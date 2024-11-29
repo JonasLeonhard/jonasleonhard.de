@@ -4,7 +4,8 @@
 	import { T } from '@threlte/core';
 	import { inview } from 'svelte-inview';
 
-	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, Marquee, lerp } from '$lib';
+	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
+	import Marqueeck from '@arisbh/marqueeck';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
 	import type { PageData } from './$types';
@@ -141,31 +142,37 @@
 	<div class="mb-40 h-screen">Project 01</div>
 </section>
 
-<Marquee
-	class="mb-40 border-b border-t border-muted"
-	direction="left"
-	fade
-	pauseOnHover
-	innerClassName="py-8"
+<Marqueeck
+	class="mb-40 border border-muted"
+	--marqueeck-padding-y="2rem"
+	options={{ paddingX: 200, gap: 200, speed: 40 }}
 >
-	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+	<div
+		class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+	>
 		<Home /> Buerkert
 	</div>
-	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
-		<Home /> Hapeko
-	</div>
-	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
-		<Home /> Obi
-	</div>
-	<div class="flex gap-1 text-accent grayscale transition-all duration-1000 hover:grayscale-0">
+	<div
+		class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+	>
 		<Home /> Hapeko
 	</div>
 	<div
-		class="flex gap-1 pr-[10em] text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+		class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+	>
+		<Home /> Obi
+	</div>
+	<div
+		class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+	>
+		<Home /> Hapeko
+	</div>
+	<div
+		class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
 	>
 		<Home /> Landesanstalt für Medien NRW
 	</div>
-</Marquee>
+</Marqueeck>
 
 <section class="container mx-auto mb-40">
 	<HackedText class="mb-8 w-max font-mono text-8xl" text="Latest Posts" />

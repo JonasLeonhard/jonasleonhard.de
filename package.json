@@ -44,6 +44,7 @@
 		"vite": "^6.0.1"
 	},
 	"dependencies": {
+		"@arisbh/marqueeck": "^0.5.1",
 		"@threlte/core": "^8.0.0-next.31",
 		"@threlte/extras": "^9.0.0-next.40",
 		"clsx": "^2.1.1",

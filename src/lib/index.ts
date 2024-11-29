@@ -14,7 +14,6 @@ import HackedText from './components/HackedText.svelte';
 import Header from './components/Header.svelte';
 import Headroom from './components/Headroom.svelte';
 import Hero from './components/Hero.svelte';
-import Marquee from './components/Marquee.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import Search from './components/Search.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
@@ -48,7 +47,6 @@ export {
 	Hero,
 	Input,
 	Label,
-	Marquee,
 	MouseDrag,
 	Pagination,
 	Search,
