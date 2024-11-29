@@ -67,8 +67,8 @@ const config: Config = {
 			keyframes: {
 				'border-width': {
 					from: {
-						width: '10%',
-						opacity: '0'
+						width: '60%',
+						opacity: '0.8'
 					},
 					to: {
 						width: '100%',

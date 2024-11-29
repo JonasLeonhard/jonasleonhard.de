@@ -3,8 +3,9 @@
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
 	import { inview } from 'svelte-inview';
+	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
 
-	import { useLink, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
+	import { useLink, ProjectTeaser, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
 
 	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
@@ -19,6 +20,9 @@
 	let currentDescIndex = $state(0);
 	let visibleProjectsHeadline = $state(false);
 	let visibleProject01 = $state(false);
+	let visibleProject02 = $state(false);
+	let visibleProject03 = $state(false);
+	let visibleProject04 = $state(false);
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -120,26 +124,102 @@
 		/>
 	</div>
 
-	<div class="mb-40 h-screen transition-all duration-1000" class:opacity-0={!visibleProject01}>
-		<h4
-			class="font-mono text-4xl"
-			use:inview={{ threshold: 0, rootMargin: '-50% 0% 50% 0%' }}
-			oninview_change={(event) => {
-				visibleProject01 = !event.detail.inView;
-			}}
+	<!-- these enter when in the viewport -->
+	<div
+		class="mb-40 transition-all duration-1000"
+		class:opacity-0={!visibleProject01}
+		use:inview={{ threshold: 0.1 }}
+		oninview_change={(event) => {
+			visibleProject01 = event.detail.inView;
+		}}
+	>
+		<ProjectTeaser
+			href="/?TODO=true"
+			headline="Buerkert"
+			description="B2B Ecommerce Platform in Vue"
+			company="Fork"
+			pageUrl="buerkert.de"
+			year="2021-2024"
 		>
-			Project 01
-		</h4>
+			<enhanced:img
+				class="h-full w-full object-cover"
+				src={someStaticImage}
+				alt="describe what can be seeon here!"
+			/>
+		</ProjectTeaser>
 	</div>
 
-	<!-- these enter when in the viewport -->
-	<div class="mb-40 h-screen">Project 01</div>
+	<div
+		class="mb-40 transition-all duration-1000"
+		class:opacity-0={!visibleProject02}
+		use:inview={{ threshold: 0.1 }}
+		oninview_change={(event) => {
+			visibleProject02 = event.detail.inView;
+		}}
+	>
+		<ProjectTeaser
+			href="/?TODO=true"
+			headline="Hapeko"
+			description="Personal Beratung und Jobbörse"
+			company="Fork"
+			pageUrl="hapeko.de"
+			year="2023-2024"
+		>
+			<enhanced:img
+				class="h-full w-full object-cover"
+				src={someStaticImage}
+				alt="describe what can be seeon here!"
+			/>
+		</ProjectTeaser>
+	</div>
 
-	<div class="mb-40 h-screen">Project 01</div>
+	<div
+		class="mb-40 transition-all duration-1000"
+		class:opacity-0={!visibleProject03}
+		use:inview={{ threshold: 0.1 }}
+		oninview_change={(event) => {
+			visibleProject03 = event.detail.inView;
+		}}
+	>
+		<ProjectTeaser
+			href="/?TODO=true"
+			headline="Futurium"
+			description="Futuristic Museum right in the hearth of Berlin"
+			company="Fork"
+			pageUrl="futurium.de"
+			year="2021-2022"
+		>
+			<enhanced:img
+				class="h-full w-full object-cover"
+				src={someStaticImage}
+				alt="describe what can be seeon here!"
+			/>
+		</ProjectTeaser>
+	</div>
 
-	<div class="mb-40 h-screen">Project 01</div>
-
-	<div class="mb-40 h-screen">Project 01</div>
+	<div
+		class="mb-40 transition-all duration-1000"
+		class:opacity-0={!visibleProject04}
+		use:inview={{ threshold: 0.1 }}
+		oninview_change={(event) => {
+			visibleProject04 = event.detail.inView;
+		}}
+	>
+		<ProjectTeaser
+			href="/?TODO=true"
+			headline="Landesanstalt für Medien"
+			description="Zebra"
+			company="Fork"
+			year="2020"
+			pageUrl="fragzebra.de"
+		>
+			<enhanced:img
+				class="h-full w-full object-cover"
+				src={someStaticImage}
+				alt="describe what can be seeon here!"
+			/>
+		</ProjectTeaser>
+	</div>
 </section>
 
 <Marqueeck
