@@ -218,7 +218,7 @@
 				<h2 class="mb-6 font-mono text-lg font-semibold uppercase text-foreground/80">Read More</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
-						<a use:useLink href="/blog" class="hover:text-accent hover:underline">Blog</a>
+						<a use:useLink href="/c" class="hover:text-accent hover:underline">Blog</a>
 					</li>
 					<li class="mb-4">
 						<a use:useLink href="/resources" class="hover:text-accent hover:underline">Resources</a>

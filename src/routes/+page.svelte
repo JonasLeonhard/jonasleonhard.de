@@ -90,8 +90,8 @@
 		I don't know how you found me. But does it matter? You found gold!
 	</p>
 	<p class="mr-auto mt-auto flex gap-14">
-		<a href="/blog" class="underline hover:text-accent">blog</a>
-		<a href="/about#projects" class="underline hover:text-accent">projects</a>
+		<a href="/c" class="underline hover:text-accent">blog</a>
+		<a href="/#projects" class="underline hover:text-accent">projects</a>
 		<a href="/contact" class="underline hover:text-accent">contact</a>
 	</p>
 </section>
@@ -110,6 +110,7 @@
 
 <section class="container mx-auto mb-40 mt-[50vh]">
 	<div
+		id="projects"
 		class="mb-40 transition-all duration-1000"
 		class:opacity-0={!visibleProjectsHeadline}
 		use:inview={{ threshold: 0, rootMargin: '-60% 0% 50% 0%' }}
@@ -284,7 +285,7 @@
 		</BentoGrid>
 	</div>
 
-	<a use:useLink href="/blog" class="hover:text-accent hover:underline">View All</a>
+	<a use:useLink href="/c" class="hover:text-accent hover:underline">View All</a>
 </section>
 
 <div
@@ -298,7 +299,7 @@
 <div>
 	<a
 		use:useLink
-		href="/about#projects"
+		href="/#projects"
 		class="group mx-auto mb-6 flex justify-center text-center text-muted-foreground hover:text-accent hover:underline"
 	>
 		Trusted by Teams around the world <ChevronRight

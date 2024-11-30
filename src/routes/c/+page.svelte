@@ -10,7 +10,7 @@
 
 <section class="container mx-auto">
 	<div class="prose dark:prose-invert">
-		<h1>Blog Posts</h1>
+		<h1>Content</h1>
 		{#each data.posts as post}
 			<a use:useLink class="block underline hover:text-accent" href={post.href}>
 				{post.title} - {post.publishDate.toLocaleDateString()}

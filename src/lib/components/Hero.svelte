@@ -34,7 +34,7 @@
 			{/if}
 
 			{#each metadata.tags as tag}
-				<a use:useLink href={`/blog?tag=${tag}`} class={badgeVariants({ variant: 'default' })}>
+				<a use:useLink href={`/c?tag=${tag}`} class={badgeVariants({ variant: 'default' })}>
 					#{tag}
 				</a>
 			{/each}
