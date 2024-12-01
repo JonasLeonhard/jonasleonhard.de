@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Headroom, ClipboardCopy, Search, ThemeToggle, BreadCrumbs } from '$lib';
-	import { Rss, Check, Menu } from 'lucide-svelte';
+	import { Headroom, ClipboardCopy, ThemeToggle, MouseDrag, BreadCrumbs } from '$lib';
+	import { Rss, Check, Menu, Search } from 'lucide-svelte';
 </script>
 
 <Headroom offset={40} tolerance={180}>
@@ -25,7 +25,11 @@
 					{/snippet}
 				</ClipboardCopy>
 
-				<Search />
+				<a href="/c" class="flex h-8 w-8 items-center justify-center">
+					<MouseDrag>
+						<Search />
+					</MouseDrag>
+				</a>
 
 				<ThemeToggle />
 			</div>

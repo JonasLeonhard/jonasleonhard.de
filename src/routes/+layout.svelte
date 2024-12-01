@@ -76,6 +76,7 @@
 	<main class="min-h-[calc(100vh-15rem)] flex-grow">
 		{@render children()}
 	</main>
-	<Footer />
 	<Toaster />
 </div>
+
+<Footer />

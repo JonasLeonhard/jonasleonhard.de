@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useLink } from '$lib';
+	import { useLink, Search } from '$lib';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -9,6 +9,8 @@
 </script>
 
 <section class="container mx-auto">
+	<Search />
+
 	<div class="prose dark:prose-invert">
 		<h1>Content</h1>
 		{#each data.posts as post}

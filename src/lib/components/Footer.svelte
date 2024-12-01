@@ -2,6 +2,7 @@
 	import { spring } from 'svelte/motion';
 	import { ClipboardCopy, MouseDrag, GridPattern, cn, useLink } from '$lib';
 	import { Rss, Check } from 'lucide-svelte';
+	import Marqueeck from '@arisbh/marqueeck';
 
 	const currentGitHash = import.meta.env.VITE_CURRENT_GIT_HASH;
 	const date = new Date().getFullYear();
@@ -114,41 +115,35 @@
 	</svg>
 {/snippet}
 
-<footer class="relative">
-	<div class="relative px-4 py-2 pt-8 md:flex md:items-center md:justify-between">
-		<div
-			class="absolute left-[50%] top-0 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
-		></div>
+<Marqueeck
+	class="border border-muted"
+	--marqueeck-padding-y="2rem"
+	options={{ paddingX: 200, gap: 10, speed: 5 }}
+>
+	<div class="mr-auto flex w-max pl-4 pr-4 text-sm text-foreground">
+		<span class="w-max text-sm text-muted-foreground">{date} Jonas Leonhard -</span>
+		<a
+			use:useLink
+			class="pl-2 text-muted-foreground hover:text-accent"
+			href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
+			target="_blank"
+			>{currentGitHash?.slice(0, 7)}
+		</a>
+	</div>
+	<svelte:fragment slot="separator"><span class="text-muted-foreground">©</span></svelte:fragment>
+</Marqueeck>
 
-		<div class="flex w-max pr-4 text-sm text-foreground">
-			<span class="w-max">© {date} Jonas Leonhard -</span>
-			<a
-				use:useLink
-				class="pl-2 hover:text-accent"
-				href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
-				target="_blank"
-				>{currentGitHash?.slice(0, 7)}
-			</a>
-		</div>
-		<div class="relative w-full">
-			<div
-				class="absolute -top-[10px]"
-				style="
-							left: {$ferrisX}%;
-							transform: translateY({Math.sin($ferrisX * 3)}px)
-												rotate({Math.sin($ferrisX * 1.5) * 5}deg)
-					"
-			>
-				{@render FerrisRustIcon()}
-			</div>
-		</div>
-		<div class="ml-auto mt-4 flex space-x-5 pl-4 sm:justify-center md:mt-0 rtl:space-x-reverse">
+<footer class="relative shadow-inner">
+	<div
+		class="mt-px-4 container relative mx-auto pb-2 pt-12 md:flex md:items-center md:justify-between"
+	>
+		<div class="mt-4 flex space-x-5 sm:justify-center md:mt-0 rtl:space-x-reverse">
 			<MouseDrag>
 				<a
 					use:useLink
 					href="https://github.com/JonasLeonhard"
 					target="_blank"
-					class="text-foreground hover:text-accent"
+					class="text-foreground"
 				>
 					{@render GithubIcon()}
 					<span class="sr-only">GitHub account</span>
@@ -165,10 +160,10 @@
 			</ClipboardCopy>
 		</div>
 	</div>
-	<div class="container mx-auto w-full">
+	<div class="container mx-auto mt-4 w-full">
 		<div class="grid grid-cols-2 gap-8 py-6 md:grid-cols-4 lg:py-8">
 			<div>
-				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">About Me</h2>
+				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">About Me</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
@@ -185,7 +180,7 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">Contact</h2>
+				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">Contact</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a
@@ -203,7 +198,7 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 font-mono text-sm font-semibold uppercase text-foreground/80">Boring</h2>
+				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">Boring</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
 						<a use:useLink href="/credits" class="hover:text-accent hover:underline">Credits</a>
@@ -215,13 +210,17 @@
 			</div>
 
 			<div>
-				<h2 class="mb-6 font-mono text-lg font-semibold uppercase text-foreground/80">Read More</h2>
+				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+					Read More
+				</h2>
 				<ul class="font-medium text-foreground/60">
 					<li class="mb-4">
-						<a use:useLink href="/c" class="hover:text-accent hover:underline">Blog</a>
+						<a use:useLink href="/c?q=articles" class="hover:text-accent hover:underline">Blog</a>
 					</li>
 					<li class="mb-4">
-						<a use:useLink href="/resources" class="hover:text-accent hover:underline">Resources</a>
+						<a use:useLink href="/c?q=resources" class="hover:text-accent hover:underline"
+							>Resources</a
+						>
 					</li>
 					<li class="mb-4 text-accent">
 						<a use:useLink href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
@@ -230,12 +229,27 @@
 			</div>
 		</div>
 
-		<GridPattern
-			width={35}
-			height={35}
-			class={cn(
-				'mx-auto max-w-[1500px] [mask-image:linear-gradient(to_top_left,white,transparent,transparent)] '
-			)}
-		/>
+		<div class="relative w-full">
+			<div
+				class="absolute -top-[10px]"
+				style="
+							left: {$ferrisX}%;
+							transform: translateY({Math.sin($ferrisX * 3)}px)
+												rotate({Math.sin($ferrisX * 1.5) * 5}deg)
+					"
+			>
+				{@render FerrisRustIcon()}
+			</div>
+		</div>
 	</div>
+
+	<GridPattern
+		width={35}
+		height={35}
+		class={cn('mx-auto [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] ')}
+	/>
+	<div
+		class="absolute top-0 -z-10 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
+	></div>
+	<div class="absolute top-0 -z-10 h-full w-full bg-gradient-to-b from-muted to-transparent"></div>
 </footer>
