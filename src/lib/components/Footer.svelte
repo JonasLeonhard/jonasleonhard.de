@@ -115,23 +115,26 @@
 	</svg>
 {/snippet}
 
-<Marqueeck
-	class="border border-muted"
-	--marqueeck-padding-y="2rem"
-	options={{ paddingX: 200, gap: 10, speed: 5 }}
->
-	<div class="mr-auto flex w-max pl-4 pr-4 text-sm text-foreground">
-		<span class="w-max text-sm text-muted-foreground">{date} Jonas Leonhard -</span>
-		<a
-			use:useLink
-			class="pl-2 text-muted-foreground hover:text-accent"
-			href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
-			target="_blank"
-			>{currentGitHash?.slice(0, 7)}
-		</a>
-	</div>
-	<svelte:fragment slot="separator"><span class="text-muted-foreground">©</span></svelte:fragment>
-</Marqueeck>
+<div class="w-screen overflow-hidden">
+	<Marqueeck
+		class="w-full border border-muted"
+		--marqueeck-padding-y="2rem"
+		options={{ paddingX: 200, gap: 10, speed: 5 }}
+	>
+		<div class="mr-auto flex w-max pl-4 pr-4 text-sm text-foreground">
+			<span class="w-max text-sm text-muted-foreground">{date} Jonas Leonhard -</span>
+			<a
+				use:useLink
+				class="pl-2 text-muted-foreground hover:text-accent"
+				href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
+				target="_blank"
+				>{currentGitHash?.slice(0, 7)}
+			</a>
+		</div>
+		<svelte:fragment slot="separator"><span class="text-muted-foreground">©</span></svelte:fragment
+		>
+	</Marqueeck>
+</div>
 
 <div class="relative h-[360px]" style="clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%)">
 	<div class="fixed bottom-0 h-[360px] w-full">
