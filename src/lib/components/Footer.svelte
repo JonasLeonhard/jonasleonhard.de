@@ -133,123 +133,144 @@
 	<svelte:fragment slot="separator"><span class="text-muted-foreground">©</span></svelte:fragment>
 </Marqueeck>
 
-<footer class="relative shadow-inner">
-	<div
-		class="mt-px-4 container relative mx-auto pb-2 pt-12 md:flex md:items-center md:justify-between"
-	>
-		<div class="mt-4 flex space-x-5 sm:justify-center md:mt-0 rtl:space-x-reverse">
-			<MouseDrag>
-				<a
-					use:useLink
-					href="https://github.com/JonasLeonhard"
-					target="_blank"
-					class="text-foreground"
-				>
-					{@render GithubIcon()}
-					<span class="sr-only">GitHub account</span>
-				</a>
-			</MouseDrag>
-
-			<ClipboardCopy clipboard={`TODO->rss.xml`}>
-				{#snippet copy()}
-					<div title="Rss copy to clipboard"><Rss /></div>
-				{/snippet}
-				{#snippet copied()}
-					<div title="Rss copied!"><Check /></div>
-				{/snippet}
-			</ClipboardCopy>
-		</div>
-	</div>
-	<div class="container mx-auto mt-4 w-full">
-		<div class="grid grid-cols-2 gap-8 py-6 md:grid-cols-4 lg:py-8">
-			<div>
-				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">About Me</h2>
-				<ul class="font-medium text-foreground/60">
-					<li class="mb-4">
-						<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
-					</li>
-					<li class="mb-4">
-						<a use:useLink href="/about#career" class="hover:text-accent hover:underline">Career</a>
-					</li>
-					<li class="mb-4">
-						<a use:useLink href="/about#projects" class="hover:text-accent hover:underline"
-							>Projects</a
-						>
-					</li>
-				</ul>
-			</div>
-
-			<div>
-				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">Contact</h2>
-				<ul class="font-medium text-foreground/60">
-					<li class="mb-4">
+<div class="relative h-[360px]" style="clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%)">
+	<div class="fixed bottom-0 h-[360px] w-full">
+		<footer class="relative shadow-inner">
+			<div
+				class="mt-px-4 container relative mx-auto pb-2 pt-12 md:flex md:items-center md:justify-between"
+			>
+				<div class="mt-4 flex space-x-5 sm:justify-center md:mt-0 rtl:space-x-reverse">
+					<MouseDrag>
 						<a
 							use:useLink
-							href="https://discord.com/users/519622137351372816"
+							href="https://github.com/JonasLeonhard"
 							target="_blank"
-							class="hover:text-accent hover:underline">Write me on Discord</a
+							class="text-foreground"
 						>
-					</li>
-					<li class="mb-4">
-						<a use:useLink href="/contact" class="hover:text-accent hover:underline">Contact Form</a
-						>
-					</li>
-				</ul>
-			</div>
+							{@render GithubIcon()}
+							<span class="sr-only">GitHub account</span>
+						</a>
+					</MouseDrag>
 
-			<div>
-				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">Boring</h2>
-				<ul class="font-medium text-foreground/60">
-					<li class="mb-4">
-						<a use:useLink href="/credits" class="hover:text-accent hover:underline">Credits</a>
-					</li>
-					<li class="mb-4">
-						<a use:useLink href="/impressum" class="hover:text-accent hover:underline">Impressum</a>
-					</li>
-				</ul>
+					<ClipboardCopy clipboard={`TODO->rss.xml`}>
+						{#snippet copy()}
+							<div title="Rss copy to clipboard"><Rss /></div>
+						{/snippet}
+						{#snippet copied()}
+							<div title="Rss copied!"><Check /></div>
+						{/snippet}
+					</ClipboardCopy>
+				</div>
 			</div>
+			<div class="container mx-auto mt-4 w-full">
+				<div class="grid grid-cols-2 gap-8 py-6 md:grid-cols-4 lg:py-8">
+					<div>
+						<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							About Me
+						</h2>
+						<ul class="font-medium text-foreground/60">
+							<li class="mb-4">
+								<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
+							</li>
+							<li class="mb-4">
+								<a use:useLink href="/about#career" class="hover:text-accent hover:underline"
+									>Career</a
+								>
+							</li>
+							<li class="mb-4">
+								<a use:useLink href="/about#projects" class="hover:text-accent hover:underline"
+									>Projects</a
+								>
+							</li>
+						</ul>
+					</div>
 
-			<div>
-				<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
-					Read More
-				</h2>
-				<ul class="font-medium text-foreground/60">
-					<li class="mb-4">
-						<a use:useLink href="/c?q=articles" class="hover:text-accent hover:underline">Blog</a>
-					</li>
-					<li class="mb-4">
-						<a use:useLink href="/c?q=resources" class="hover:text-accent hover:underline"
-							>Resources</a
-						>
-					</li>
-					<li class="mb-4 text-accent">
-						<a use:useLink href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
-					</li>
-				</ul>
-			</div>
-		</div>
+					<div>
+						<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							Contact
+						</h2>
+						<ul class="font-medium text-foreground/60">
+							<li class="mb-4">
+								<a
+									use:useLink
+									href="https://discord.com/users/519622137351372816"
+									target="_blank"
+									class="hover:text-accent hover:underline">Write me on Discord</a
+								>
+							</li>
+							<li class="mb-4">
+								<a use:useLink href="/contact" class="hover:text-accent hover:underline"
+									>Contact Form</a
+								>
+							</li>
+						</ul>
+					</div>
 
-		<div class="relative w-full">
-			<div
-				class="absolute -top-[10px]"
-				style="
+					<div>
+						<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							Boring
+						</h2>
+						<ul class="font-medium text-foreground/60">
+							<li class="mb-4">
+								<a use:useLink href="/credits" class="hover:text-accent hover:underline">Credits</a>
+							</li>
+							<li class="mb-4">
+								<a use:useLink href="/impressum" class="hover:text-accent hover:underline"
+									>Impressum</a
+								>
+							</li>
+						</ul>
+					</div>
+
+					<div>
+						<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							Read More
+						</h2>
+						<ul class="font-medium text-foreground/60">
+							<li class="mb-4">
+								<a use:useLink href="/c?q=articles" class="hover:text-accent hover:underline"
+									>Blog</a
+								>
+							</li>
+							<li class="mb-4">
+								<a use:useLink href="/c?q=resources" class="hover:text-accent hover:underline"
+									>Resources</a
+								>
+							</li>
+							<li class="mb-4 text-accent">
+								<a use:useLink href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="relative w-full">
+					<div
+						class="absolute -top-[10px]"
+						style="
 							left: {$ferrisX}%;
 							transform: translateY({Math.sin($ferrisX * 3)}px)
 												rotate({Math.sin($ferrisX * 1.5) * 5}deg)
 					"
-			>
-				{@render FerrisRustIcon()}
+					>
+						{@render FerrisRustIcon()}
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
 
-	<GridPattern
-		width={35}
-		height={35}
-		class={cn('mx-auto [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] ')}
-	/>
-	<div
-		class="absolute top-0 -z-10 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
-	></div>
-	<div class="absolute top-0 -z-10 h-full w-full bg-gradient-to-b from-muted to-transparent"></div>
-</footer>
+			<GridPattern
+				width={35}
+				height={35}
+				class={cn(
+					'mx-auto [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
+				)}
+			/>
+			<div
+				class="absolute top-0 -z-10 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
+			></div>
+			<div
+				class="absolute top-0 -z-10 h-full w-full bg-gradient-to-b from-muted to-transparent"
+			></div>
+		</footer>
+	</div>
+</div>
