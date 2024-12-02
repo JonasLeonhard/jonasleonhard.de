@@ -11,7 +11,7 @@
 	let scrollY = $state(0);
 	let time = $state(0);
 	const fadeoutProgress = spring(1, {
-		stiffness: 0.01,
+		stiffness: 0.03,
 		damping: 0.8
 	});
 	let hasTriggeredFadeout = $state(false);
