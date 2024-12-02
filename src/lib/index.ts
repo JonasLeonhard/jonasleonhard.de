@@ -17,6 +17,7 @@ import Hero from './components/Hero.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import ProjectTeaser from './components/ProjectTeaser.svelte';
 import Search from './components/Search.svelte';
+import SearchTeaser from './components/SearchTeaser.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
 import { Badge, badgeVariants } from './components/ui/badge';
 import { Button } from './components/ui/button';
@@ -49,9 +50,10 @@ export {
 	Input,
 	Label,
 	MouseDrag,
-	ProjectTeaser,
 	Pagination,
+	ProjectTeaser,
 	Search,
+	SearchTeaser,
 	Skeleton,
 	ThemeToggle,
 	Toaster,

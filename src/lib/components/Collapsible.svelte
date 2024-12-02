@@ -15,10 +15,7 @@
 	let isExpanded = $state(false);
 </script>
 
-<button
-	class={cn('h-max border-b border-muted-foreground pb-2 pt-2 hover:bg-muted', className)}
-	onclick={() => (isExpanded = !isExpanded)}
->
+<button class={cn('h-max', className)} onclick={() => (isExpanded = !isExpanded)}>
 	{@render children()}
 
 	{#if isExpanded}
