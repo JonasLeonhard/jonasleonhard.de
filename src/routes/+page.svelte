@@ -101,9 +101,9 @@
 		<Circuit />
 		<T.PerspectiveCamera
 			makeDefault
-			position={[0, 0, lerp(scrollY, 400, 1400, 620, 550)]}
+			position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
 			fov={50}
-			rotation={[0, 0, lerp(scrollY, 400, 1400, 0, Math.PI / 10)]}
+			rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
 		/>
 	</Canvas>
 </div>

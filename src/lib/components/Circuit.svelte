@@ -28,9 +28,9 @@
 	});
 
 	$effect(() => {
-		if (scrollY < 400) {
+		if (scrollY < 0) {
 			fadeoutProgress.set(1);
-		} else if (scrollY >= 400) {
+		} else if (scrollY >= 0) {
 			fadeoutProgress.set(0);
 		}
 	});
