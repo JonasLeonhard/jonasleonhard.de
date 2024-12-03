@@ -131,8 +131,9 @@
 				>{currentGitHash?.slice(0, 7)}
 			</a>
 		</div>
-		<svelte:fragment slot="separator"><span class="text-muted-foreground">©</span></svelte:fragment
-		>
+		{#snippet separator()}
+				<span class="text-muted-foreground">©</span>
+			{/snippet}
 	</Marqueeck>
 </div>
 

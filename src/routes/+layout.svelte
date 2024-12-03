@@ -22,7 +22,7 @@
 	<link rel="canonical" href={`${import.meta.env.VITE_CANONICAL_URL}${$page.url.pathname}`} />
 	{#if data.metadata}
 		<meta data-pagefind-meta="author[content]" name="author" content={data.metadata.author} />
-		<meta property="og:title" content={data.metadata.title} />
+		<meta property="og:title" data-pagefind-sort="title[content]" content={data.metadata.title} />
 		<meta
 			data-pagefind-meta="description[content]"
 			property="og:description"
@@ -35,12 +35,14 @@
 		{/if}
 		<meta
 			data-pagefind-meta="publishDate[content]"
+			data-pagefind-sort="publishDate[content]"
 			property="article:published_time"
 			content={data.metadata.publishDate.toISOString()}
 		/>
 		{#if data.metadata.updatedDate}
 			<meta
 				data-pagefind-meta="updatedDate[content]"
+				data-pagefind-sort="updatedDate[content]"
 				property="article:modified_time"
 				content={data.metadata.updatedDate.toISOString()}
 			/>

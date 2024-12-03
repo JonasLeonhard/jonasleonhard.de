@@ -1,6 +1,7 @@
 // place files you want to import through the `$lib` alias in this folder.
 import * as Drawer from './components/ui/drawer';
 import * as Pagination from './components/ui/pagination';
+import * as Select from './components/ui/select';
 import BentoCard from './components/BentoCard.svelte';
 import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
@@ -54,6 +55,7 @@ export {
 	ProjectTeaser,
 	Search,
 	SearchTeaser,
+	Select,
 	Skeleton,
 	ThemeToggle,
 	Toaster,

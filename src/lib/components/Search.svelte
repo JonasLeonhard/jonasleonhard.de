@@ -1,9 +1,21 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
 	import { ChevronLeft, ChevronRight, BookA } from 'lucide-svelte';
-	import { Folder, Input, Badge, Pagination, Skeleton, SearchTeaser, send, receive } from '$lib';
+	import {
+		Folder,
+		Input,
+		Badge,
+		Label,
+		Pagination,
+		Select,
+		Skeleton,
+		SearchTeaser,
+		send,
+		receive
+	} from '$lib';
 	import { MediaQuery } from 'runed';
 	import { onMount } from 'svelte';
+	import type { Selected } from 'bits-ui';
 
 	interface PagefindResultItem {
 		id: string;
@@ -65,6 +77,10 @@
 	let searchInput = $state('');
 	let searchIsLoading = $state(false);
 	let searchResult: PagefindResult | undefined = $state();
+	let sortBy: Selected<unknown> | undefined = $state({
+		label: 'Publish Date desc',
+		value: 'publishDate-desc'
+	});
 	let paginationPage = $state(1);
 	const paginationSiblingCount = $derived(isDesktop.matches ? 1 : 0);
 	let paginatedSearchResults: PagefindResultItem[] = $derived(
@@ -93,21 +109,33 @@
 		unselectedTags = filters.tag || {};
 	}
 
-	async function performSearch(sInput: string | null, sTags: PagefindFilter) {
+	async function performSearch(
+		sInput: string | null,
+		sTags: PagefindFilter,
+		sSortBy: Selected<unknown> | undefined
+	) {
 		if (!pagefind) {
 			searchResult = undefined;
 			return;
 		}
 
 		searchIsLoading = true;
-		try {
-			searchResult = await pagefind.debouncedSearch(sInput, {
-				filters: {
-					tag: {
-						any: Object.keys(sTags)
-					}
+		const searchOpts = {
+			filters: {
+				tag: {
+					any: Object.keys(sTags)
 				}
-			});
+			},
+			sort: {} as { [key: string]: string }
+		};
+		if (sSortBy) {
+			const [key, val] = (sSortBy.value as string).split('-') || [];
+			if (key && val) {
+				searchOpts.sort[key] = val;
+			}
+		}
+		try {
+			searchResult = await pagefind.debouncedSearch(sInput, searchOpts);
 		} catch (error) {
 			console.error('Search failed:', error);
 			searchResult = undefined;
@@ -123,7 +151,7 @@
 		const filters = await pagefind.filters();
 		unselectedTags = filters.tag || {};
 		tags = {};
-		performSearch(searchInput, tags);
+		performSearch(searchInput, tags, sortBy);
 	}
 
 	onMount(() => {
@@ -131,7 +159,7 @@
 	});
 
 	$effect(() => {
-		performSearch(searchInput?.trim() === '' ? null : searchInput, tags);
+		performSearch(searchInput?.trim() === '' ? null : searchInput, tags, sortBy);
 	});
 </script>
 
@@ -171,7 +199,20 @@
 				<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
 			</div>
 
-			<div class="mb-8">TODO: date - asc | desc toggle</div>
+			<Select.Root bind:selected={sortBy}>
+				<Label for="sort">Sort by</Label>
+				<Select.Trigger class="mb-8 w-[180px]">
+					<Select.Value id="sort" placeholder="-" />
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Item value="publishDate-desc">Publish Date desc</Select.Item>
+					<Select.Item value="publishDate-asc">Publish Date asc</Select.Item>
+					<Select.Item value="title-asc">Title asc</Select.Item>
+					<Select.Item value="title-desc">Title desc</Select.Item>
+					<Select.Item value="updatedDate-desc">Publish Date desc</Select.Item>
+					<Select.Item selected value="updatedDate-asc">Publish Date asc</Select.Item>
+				</Select.Content>
+			</Select.Root>
 
 			<Folder class="mb-8" expanded name="Selected/">
 				<div class="flex flex-col gap-1">
