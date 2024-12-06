@@ -62,7 +62,7 @@
 		>
 	</h6>
 	<h3
-		class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+		class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-8xl lg:text-9xl"
 	>
 		Jonas Leonhard,
 	</h3>
@@ -72,7 +72,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-9xl text-transparent dark:from-white dark:to-white/40"
+					class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-8xl lg:text-9xl"
 				>
 					{description}
 				</h3>
@@ -86,9 +86,7 @@
 	class:opacity-0={scrollY > 250}
 	class:-translate-y-2={scrollY > 250}
 >
-	<p class="w-80 text-muted-foreground">
-		I don't know how you found me. But does it matter? You found gold!
-	</p>
+	<p class="w-80 text-muted-foreground">"programming <s>professionally</s> for fun since 2018"</p>
 	<p class="mr-auto mt-auto flex gap-14">
 		<a href="/c" class="underline hover:text-accent">blog</a>
 		<a href="/#projects" class="underline hover:text-accent">projects</a>
@@ -119,7 +117,7 @@
 		}}
 	>
 		<HackedText
-			class="w-max font-mono text-8xl"
+			class="w-max font-mono text-6xl lg:text-8xl"
 			text="Projects"
 			scrambled={!visibleProjectsHeadline}
 		/>
@@ -258,9 +256,9 @@
 </div>
 
 <section class="container mx-auto mb-40">
-	<HackedText class="mb-8 w-max font-mono text-8xl" text="Latest Posts" />
+	<HackedText class="mb-40 w-max font-mono text-6xl lg:text-8xl" text="Latest Posts" />
 
-	<div class="mb-6 flex items-center justify-center">
+	<div class="mb-16 flex items-center justify-center">
 		<BentoGrid>
 			{#each data.posts.slice(0, 4) as post, index}
 				<BentoCard
@@ -291,32 +289,9 @@
 </section>
 
 <div
-	class="text- mb-80 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
+	class="text- container mx-auto mb-80 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
 >
-	Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
+	"Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
 	ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt
-	aliquid vel perspiciatis praesentium vitae.
+	aliquid vel perspiciatis praesentium vitae."
 </div>
-
-<div>
-	<a
-		use:useLink
-		href="/#projects"
-		class="group mx-auto mb-6 flex justify-center text-center text-muted-foreground hover:text-accent hover:underline"
-	>
-		Trusted by Teams around the world <ChevronRight
-			class="w-4 transition-all group-hover:translate-x-1.5"
-		/>
-	</a>
-	<div class="mx-auto mb-14 flex w-max gap-24">
-		<Home />
-		<Home />
-		<Home />
-		<Home />
-		<Home />
-	</div>
-	<div
-		class="pointer-events-none relative mx-auto -mt-[18.8rem] h-[50rem] animate-pulse overflow-hidden transition-all [--color:#FD9644] [animation-duration:_8s] [mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)] before:absolute before:inset-0 before:size-full before:opacity-100 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_100%)] after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[50%] after:border-t after:border-[hsl(var(--border))] after:bg-background dark:before:opacity-60 dark:before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)]"
-	></div>
-</div>
-<br />

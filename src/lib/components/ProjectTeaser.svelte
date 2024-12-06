@@ -28,7 +28,7 @@
 		class="relative flex flex-col overflow-hidden bg-gradient-to-b from-muted to-background pl-8 pr-8 pt-8"
 		{href}
 	>
-		<h3 class="z-10 mb-2 font-mono text-3xl">{headline}</h3>
+		<h3 class="z-10 mb-2 max-w-[calc(100%-32px)] font-mono text-3xl">{headline}</h3>
 		<div class="z-10 mb-20">
 			<span class="font-mono">{company}, </span>
 			<span class="font-mono">{year}</span>
