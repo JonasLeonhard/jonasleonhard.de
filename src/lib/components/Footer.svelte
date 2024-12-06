@@ -132,8 +132,8 @@
 			</a>
 		</div>
 		{#snippet separator()}
-				<span class="text-muted-foreground">©</span>
-			{/snippet}
+			<span class="text-muted-foreground">©</span>
+		{/snippet}
 	</Marqueeck>
 </div>
 

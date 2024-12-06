@@ -1,25 +1,38 @@
 <script lang="ts">
 	import { MoveRight } from 'lucide-svelte';
 	import { Collapsible, Badge, useLink } from '$lib';
-
+	interface PagefindFilter {
+		[key: string]: number;
+	}
 	interface Props {
 		url?: string;
 		headline: string;
 		date: string;
 		excerpt: string;
 		tags?: string;
+		selectedTags?: PagefindFilter;
 		image?: string;
-		image_alt?: string;
+		imageAlt?: string;
 		author?: string;
 		description?: string;
 	}
 
-	const { headline, date, excerpt, tags, image, image_alt, author, description, url }: Props =
-		$props();
+	const {
+		headline,
+		date,
+		excerpt,
+		tags,
+		selectedTags,
+		image,
+		imageAlt,
+		author,
+		description,
+		url
+	}: Props = $props();
 </script>
 
 <div
-	class="group relative col-span-12 mb-10 max-w-screen-lg border border-muted-foreground/50 text-left transition-all duration-1000 hover:border-muted-foreground"
+	class="group relative col-span-12 mb-10 border border-muted-foreground/50 text-left transition-all duration-1000 hover:border-muted-foreground"
 >
 	<div
 		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
@@ -30,7 +43,7 @@
 		class="relative flex flex-col overflow-hidden bg-gradient-to-b from-muted to-background pl-8 pr-8 pt-8"
 	>
 		<a class="z-10" use:useLink href={url?.replace('.html', '')}>
-			<h3 class="mb-2 font-mono text-3xl">{headline}</h3>
+			<h3 class="mb-2 max-w-[calc(100%-32px)] font-mono text-3xl">{headline}</h3>
 			<div class="mb-20">
 				<span class="font-mono">{date}</span>
 				<span class="text-muted-foreground"> -- {@html excerpt}</span>
@@ -42,7 +55,11 @@
 				{#if tags}
 					<div class="col-span-1 mb-4 mt-2 flex flex-wrap gap-1">
 						{#each tags.split(',') as tag}
-							<Badge>
+							<Badge
+								variant={Object.keys(selectedTags || {}).includes(tag.trim())
+									? 'selected'
+									: 'default'}
+							>
 								{tag}
 							</Badge>
 						{/each}
@@ -58,7 +75,7 @@
 					<span class="font-mono text-muted-foreground">TEASER:</span>
 					<img
 						src={image}
-						alt={image_alt || 'Teaser Image'}
+						alt={imageAlt || 'Teaser Image'}
 						class="col-span-12 h-auto w-[150px] border border-muted-foreground"
 						width="150px"
 						loading="lazy"
@@ -80,7 +97,7 @@
 				{/if}
 
 				<a
-					class="mt-3 block w-full w-max text-accent underline"
+					class="mt-3 block w-max text-accent underline"
 					use:useLink
 					href={url?.replace('.html', '')}
 					class:flex={image}

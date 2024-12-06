@@ -7,7 +7,9 @@ export const badgeVariants = tv({
 		variant: {
 			default:
 				'bg-gradient-to-b from-secondary/10 to-secondary text-secondary-foreground hover:opacity-80',
-			destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80'
+			destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
+			selected:
+				'bg-gradient-to-b from-accent/10 to-accent text-secondary-foreground hover:opacity-80'
 		}
 	},
 	defaultVariants: {

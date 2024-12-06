@@ -185,144 +185,149 @@
 		<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
 	</div>
 
-	<!-- Filter Left -->
-	<div class="flex gap-4">
-		<div class="p-4">
-			<div class="mb-4 flex w-max justify-between pb-2 font-mono text-xs">
-				<div class="col-span-1 pr-20">Filter</div>
-				<button onmousedown={resetSearch} class="col-span-10 underline hover:text-accent"
-					>clear filters</button
+	<div class="@container/search_results">
+		<div class="flex flex-col gap-4 @xl/search_results:flex-row">
+			<!-- Filter Left -->
+			<div class="@xl/search_results:p-4">
+				<div
+					class="mb-4 flex w-full justify-between pb-2 font-mono text-xs @xl/search_results:w-max"
 				>
+					<div class="col-span-1 pr-20">Filter</div>
+					<button onmousedown={resetSearch} class="col-span-10 underline hover:text-accent"
+						>clear filters</button
+					>
+				</div>
+
+				<div class="mb-8">
+					<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
+				</div>
+
+				<Select.Root bind:selected={sortBy}>
+					<Label for="sort">Sort by</Label>
+					<Select.Trigger class="mb-8 w-full @xl/search_results:w-[180px]">
+						<Select.Value id="sort" placeholder="-" />
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Item value="publishDate-desc">Publish Date desc</Select.Item>
+						<Select.Item value="publishDate-asc">Publish Date asc</Select.Item>
+						<Select.Item value="title-desc">Title desc</Select.Item>
+						<Select.Item value="title-asc">Title asc</Select.Item>
+						<Select.Item value="updatedDate-desc">Updated Date desc</Select.Item>
+						<Select.Item selected value="updatedDate-asc">Updated Date asc</Select.Item>
+					</Select.Content>
+				</Select.Root>
+
+				<Folder class="mb-8" expanded name="Selected/">
+					<div class="flex flex-col gap-1">
+						{#each Object.entries(tags) as [key, value] (key)}
+							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
+								<Badge
+									class="cursor-pointer"
+									onmousedown={() => {
+										delete tags[key];
+										unselectedTags[key] = value;
+									}}
+								>
+									{key}
+									{value}
+								</Badge>
+							</div>
+						{/each}
+					</div>
+				</Folder>
+
+				<Folder class="mb-8" expanded name="Unselected/">
+					<div class="flex flex-col gap-1">
+						{#each Object.entries(unselectedTags) as [key, value] (key)}
+							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
+								<Badge
+									class="cursor-pointer opacity-50"
+									onmousedown={() => {
+										delete unselectedTags[key];
+										tags[key] = value;
+									}}
+								>
+									{key}
+									{value}
+								</Badge>
+							</div>
+						{/each}
+					</div>
+				</Folder>
 			</div>
 
-			<div class="mb-8">
-				<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
+			<!-- Results Right -->
+			<div
+				class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto font-mono text-xs @xl/search-results:p-4"
+			>
+				{#if searchIsLoading || !pagefind}
+					<Skeleton class="col-span-12 h-52 w-full" />
+				{:else if !searchResult?.results?.length}
+					<span class="w-max text-4xl">No search results</span>
+				{:else}
+					{#each paginatedSearchResults as result (result.id)}
+						{#await result.data()}
+							<Skeleton class="col-span-12 h-32 w-32" />
+						{:then data}
+							<SearchTeaser
+								headline={data.meta.title}
+								date={data.meta?.publishDate
+									? new Date(data.meta.publishDate).toLocaleDateString()
+									: '-'}
+								excerpt={data.excerpt}
+								selectedTags={tags}
+								tags={data.meta.tags}
+								image={data.meta.image}
+								imageAlt={data.meta.image_alt || 'teaser'}
+								author={data.meta?.author}
+								description={data.meta?.description}
+								url={data.meta?.url}
+							/>
+						{:catch error}
+							{error}
+						{/await}
+					{/each}
+				{/if}
 			</div>
-
-			<Select.Root bind:selected={sortBy}>
-				<Label for="sort">Sort by</Label>
-				<Select.Trigger class="mb-8 w-[180px]">
-					<Select.Value id="sort" placeholder="-" />
-				</Select.Trigger>
-				<Select.Content>
-					<Select.Item value="publishDate-desc">Publish Date desc</Select.Item>
-					<Select.Item value="publishDate-asc">Publish Date asc</Select.Item>
-					<Select.Item value="title-asc">Title asc</Select.Item>
-					<Select.Item value="title-desc">Title desc</Select.Item>
-					<Select.Item value="updatedDate-desc">Publish Date desc</Select.Item>
-					<Select.Item selected value="updatedDate-asc">Publish Date asc</Select.Item>
-				</Select.Content>
-			</Select.Root>
-
-			<Folder class="mb-8" expanded name="Selected/">
-				<div class="flex flex-col gap-1">
-					{#each Object.entries(tags) as [key, value] (key)}
-						<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
-							<Badge
-								class="cursor-pointer"
-								onmousedown={() => {
-									delete tags[key];
-									unselectedTags[key] = value;
-								}}
-							>
-								{key}
-								{value}
-							</Badge>
-						</div>
-					{/each}
-				</div>
-			</Folder>
-
-			<Folder class="mb-8" expanded name="Unselected/">
-				<div class="flex flex-col gap-1">
-					{#each Object.entries(unselectedTags) as [key, value] (key)}
-						<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
-							<Badge
-								class="cursor-pointer opacity-50"
-								onmousedown={() => {
-									delete unselectedTags[key];
-									tags[key] = value;
-								}}
-							>
-								{key}
-								{value}
-							</Badge>
-						</div>
-					{/each}
-				</div>
-			</Folder>
 		</div>
 
-		<!-- Results Right -->
-		<div
-			class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto p-4 font-mono text-xs"
-		>
-			{#if searchIsLoading || !pagefind}
-				<Skeleton class="col-span-12 h-52 w-full" />
-			{:else if !searchResult?.results?.length}
-				<span class="w-max text-4xl">No search results</span>
-			{:else}
-				{#each paginatedSearchResults as result (result.id)}
-					{#await result.data()}
-						<Skeleton class="col-span-12 h-32 w-32" />
-					{:then data}
-						<SearchTeaser
-							headline={data.meta.title}
-							date={data.meta?.publishDate
-								? new Date(data.meta.publishDate).toLocaleDateString()
-								: '-'}
-							excerpt={data.excerpt}
-							tags={data.meta.tags}
-							image={data.meta.image}
-							image_alt={data.meta.image_alt || 'teaser'}
-							author={data.meta?.author}
-							description={data.meta?.description}
-							url={data.meta?.url}
-						/>
-					{:catch error}
-						{error}
-					{/await}
-				{/each}
-			{/if}
-		</div>
+		{#if (searchResult?.results?.length || 0) > paginationPageSize}
+			<Pagination.Root
+				bind:page={paginationPage}
+				count={searchResult?.results?.length || 0}
+				perPage={paginationPageSize}
+				siblingCount={paginationSiblingCount}
+			>
+				{#snippet children({ pages, currentPage })}
+					<Pagination.Content>
+						<Pagination.Item>
+							<Pagination.PrevButton>
+								<ChevronLeft class="size-4" />
+								<span class="hidden sm:block">Previous</span>
+							</Pagination.PrevButton>
+						</Pagination.Item>
+						{#each pages as page (page.key)}
+							{#if page.type === 'ellipsis'}
+								<Pagination.Item>
+									<Pagination.Ellipsis />
+								</Pagination.Item>
+							{:else}
+								<Pagination.Item>
+									<Pagination.Link {page} isActive={currentPage === page.value}>
+										{page.value}
+									</Pagination.Link>
+								</Pagination.Item>
+							{/if}
+						{/each}
+						<Pagination.Item>
+							<Pagination.NextButton>
+								<span class="hidden sm:block">Next</span>
+								<ChevronRight class="size-4" />
+							</Pagination.NextButton>
+						</Pagination.Item>
+					</Pagination.Content>
+				{/snippet}
+			</Pagination.Root>
+		{/if}
 	</div>
-
-	{#if (searchResult?.results?.length || 0) > paginationPageSize}
-		<Pagination.Root
-			bind:page={paginationPage}
-			count={searchResult?.results?.length || 0}
-			perPage={paginationPageSize}
-			siblingCount={paginationSiblingCount}
-		>
-			{#snippet children({ pages, currentPage })}
-				<Pagination.Content>
-					<Pagination.Item>
-						<Pagination.PrevButton>
-							<ChevronLeft class="size-4" />
-							<span class="hidden sm:block">Previous</span>
-						</Pagination.PrevButton>
-					</Pagination.Item>
-					{#each pages as page (page.key)}
-						{#if page.type === 'ellipsis'}
-							<Pagination.Item>
-								<Pagination.Ellipsis />
-							</Pagination.Item>
-						{:else}
-							<Pagination.Item>
-								<Pagination.Link {page} isActive={currentPage === page.value}>
-									{page.value}
-								</Pagination.Link>
-							</Pagination.Item>
-						{/if}
-					{/each}
-					<Pagination.Item>
-						<Pagination.NextButton>
-							<span class="hidden sm:block">Next</span>
-							<ChevronRight class="size-4" />
-						</Pagination.NextButton>
-					</Pagination.Item>
-				</Pagination.Content>
-			{/snippet}
-		</Pagination.Root>
-	{/if}
 </div>
