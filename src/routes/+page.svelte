@@ -8,7 +8,7 @@
 	import { useLink, ProjectTeaser, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
 
-	import { Home, ChevronRight, MessageSquareMore } from 'lucide-svelte';
+	import { Home } from 'lucide-svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -270,16 +270,11 @@
 						? 'lg:col-span-1'
 						: 'lg:col-span-2'}"
 				>
-					{#snippet icon()}
-						<MessageSquareMore />
-					{/snippet}
-
-					<div class="m-auto self-center justify-self-center pb-12">
-						<enhanced:img src={post.coverImage.src} alt={post.coverImage.alt} class="h-auto w-12" />
-						<span class="absolute left-0 top-0 opacity-15"
-							>TODO: image beams circuit like from outside to image</span
-						>
-					</div>
+					<enhanced:img
+						src={post.coverImage.src}
+						alt={post.coverImage.alt}
+						class="h-full w-full object-cover"
+					/>
 				</BentoCard>
 			{/each}
 		</BentoGrid>

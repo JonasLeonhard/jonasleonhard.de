@@ -36,7 +36,7 @@
 		</div>
 
 		<div
-			class="rounded-r-l z-10 mx-10 translate-y-[10%] rounded-t-lg bg-gradient-to-b from-muted-foreground/50 to-transparent p-px shadow-2xl transition-all duration-500 group-hover:translate-y-0"
+			class="rounded-r-l z-10 translate-y-[10%] rounded-t-lg bg-gradient-to-b from-muted-foreground/50 to-transparent p-px shadow-2xl transition-all duration-500 group-hover:translate-y-0 lg:mx-10"
 		>
 			<div class="rounded-r-l rounded-t-lg bg-background">
 				<div class="flex flex-col items-center border-b border-muted bg-muted/50 py-2">
