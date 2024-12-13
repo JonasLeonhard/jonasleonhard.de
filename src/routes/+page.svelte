@@ -269,13 +269,7 @@
 					class="col-span-3 {index % 4 === 0 || index % 4 === 3
 						? 'lg:col-span-1'
 						: 'lg:col-span-2'}"
-				>
-					<enhanced:img
-						src={post.coverImage.src}
-						alt={post.coverImage.alt}
-						class="h-full w-full object-cover"
-					/>
-				</BentoCard>
+				></BentoCard>
 			{/each}
 		</BentoGrid>
 	</div>
