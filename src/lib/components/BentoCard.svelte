@@ -3,7 +3,6 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
 	import type { ClassValue } from 'clsx';
-	import type { Snippet } from 'svelte';
 	import { MoveRight } from 'lucide-svelte';
 
 	interface Props {
@@ -19,6 +18,7 @@
 
 <a
 	{href}
+	use:useLink
 	class={cn(
 		'group relative col-span-3 flex max-w-screen-lg flex-col border border-muted-foreground/50 bg-gradient-to-b from-muted to-background transition-all duration-1000 hover:border-muted-foreground',
 		className
@@ -41,15 +41,11 @@
 
 	<div
 		class={cn(
-			'pointer-events-none absolute bottom-0 z-10 flex w-full translate-y-10 transform-gpu flex-row items-center p-6 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
+			'pointer-events-none absolute bottom-0 z-10 ml-2.5 flex w-max translate-y-10 transform-gpu flex-row items-center justify-center gap-2 p-6 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
 		)}
 	>
-		<Button variant="ghost" size="sm" class="pointer-events-auto">
-			<a use:useLink {href} class="flex items-center justify-center gap-2">
-				{cta}
-				<MoveRight />
-			</a>
-		</Button>
+		{cta}
+		<MoveRight />
 	</div>
 	<div
 		class="absolute top-0 h-full w-full bg-[radial-gradient(100vh_circle_at_50%_-10%,hsl(var(--accent)),hsl(var(--background)))] opacity-0 transition-all duration-500 group-hover:opacity-50"

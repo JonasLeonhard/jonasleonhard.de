@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { MoveRight, Plus, ArrowLeft, ArrowRight, RotateCw } from 'lucide-svelte';
+	import { useLink } from '$lib/useLink.svelte';
 
 	interface Props {
 		href: string;
@@ -27,6 +28,7 @@
 	<a
 		class="relative flex flex-col overflow-hidden bg-gradient-to-b from-muted to-background pl-8 pr-8 pt-8"
 		{href}
+		use:useLink
 	>
 		<h3 class="z-10 mb-2 max-w-[calc(100%-32px)] font-mono text-3xl">{headline}</h3>
 		<div class="z-10 mb-20">

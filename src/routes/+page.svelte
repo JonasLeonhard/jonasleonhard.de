@@ -4,6 +4,7 @@
 	import { T } from '@threlte/core';
 	import { inview } from 'svelte-inview';
 	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
+	import { MediaQuery } from 'runed';
 
 	import { useLink, ProjectTeaser, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
@@ -23,6 +24,7 @@
 	let visibleProject02 = $state(false);
 	let visibleProject03 = $state(false);
 	let visibleProject04 = $state(false);
+	const isDesktop = new MediaQuery('(min-width: 1024px)');
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -52,19 +54,10 @@
 <svelte:window bind:scrollY />
 
 <section class="container mx-auto -mt-20 flex flex-col pb-60 pt-4">
-	<h6
-		class="mb-6 flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
-	>
-		Building Experiences at <a
-			class="underline hover:text-accent"
-			href="https://www.fork.de/"
-			target="_blank">Fork</a
-		>
-	</h6>
 	<h3
-		class="relative z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-8xl lg:text-9xl"
+		class="relative z-10 w-full max-w-3xl bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
 	>
-		Jonas Leonhard,
+		Jonas,
 	</h3>
 	<div class="relative h-[120px]">
 		{#each descriptions as description, index}
@@ -72,7 +65,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute left-0 top-0 z-10 w-full bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-8xl lg:text-9xl"
+					class="absolute left-0 top-0 z-10 w-full max-w-3xl bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
 				>
 					{description}
 				</h3>
@@ -85,12 +78,22 @@
 	class="container mx-auto flex w-full justify-between gap-60 transition-all duration-1000"
 	class:opacity-0={scrollY > 250}
 	class:-translate-y-2={scrollY > 250}
+	class:pointer-events-none={scrollY > 250}
+	aria-hidden={scrollY > 250}
 >
-	<p class="w-80 text-muted-foreground">"programming <s>professionally</s> for fun since 2018"</p>
-	<p class="mr-auto mt-auto flex gap-14">
-		<a href="/c" class="underline hover:text-accent">blog</a>
-		<a href="/#projects" class="underline hover:text-accent">projects</a>
-		<a href="/contact" class="underline hover:text-accent">contact</a>
+	<p class="mr-auto mt-auto flex gap-14 text-2xl">
+		<a href="/c" use:useLink class="underline hover:text-accent">blog</a>
+		<a href="/#projects" use:useLink class="underline hover:text-accent">projects</a>
+		<a href="/contact" use:useLink class="underline hover:text-accent">contact</a>
+	</p>
+	<p
+		class="flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+	>
+		Building Experiences at <a
+			class="underline hover:text-accent"
+			href="https://www.fork.de/"
+			target="_blank">Fork</a
+		>
 	</p>
 </section>
 
@@ -99,7 +102,11 @@
 		<Circuit />
 		<T.PerspectiveCamera
 			makeDefault
-			position={[0, 0, lerp(scrollY, 0, 1000, 620, 550)]}
+			position={[
+				isDesktop.matches ? lerp(scrollY, 0, 600, -200, 0) : 0,
+				0,
+				lerp(scrollY, 0, 1000, 620, 550)
+			]}
 			fov={50}
 			rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
 		/>

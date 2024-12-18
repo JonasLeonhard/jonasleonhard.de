@@ -46,6 +46,10 @@
 	to use?
 </p>
 
+<h2>Slow is smooth, and smooth is fast.</h2>
+
+<p>todo</p>
+
 <h2>Everyone has a Plan, until they get Punched in the Face.</h2>
 
 <p>

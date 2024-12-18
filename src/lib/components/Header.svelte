@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Headroom, ClipboardCopy, ThemeToggle, MouseDrag, BreadCrumbs } from '$lib';
+	import { Headroom, ClipboardCopy, ThemeToggle, MouseDrag, BreadCrumbs, useLink } from '$lib';
 	import { Rss, Check, Menu, Search } from 'lucide-svelte';
 </script>
 
@@ -25,7 +25,7 @@
 					{/snippet}
 				</ClipboardCopy>
 
-				<a href="/c" class="flex h-8 w-8 items-center justify-center">
+				<a href="/c" use:useLink class="flex h-8 w-8 items-center justify-center">
 					<MouseDrag>
 						<Search />
 					</MouseDrag>

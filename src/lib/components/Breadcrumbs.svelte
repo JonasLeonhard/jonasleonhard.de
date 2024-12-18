@@ -22,7 +22,12 @@
 
 				return acc;
 			},
-			[{ text: 'jonas', href: segments.length > 0 ? '/' : undefined } as Item]
+			[
+				{
+					text: $page.url.pathname === '/' ? 'hi!' : 'jonas',
+					href: segments.length > 0 ? '/' : undefined
+				} as Item
+			]
 		);
 	}
 </script>
