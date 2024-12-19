@@ -17,6 +17,7 @@
 	import { MediaQuery } from 'runed';
 	import { onMount } from 'svelte';
 	import type { Selected } from 'bits-ui';
+	import { page } from '$app/state';
 
 	interface PagefindResultItem {
 		id: string;
@@ -91,20 +92,8 @@
 		) || []
 	);
 
-	async function lazyLoadPagefind(initialized: Pagefind | null) {
-		if (initialized) {
-			return;
-		}
-		// INFO: This will throw an error if vite cannot find this script in static/pagefind/pagefind.js
-		// it gets installed after running 'bun run build'
-		// if this is the first time starting this app, run 'bun run build' first, to build a pagefind index
-		const _pagefind = (await import('/pagefind/pagefind.js?url')) as unknown as Pagefind;
-		await _pagefind.options({
-			baseUrl: import.meta.env.BASE_URL,
-			bundlePath: '/pagefind/'
-		});
-		_pagefind.init();
-		pagefind = _pagefind;
+	async function loadFilters() {
+		if (!pagefind) return;
 
 		const filters = await pagefind.filters();
 
@@ -122,6 +111,24 @@
 		} else {
 			unselectedTags = filters.tag || {};
 		}
+		tags = {};
+	}
+
+	async function lazyLoadPagefind(initialized: Pagefind | null) {
+		if (initialized) {
+			return;
+		}
+		// INFO: This will throw an error if vite cannot find this script in static/pagefind/pagefind.js
+		// it gets installed after running 'bun run build'
+		// if this is the first time starting this app, run 'bun run build' first, to build a pagefind index
+		const _pagefind = (await import('/pagefind/pagefind.js?url')) as unknown as Pagefind;
+		await _pagefind.options({
+			baseUrl: import.meta.env.BASE_URL,
+			bundlePath: '/pagefind/'
+		});
+		_pagefind.init();
+		pagefind = _pagefind;
+		await loadFilters();
 	}
 
 	async function performSearch(
@@ -169,9 +176,7 @@
 		if (!pagefind) return;
 
 		searchInput = '';
-		const filters = await pagefind.filters();
-		unselectedTags = filters.tag || {};
-		tags = {};
+		await loadFilters();
 		performSearch(searchInput, tags, sortBy);
 	}
 
