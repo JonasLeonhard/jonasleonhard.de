@@ -107,7 +107,21 @@
 		pagefind = _pagefind;
 
 		const filters = await pagefind.filters();
-		unselectedTags = filters.tag || {};
+
+		// filter out _DRAFT_ tags for production
+		if (!dev && filters.tag) {
+			unselectedTags = Object.entries(filters.tag).reduce(
+				(acc, [key, value]) => {
+					if (!key.startsWith('_DRAFT_')) {
+						acc[key] = value;
+					}
+					return acc;
+				},
+				{} as Record<string, number>
+			);
+		} else {
+			unselectedTags = filters.tag || {};
+		}
 	}
 
 	async function performSearch(
@@ -245,7 +259,7 @@
 
 				<Folder class="mb-8" expanded name="Unselected/">
 					<div class="flex flex-col gap-1">
-						{#each Object.entries(unselectedTags).filter(([key]) => dev || !key.startsWith('_DRAFT_')) as [key, value] (key)}
+						{#each Object.entries(unselectedTags) as [key, value] (key)}
 							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
 								<Badge
 									class="cursor-pointer opacity-50"
