@@ -8,9 +8,9 @@ import { getBlogMetadata, getMetadata } from '$lib/getMetadata';
  * Imports all svelte files, looks if the export a module that contains "metadata".
  * If so, we recognize them as a blogpost, and add them to our list
  */
-export const load: LayoutServerLoad = async ({ url }) => {
+export const load: LayoutServerLoad = async (event) => {
 	const posts = await getBlogMetadata();
-	const metadata = await getMetadata(url);
+	const metadata = await getMetadata(event);
 
 	return {
 		posts,
