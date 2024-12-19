@@ -1,5 +1,6 @@
 import type { MetaData } from '$lib';
 import type { ServerLoadEvent } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 
 export async function getBlogMetadata() {
 	const modules = import.meta.glob<MetaData>('/src/routes/c/**/+page.server.ts', {
@@ -30,11 +31,13 @@ export async function getBlogMetadata() {
 			.replace(/\([^)]+\)\//g, '') // Replaces any hidden routes like '(article)' followed by /
 			.replace('/+page.server.ts', '');
 
-		metadata.push({
-			...modMetadata,
-			href: routePath || '/',
-			type: getType(path)
-		});
+		if (dev || !modMetadata.draft) {
+			metadata.push({
+				...modMetadata,
+				href: routePath || '/',
+				type: getType(path)
+			});
+		}
 	}
 
 	return metadata.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());
@@ -57,9 +60,9 @@ export async function getMetadata(event: ServerLoadEvent) {
 		import: '_metadata'
 	});
 
-	const routeId = event.route.id;
+	let routeId = event.route.id;
 	if (!routeId) {
-		throw new Error('getMetadata: Route ID is missing');
+		routeId = '/'; // load the default +page.server.metadata for pages like +error
 	}
 
 	const metadataPath = `/src/routes${routeId == '/' ? '' : routeId}/+page.server.ts`;
