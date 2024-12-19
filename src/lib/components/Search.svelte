@@ -249,7 +249,7 @@
 										unselectedTags[key] = value;
 									}}
 								>
-									{key.replace('_DRAFT_', '').replace('_VISIBLE_', '')}
+									{key.replace('_VISIBLE_', '')}
 									{value}
 								</Badge>
 							</div>
@@ -268,7 +268,7 @@
 										tags[key] = value;
 									}}
 								>
-									{key.replace('_VISIBLE_', '').replace('_DRAFT_', '')}
+									{key.replace('_VISIBLE_', '')}
 									{value}
 								</Badge>
 							</div>
