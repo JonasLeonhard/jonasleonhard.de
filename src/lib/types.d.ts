@@ -1,5 +1,8 @@
 import { type Picture } from '@sveltejs/enhanced-img';
 
+/***
+ * getMetaData.ts expects that a page.server.ts exports "export _metadata: Metadata = ..." in order to build seo relevant data
+ */
 export type MetaData = {
 	title: string;
 	description: string;
