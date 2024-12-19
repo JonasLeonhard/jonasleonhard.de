@@ -5,7 +5,8 @@ import { getBlogMetadata } from '$lib/getMetadata';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
-	const body = render(await getBlogMetadata());
+	const metadata = (await getBlogMetadata()).filter((post) => !post.draft);
+	const body = render(metadata);
 
 	return new Response(String(body));
 };
