@@ -10,7 +10,10 @@
 	let { children, data }: Props = $props();
 </script>
 
-<article data-pagefind-body>
+<article
+	data-pagefind-body
+	data-pagefind-filter={data.metadata?.draft ? 'visibility:draft' : 'visibility:visible'}
+>
 	{#if data.metadata}
 		<Hero metadata={data.metadata} />
 	{/if}

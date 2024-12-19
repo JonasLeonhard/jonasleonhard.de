@@ -6,14 +6,13 @@ import coverImage from '$lib/assets/images/cover.png?enhanced';
 export const _metadata: MetaData = {
 	title: 'Example Post',
 	author: 'Jonas Leonhard',
-	description:
-		'Neovim - from basic setup, to advanced functionality, to writing your own config and plugins. The ultimate getting started guide.',
+	description: 'Example Article',
 	publishDate: new Date('10 May 2024'),
 	updatedDate: new Date('11 May 2024'),
-	tags: ['neovim', 'lua'],
+	tags: ['draft'],
 	coverImage: {
 		src: coverImage,
-		alt: 'Neovim, from zero to hero cover'
+		alt: 'Example alt'
 	},
 	draft: true
 };

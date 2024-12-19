@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
+	import { dev } from '$app/environment';
 	import { ChevronLeft, ChevronRight, BookA } from 'lucide-svelte';
 	import {
 		Folder,
@@ -124,6 +125,9 @@
 			filters: {
 				tag: {
 					any: Object.keys(sTags)
+				},
+				visibility: {
+					any: ['visible'] as ('visible' | 'draft')[]
 				}
 			},
 			sort: {} as { [key: string]: string }
@@ -133,6 +137,9 @@
 			if (key && val) {
 				searchOpts.sort[key] = val;
 			}
+		}
+		if (dev) {
+			searchOpts.filters.visibility.any = ['visible', 'draft']; // show draft articles in search for dev env
 		}
 		try {
 			searchResult = await pagefind.debouncedSearch(sInput, searchOpts);
@@ -228,7 +235,7 @@
 										unselectedTags[key] = value;
 									}}
 								>
-									{key}
+									{key.replace('_DRAFT_', '').replace('_VISIBLE_', '')}
 									{value}
 								</Badge>
 							</div>
@@ -238,7 +245,7 @@
 
 				<Folder class="mb-8" expanded name="Unselected/">
 					<div class="flex flex-col gap-1">
-						{#each Object.entries(unselectedTags) as [key, value] (key)}
+						{#each Object.entries(unselectedTags).filter(([key]) => dev || !key.startsWith('_DRAFT_')) as [key, value] (key)}
 							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
 								<Badge
 									class="cursor-pointer opacity-50"
@@ -247,7 +254,7 @@
 										tags[key] = value;
 									}}
 								>
-									{key}
+									{key.replace('_VISIBLE_', '').replace('_DRAFT_', '')}
 									{value}
 								</Badge>
 							</div>

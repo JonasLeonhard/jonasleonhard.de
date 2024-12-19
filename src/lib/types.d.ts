@@ -18,10 +18,14 @@ export type MetaData = {
 	};
 	draft: boolean;
 	tags: string[];
+	updatedDate?: Date;
 
 	/**
-	 * This will be set in getAllMetaData, and will not be set for a single pages metadata
+	 * This will be set when loading the metadata, you don't need to set this manually!
 	 **/
 	href?: string;
-	updatedDate?: Date;
+	/**
+	 * This will be set when loading the metadata, you don't need to set this manually!
+	 **/
+	type?: 'project' | 'article' | 'resource';
 };

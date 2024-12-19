@@ -51,12 +51,27 @@
 			<meta
 				data-pagefind-meta="tags[content]"
 				name="keywords"
-				content={data.metadata.tags.join(', ')}
+				content={[data.metadata?.type || 'article', ...data.metadata.tags].join(', ')}
 			/>
 			{#each data.metadata.tags as tag}
-				<meta data-pagefind-filter="tag[content]" content={tag} />
+				<meta
+					data-pagefind-filter="tag[content]"
+					content={`${data.metadata.draft ? '_DRAFT_' : '_VISIBLE_'}${tag}`}
+				/>
 			{/each}
 		{/if}
+
+		{#if data.metadata?.type}
+			<meta
+				data-pagefind-filter="tag[content]"
+				content={`${data.metadata.draft ? '_DRAFT_' : '_VISIBLE_'}${data.metadata.type}`}
+			/>
+		{/if}
+
+		<meta
+			data-pagefind-filter="visibility[content]"
+			content={data.metadata.draft ? 'draft' : 'visible'}
+		/>
 	{/if}
 
 	<link data-pagefind-meta="url[href]" href={$page.url.pathname} />

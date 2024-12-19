@@ -2,9 +2,10 @@ import type { MetaData } from '$lib';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 export async function getBlogMetadata() {
-	const modules = import.meta.glob<MetaData>('/src/routes/c/\\(article\\)/**/+page.server.ts', {
+	const modules = import.meta.glob<MetaData>('/src/routes/c/**/+page.server.ts', {
 		import: '_metadata'
 	});
+	const excluded = ['/src/routes/c/+page.server.ts']; // dont add this path to metadata
 
 	// Validate that all files have _metadata export
 	for (const path in modules) {
@@ -15,6 +16,10 @@ export async function getBlogMetadata() {
 
 	const metadata: MetaData[] = [];
 	for (const path in modules) {
+		if (excluded.includes(path)) {
+			continue;
+		}
+
 		const modMetadata = await modules[path]();
 		if (!modMetadata) {
 			throw new Error(`getBlogMetadata: missing export _metadata from +page.server.ts at ${path}`);
@@ -22,16 +27,29 @@ export async function getBlogMetadata() {
 
 		const routePath = path
 			.replace('/src/routes', '')
-			.replace('/(article)', '')
+			.replace(/\([^)]+\)\//g, '') // Replaces any hidden routes like '(article)' followed by /
 			.replace('/+page.server.ts', '');
 
 		metadata.push({
 			...modMetadata,
-			href: routePath || '/'
+			href: routePath || '/',
+			type: getType(path)
 		});
 	}
 
 	return metadata.sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());
+}
+
+function getType(path: string | null): MetaData['type'] {
+	if (path?.includes('(resource)')) {
+		return 'resource';
+	}
+
+	if (path?.includes('(project)')) {
+		return 'project';
+	}
+
+	return 'article';
 }
 
 export async function getMetadata(event: ServerLoadEvent) {
@@ -54,7 +72,8 @@ export async function getMetadata(event: ServerLoadEvent) {
 		}
 		return {
 			...modMetadata,
-			href: event.url.pathname || '/'
+			href: event.url.pathname || '/',
+			type: getType(event.route.id)
 		};
 	}
 
