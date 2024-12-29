@@ -19,6 +19,7 @@ import MouseDrag from './components/MouseDrag.svelte';
 import ProjectTeaser from './components/ProjectTeaser.svelte';
 import Search from './components/Search.svelte';
 import SearchTeaser from './components/SearchTeaser.svelte';
+import SearchPath from './components/SearchPath.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
 import { Badge, badgeVariants } from './components/ui/badge';
 import { Button } from './components/ui/button';
@@ -55,6 +56,7 @@ export {
 	ProjectTeaser,
 	Search,
 	SearchTeaser,
+	SearchPath,
 	Select,
 	Skeleton,
 	ThemeToggle,

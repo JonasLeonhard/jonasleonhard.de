@@ -2,6 +2,8 @@
 	import { flip } from 'svelte/animate';
 	import { dev } from '$app/environment';
 	import { ChevronLeft, ChevronRight, BookA } from 'lucide-svelte';
+	import { SearchPath } from '$lib';
+
 	import {
 		Folder,
 		Input,
@@ -17,7 +19,6 @@
 	import { MediaQuery } from 'runed';
 	import { onMount } from 'svelte';
 	import type { Selected } from 'bits-ui';
-	import { page } from '$app/state';
 
 	interface PagefindResultItem {
 		id: string;
@@ -200,6 +201,8 @@
 		<span class="text-green-600">Shorts</span>
 		<p class="absolute right-0 top-0">TODO: only color selected by tags</p>
 	</h3>
+
+	<SearchPath searchTerm={searchInput} />
 
 	<span
 		class="relative z-10 mx-auto mb-4 block w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
