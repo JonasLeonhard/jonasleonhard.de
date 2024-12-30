@@ -1,164 +1,185 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	interface Props {
-		searchTerm: string;
-	}
-	let { searchTerm }: Props = $props();
-	let canvas: HTMLCanvasElement;
-	let ctx: CanvasRenderingContext2D;
-	let isAnimating = $state(false);
-	let previousSearchTerm = '';
-	let animationFrame: number | undefined;
 
-	const GRID_SIZE = 24;
-	const CELL_SIZE = 12;
-	const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
-	const ANIMATION_DELAY = 25;
-	const START_POS: [number, number] = [Math.floor(GRID_SIZE / 2), GRID_SIZE - 4];
-	const END_POS: [number, number] = [Math.floor(GRID_SIZE / 2), 2];
-
-	type Position = [number, number];
-	type PathSegment = {
-		pos: Position;
-		type: 'main' | 'dead';
+	type Position = { x: number; y: number };
+	type PathCell = { pos: Position; type: 'main' | 'dead' };
+	type Path = {
+		cells: PathCell[];
+		currentIndex: number;
+		isActive: boolean;
 	};
 
-	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-	function generatePath(): PathSegment[] {
-		const segments: PathSegment[] = [];
-		let currentPos: Position = [...START_POS];
-
-		while (currentPos[1] > END_POS[1] + 1) {
-			// Stop one cell before the end point
-			const moveUp = Math.random() < 0.7;
-			const newPos: Position = [...currentPos];
-
-			if (moveUp) {
-				newPos[1]--;
-			} else {
-				newPos[0] += Math.random() < 0.5 ? -1 : 1;
-				newPos[0] = Math.max(2, Math.min(GRID_SIZE - 3, newPos[0]));
+	const CONFIG = {
+		GRID: {
+			SIZE: 24,
+			CELL_SIZE: 12
+		},
+		CANVAS_SIZE: 288, // 24 * 12
+		MAX_PATHS: 3,
+		ANIMATION_INTERVAL: 10,
+		POSITIONS: {
+			START: { x: 12, y: 20 } as Position,
+			END: { x: 12, y: 2 } as Position
+		},
+		COLORS: {
+			START: '#ef4444',
+			END: '#22c55e',
+			PATH: {
+				ACTIVE: { MAIN: '#eab308', DEAD: '#ca8a04' },
+				INACTIVE: { MAIN: '#9ca3af', DEAD: '#6b7280' }
 			}
+		}
+	} as const;
 
-			segments.push({ pos: newPos, type: 'main' });
-			currentPos = newPos;
+	let { searchTerm } = $props();
+	let canvas: HTMLCanvasElement;
+	let ctx: CanvasRenderingContext2D;
+	let paths: Path[] = [];
+	let animationInterval: Timer | undefined;
+	let previousTerm = '';
 
-			if (Math.random() < 0.15) {
-				const deadPos: Position = [
-					currentPos[0] + (Math.random() < 0.5 ? -1 : 1),
-					currentPos[1] + (Math.random() < 0.5 ? -1 : 1)
-				];
+	function isEndpoint(pos: Position): boolean {
+		const { START, END } = CONFIG.POSITIONS;
+		return (pos.x === START.x && pos.y === START.y) || (pos.x === END.x && pos.y === END.y);
+	}
 
-				if (
-					deadPos[0] >= 0 &&
-					deadPos[0] < GRID_SIZE &&
-					deadPos[1] >= 0 &&
-					deadPos[1] < GRID_SIZE &&
-					!(deadPos[0] === END_POS[0] && deadPos[1] === END_POS[1]) // Don't create dead ends on end point
-				) {
-					segments.push({ pos: deadPos, type: 'dead' });
+	function isValidPosition(pos: Position): boolean {
+		const { SIZE } = CONFIG.GRID;
+		return pos.x >= 0 && pos.x < SIZE && pos.y >= 0 && pos.y < SIZE && !isEndpoint(pos);
+	}
+
+	function generatePath(): PathCell[] {
+		const cells: PathCell[] = [];
+		let pos = { ...CONFIG.POSITIONS.START };
+
+		// Move up first
+		pos = { ...pos, y: pos.y - 1 };
+		cells.push({ pos: { ...pos }, type: 'main' });
+
+		// Random initial horizontal movement
+		if (Math.random() < 0.8) {
+			const direction = Math.random() < 0.5 ? -1 : 1;
+			const newPos = { x: pos.x + direction, y: pos.y };
+			if (!isEndpoint(newPos)) {
+				pos = newPos;
+				cells.push({ pos: { ...pos }, type: 'main' });
+			}
+		}
+
+		// Generate main path
+		while (pos.y > CONFIG.POSITIONS.END.y + 1) {
+			// Decide movement direction
+			const moveUp = Math.random() < 0.7;
+			const newPos = moveUp
+				? { ...pos, y: pos.y - 1 }
+				: {
+						x: Math.max(2, Math.min(CONFIG.GRID.SIZE - 3, pos.x + (Math.random() < 0.5 ? -1 : 1))),
+						y: pos.y
+					};
+
+			if (!isEndpoint(newPos)) {
+				cells.push({ pos: newPos, type: 'main' });
+				pos = newPos;
+
+				// Add occasional dead ends
+				if (Math.random() < 0.15) {
+					const deadEnd = {
+						x: pos.x + (Math.random() < 0.5 ? -1 : 1),
+						y: pos.y + (Math.random() < 0.5 ? -1 : 1)
+					};
+					if (isValidPosition(deadEnd)) {
+						cells.push({ pos: deadEnd, type: 'dead' });
+					}
 				}
 			}
 		}
 
-		// Add final horizontal segments to align with end point's X position, but stop one cell below
-		while (currentPos[0] !== END_POS[0]) {
-			const step = currentPos[0] < END_POS[0] ? 1 : -1;
-			currentPos = [currentPos[0] + step, currentPos[1]];
-			segments.push({ pos: currentPos, type: 'main' });
+		// Align with endpoint
+		while (pos.x !== CONFIG.POSITIONS.END.x) {
+			const step = pos.x < CONFIG.POSITIONS.END.x ? 1 : -1;
+			const newPos = { x: pos.x + step, y: pos.y };
+			if (!isEndpoint(newPos)) {
+				cells.push({ pos: newPos, type: 'main' });
+				pos = newPos;
+			}
 		}
 
-		return segments;
+		return cells;
+	}
+
+	function drawCell(pos: Position, color: string, glow = 0) {
+		if (!ctx) return;
+
+		ctx.fillStyle = color;
+		ctx.shadowColor = glow > 0 ? color : 'transparent';
+		ctx.shadowBlur = glow;
+
+		const { CELL_SIZE } = CONFIG.GRID;
+		ctx.fillRect(pos.x * CELL_SIZE, pos.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 	}
 
 	function drawEndpoints() {
-		if (!ctx) return;
-		// Draw start point (red)
-		ctx.fillStyle = '#ef4444';
-		ctx.shadowColor = '#ef4444';
-		ctx.shadowBlur = 4;
-		ctx.fillRect(START_POS[0] * CELL_SIZE, START_POS[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-
-		// Draw end point (green)
-		ctx.fillStyle = '#22c55e';
-		ctx.shadowColor = '#22c55e';
-		ctx.shadowBlur = 4;
-		ctx.fillRect(END_POS[0] * CELL_SIZE, END_POS[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-
+		const { START, END } = CONFIG.POSITIONS;
+		const { COLORS } = CONFIG;
+		drawCell(START, COLORS.START, 4);
+		drawCell(END, COLORS.END, 4);
 		ctx.shadowBlur = 0;
-		ctx.shadowColor = 'transparent';
 	}
 
-	function clearCanvas() {
+	function drawPaths() {
 		if (!ctx) return;
+
+		// Clear and draw endpoints
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		drawEndpoints();
+
+		// Draw all paths
+		paths.forEach((path) => {
+			path.cells
+				.slice(0, path.currentIndex)
+				.filter((cell) => !isEndpoint(cell.pos))
+				.forEach((cell) => {
+					const colors = path.isActive ? CONFIG.COLORS.PATH.ACTIVE : CONFIG.COLORS.PATH.INACTIVE;
+					const color = cell.type === 'main' ? colors.MAIN : colors.DEAD;
+					const glow = cell.type === 'main' ? (path.isActive ? 4 : 2) : 0;
+					drawCell(cell.pos, color, glow);
+				});
+		});
 	}
 
-	async function drawDefaultPath() {
-		if (!ctx) return;
-		clearCanvas();
-
-		const segments = generatePath();
-		for (const segment of segments) {
-			const [x, y] = segment.pos;
-			if (segment.type === 'main') {
-				ctx.fillStyle = '#9ca3af'; // gray-400
-				ctx.shadowColor = '#9ca3af';
-				ctx.shadowBlur = 4;
-			} else {
-				ctx.fillStyle = '#6b7280'; // gray-500
-				ctx.shadowBlur = 0;
-			}
-			ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-			await sleep(ANIMATION_DELAY);
+	function startNewPath() {
+		// Clear existing animation
+		if (animationInterval) {
+			clearInterval(animationInterval);
 		}
 
-		ctx.shadowBlur = 0;
-	}
+		// Deactivate existing paths
+		paths = paths.map((path) => ({ ...path, isActive: false }));
 
-	async function animatePath() {
-		if (isAnimating || !ctx) return;
-		isAnimating = true;
-		clearCanvas();
+		const newPath: Path = {
+			cells: generatePath(),
+			currentIndex: 0,
+			isActive: true
+		};
 
-		const segments = generatePath();
-		for (const segment of segments) {
-			const [x, y] = segment.pos;
-			if (segment.type === 'main') {
-				ctx.fillStyle = '#eab308'; // yellow-500
-				ctx.shadowColor = '#eab308';
-				ctx.shadowBlur = 4;
+		paths = [...paths.slice(-(CONFIG.MAX_PATHS - 1)), newPath];
+
+		// Start animation
+		animationInterval = setInterval(() => {
+			const activePath = paths.find((p) => p.isActive);
+			if (activePath && activePath.currentIndex < activePath.cells.length) {
+				activePath.currentIndex++;
+				drawPaths();
 			} else {
-				ctx.fillStyle = '#ca8a04'; // yellow-600
-				ctx.shadowBlur = 0;
+				clearInterval(animationInterval);
 			}
-			ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-			await sleep(ANIMATION_DELAY);
-		}
-
-		ctx.shadowBlur = 0;
-		isAnimating = false;
+		}, CONFIG.ANIMATION_INTERVAL);
 	}
-
-	let isDebouncing = false;
 
 	$effect(() => {
-		if (searchTerm === previousSearchTerm) return;
-		previousSearchTerm = searchTerm;
-
-		if (isDebouncing || isAnimating) return;
-
-		isDebouncing = true;
-		setTimeout(() => {
-			isDebouncing = false;
-			if (searchTerm.trim()) {
-				animatePath();
-			} else {
-				drawDefaultPath();
-			}
-		}, 50);
+		if (searchTerm === previousTerm) return;
+		previousTerm = searchTerm;
+		startNewPath();
 	});
 
 	onMount(() => {
@@ -166,19 +187,19 @@
 		ctx = canvas.getContext('2d', { alpha: true })!;
 		if (!ctx) return;
 
-		clearCanvas();
-		if (searchTerm?.trim()) {
-			animatePath();
-		} else {
-			drawDefaultPath();
-		}
+		startNewPath();
 
 		return () => {
-			if (animationFrame) {
-				cancelAnimationFrame(animationFrame);
+			if (animationInterval) {
+				clearInterval(animationInterval);
 			}
 		};
 	});
 </script>
 
-<canvas bind:this={canvas} width={CANVAS_SIZE} height={CANVAS_SIZE} class="mx-auto mb-4"></canvas>
+<canvas
+	bind:this={canvas}
+	width={CONFIG.CANVAS_SIZE}
+	height={CONFIG.CANVAS_SIZE}
+	class="mx-auto mb-4"
+></canvas>

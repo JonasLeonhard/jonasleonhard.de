@@ -37,6 +37,10 @@
 	Uncle Bobs clean code)
 </p>
 
+<h2>Believe in Yourself</h2>
+
+<p>TODO</p>
+
 <h2>All things have tradeoffs</h2>
 
 <p>
