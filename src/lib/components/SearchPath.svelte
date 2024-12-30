@@ -14,12 +14,12 @@
 			SIZE: 24,
 			CELL_SIZE: 12
 		},
-		CANVAS_SIZE: 288, // 24 * 12
+		CANVAS_SIZE: 198, // 24 * 12
 		MAX_PATHS: 3,
 		ANIMATION_INTERVAL: 10,
 		POSITIONS: {
-			START: { x: 12, y: 20 } as Position,
-			END: { x: 12, y: 2 } as Position
+			START: { x: 8, y: 15 } as Position,
+			END: { x: 8, y: 1 } as Position
 		},
 		COLORS: {
 			START: '#ef4444',
@@ -201,5 +201,5 @@
 	bind:this={canvas}
 	width={CONFIG.CANVAS_SIZE}
 	height={CONFIG.CANVAS_SIZE}
-	class="mx-auto mb-4"
+	class="h-auto w-full border-l border-r border-t border-dashed"
 ></canvas>

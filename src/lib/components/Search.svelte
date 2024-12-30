@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
 	import { dev } from '$app/environment';
-	import { ChevronLeft, ChevronRight, BookA } from 'lucide-svelte';
-	import { SearchPath } from '$lib';
+	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 
 	import {
 		Folder,
@@ -13,6 +12,7 @@
 		Select,
 		Skeleton,
 		SearchTeaser,
+		SearchPath,
 		send,
 		receive
 	} from '$lib';
@@ -191,45 +191,29 @@
 </script>
 
 <div class="mb-80">
-	<div class="mx-auto w-max border border-dashed p-3">
-		<BookA class="h-4 w-4" />
-	</div>
+	<div class="mb-32 flex flex-col gap-4 lg:flex-row lg:gap-10">
+		<div>
+			<h3 class="mb-4 mt-4 flex w-max items-center gap-2 border border-dashed p-4 text-6xl">
+				<span>Blog</span>,
+				<span>Projects</span> &
+				<span>Shorts</span>
+			</h3>
 
-	<h3 class="mx-auto mb-4 mt-4 flex w-max items-center gap-2 text-6xl">
-		<span class="text-accent">Blog</span>,
-		<span class="text-blue-600">Projects</span> &
-		<span class="text-green-600">Shorts</span>
-		<p class="absolute right-0 top-0">TODO: only color selected by tags</p>
-	</h3>
-
-	<SearchPath searchTerm={searchInput} />
-
-	<span
-		class="relative z-10 mx-auto mb-4 block w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
-	>
-		Thoughts, tutorials, explainations and my work. You can find them all here.
-	</span>
-
-	<div class="mx-auto mb-32 flex w-full max-w-lg flex-col gap-1.5">
-		<Input id="search" bind:value={searchInput} placeholder="Type a keyword..." />
+			<span
+				class="relative z-10 mb-4 block w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+			>
+				Thoughts, tutorials, explainations and my work. You can find them all here.
+			</span>
+		</div>
 	</div>
 
 	<div class="@container/search_results">
 		<div class="flex flex-col gap-4 @xl/search_results:flex-row">
 			<!-- Filter Left -->
 			<div class="@xl/search_results:p-4">
-				<div
-					class="mb-4 flex w-full justify-between pb-2 font-mono text-xs @xl/search_results:w-max"
-				>
-					<div class="col-span-1 pr-20">Filter</div>
-					<button onmousedown={resetSearch} class="col-span-10 underline hover:text-accent"
-						>clear filters</button
-					>
-				</div>
-
-				<div class="mb-8">
-					<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
-				</div>
+				<Label for="search">Search</Label>
+				<SearchPath searchTerm={searchInput} />
+				<Input class="mb-4" id="search" bind:value={searchInput} placeholder="Search Query..." />
 
 				<Select.Root bind:selected={sortBy}>
 					<Label for="sort">Sort by</Label>
@@ -283,12 +267,18 @@
 						{/each}
 					</div>
 				</Folder>
+
+				<button onmousedown={resetSearch} class="underline hover:text-accent">clear filters</button>
 			</div>
 
 			<!-- Results Right -->
 			<div
 				class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto font-mono text-xs @xl/search-results:p-4"
 			>
+				<div class="col-span-12 mb-8 ml-auto">
+					<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
+				</div>
+
 				{#if searchIsLoading || !pagefind}
 					<Skeleton class="col-span-12 h-52 w-full" />
 				{:else if !searchResult?.results?.length}
