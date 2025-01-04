@@ -193,14 +193,14 @@
 <div class="mb-80">
 	<div class="mb-32 flex flex-col gap-4 lg:flex-row lg:gap-10">
 		<div>
-			<h3 class="mb-4 mt-4 flex w-max items-center gap-2 border border-dashed p-4 text-6xl">
-				<span>Blog</span>,
-				<span>Projects</span> &
-				<span>Shorts</span>
+			<h3
+				class="mb-4 mt-4 flex items-center gap-2 border border-dashed p-4 text-3xl sm:w-max sm:text-4xl md:text-5xl lg:text-6xl"
+			>
+				Blog, Projects & Shorts
 			</h3>
 
 			<span
-				class="relative z-10 mb-4 block w-max bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+				class="relative z-10 mb-4 block bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
 			>
 				Thoughts, tutorials, explainations and my work. You can find them all here.
 			</span>

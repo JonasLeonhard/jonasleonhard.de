@@ -75,19 +75,21 @@
 </section>
 
 <section
-	class="container mx-auto flex w-full justify-between gap-60 transition-all duration-1000"
+	class="container mx-auto flex w-full flex-wrap justify-between gap-4 transition-all duration-1000 lg:gap-60"
 	class:opacity-0={scrollY > 250}
 	class:-translate-y-2={scrollY > 250}
 	class:pointer-events-none={scrollY > 250}
 	aria-hidden={scrollY > 250}
 >
-	<p class="mr-auto mt-auto flex gap-14 text-2xl">
+	<p
+		class="md:text-1xl mr-auto mt-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
+	>
 		<a href="/c" use:useLink class="underline hover:text-accent">blog</a>
 		<a href="/#projects" use:useLink class="underline hover:text-accent">projects</a>
 		<a href="/contact" use:useLink class="underline hover:text-accent">contact</a>
 	</p>
 	<p
-		class="flex items-center gap-2 text-muted-foreground before:ml-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+		class="flex flex-wrap items-center gap-2 text-muted-foreground before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
 	>
 		Building Experiences at <a
 			class="underline hover:text-accent"

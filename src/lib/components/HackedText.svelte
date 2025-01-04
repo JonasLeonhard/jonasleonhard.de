@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib';
-	import { tweened } from 'svelte/motion';
+	import { Tween } from 'svelte/motion';
 	import type { ClassValue } from 'clsx';
 	import { fly, fade } from 'svelte/transition';
 
@@ -13,7 +13,7 @@
 
 	let { text, class: className = '', scrambled = false }: Props = $props();
 
-	let scrambleIteration = tweened(scrambled ? 0 : text.length, { duration: 650 });
+	let scrambleIteration = new Tween(scrambled ? 0 : text.length, { duration: 650 });
 
 	function getScrambled(iteration: number) {
 		return text
@@ -44,6 +44,6 @@
 		out:fly={{ x: 0, y: 100, opacity: 0, duration: 100 }}
 		class={cn('col-start-1 row-start-1', className)}
 	>
-		{getScrambled($scrambleIteration)}
+		{getScrambled(scrambleIteration.current)}
 	</p>
 </div>

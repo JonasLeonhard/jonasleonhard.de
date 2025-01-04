@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { spring } from 'svelte/motion';
+	import { Spring } from 'svelte/motion';
 	import { T, useTask } from '@threlte/core';
 	import vertexShader from '$lib/three/circuitPointVertex.glsl?raw';
 	import fragmentShader from '$lib/three/circuitPointFragment.glsl?raw';
@@ -10,7 +10,7 @@
 	const lineIndexes = $state(new Float32Array(computedSvg.lineIndexes));
 	let scrollY = $state(0);
 	let time = $state(0);
-	const fadeoutProgress = spring(1, {
+	const fadeoutProgress = new Spring(1, {
 		stiffness: 0.03,
 		damping: 0.8
 	});
@@ -90,6 +90,6 @@
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
-		uniforms.fadeoutProgress.value={$fadeoutProgress}
+		uniforms.fadeoutProgress.value={fadeoutProgress.current}
 	/>
 </T.Points>

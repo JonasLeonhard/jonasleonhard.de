@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { useLink } from '$lib';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
 	import type { ClassValue } from 'clsx';
 	import { MoveRight } from 'lucide-svelte';

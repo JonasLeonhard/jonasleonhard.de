@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { spring } from 'svelte/motion';
+	import { Spring } from 'svelte/motion';
 	import { ClipboardCopy, MouseDrag, GridPattern, cn, useLink } from '$lib';
 	import { Rss, Check } from 'lucide-svelte';
 	import Marqueeck from '@arisbh/marqueeck';
@@ -9,7 +9,7 @@
 
 	let outerWidth = $state(0);
 	let clientX = $state(0);
-	let ferrisX = spring(10, {
+	let ferrisX = new Spring(10, {
 		stiffness: 0.002,
 		damping: 0.5
 	});
@@ -258,9 +258,9 @@
 						<div
 							class="absolute -top-[10px]"
 							style="
-							left: {$ferrisX}%;
-							transform: translateY({Math.sin($ferrisX * 3)}px)
-												rotate({Math.sin($ferrisX * 1.5) * 5}deg)
+							left: {ferrisX.current}%;
+							transform: translateY({Math.sin(ferrisX.current * 3)}px)
+												rotate({Math.sin(ferrisX.current * 1.5) * 5}deg)
 					"
 						>
 							{@render FerrisRustIcon()}

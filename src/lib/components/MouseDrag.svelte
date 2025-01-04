@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { spring } from 'svelte/motion';
+	import { Spring } from 'svelte/motion';
 
 	interface Props {
 		children: Snippet;
@@ -12,7 +12,7 @@
 
 	let mouseOverClasses = $derived(mouseOver ? 'z-10 scale-110' : '');
 
-	const coords = spring(
+	const coords = new Spring(
 		{ x: 0, y: 0 },
 		{
 			damping: 0.5,
@@ -50,7 +50,7 @@
 		mouseOver = false;
 		coords.set({ x: 0, y: 0 });
 	}}
-	style={`translate: ${$coords.x}px ${$coords.y}px;`}
+	style={`translate: ${coords.current.x}px ${coords.current.y}px;`}
 >
 	{@render children?.()}
 </div>
