@@ -232,7 +232,7 @@
 
 <div class="w-screen overflow-hidden">
 	<Marqueeck
-		class="mb-40 w-full border border-muted"
+		class="mb-40 w-full border border-dashed border-muted"
 		--marqueeck-padding-y="2rem"
 		options={{ paddingX: 200, gap: 200, speed: 40 }}
 	>

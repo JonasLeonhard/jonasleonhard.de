@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Spring } from 'svelte/motion';
-	import { T, useTask } from '@threlte/core';
+	import { T, useTask, useThrelte } from '@threlte/core';
 	import vertexShader from '$lib/three/circuitPointVertex.glsl?raw';
 	import fragmentShader from '$lib/three/circuitPointFragment.glsl?raw';
 	import computedSvg from '$lib/three/precomputedSvg';
+	import { Plane, Raycaster, Vector2, Vector3 } from 'three';
 
 	const positions = $state(new Float32Array(computedSvg.positions));
 	const bloomOpacity = $state(new Float32Array(computedSvg.bloomOpacity));
@@ -15,7 +16,31 @@
 		damping: 0.8
 	});
 	let hasTriggeredFadeout = $state(false);
+	let mousePosition = $state(new Vector2(0, 0));
+	let mousePlaneIntersection = $state(new Vector3());
 	const fadeoutThreshhold = 600;
+	const raycaster = new Raycaster();
+  const { camera, renderer } = useThrelte();
+	let raycastPlane: Plane;
+
+
+function handleMouseMove(event: MouseEvent) {
+    if (!$camera || !raycastPlane || !renderer) return;
+
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    // Calculate normalized device coordinates (-1 to +1)
+    mousePosition.x = ((event.clientX) / rect.width) * 2 - 1;
+    mousePosition.y = -((event.clientY) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mousePosition, $camera);
+
+    // Since we cannot intersect with Point-Particles directly, we intersect with the Ground raycastPlane below, and use that in the Shader for mouse positions
+    const intersection = new Vector3();
+    if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
+      mousePlaneIntersection.set(intersection.x, intersection.y, intersection.z);
+    }
+  }
 
 	$effect(() => {
 		if (scrollY >= fadeoutThreshhold && !hasTriggeredFadeout) {
@@ -42,8 +67,18 @@
 	});
 </script>
 
-<svelte:window bind:scrollY />
+<svelte:window bind:scrollY  on:mousemove={handleMouseMove} />
 
+<T.Plane
+  args={[new Vector3(0, 0, 1), 0]}
+  visible={false}
+  attach={({ ref }) => {
+    raycastPlane = ref;
+    return () => {
+      raycastPlane = undefined;
+    };
+  }}
+/>
 <T.Points>
 	<T.BufferGeometry>
 		<T.BufferAttribute
@@ -86,10 +121,12 @@
 		uniforms={{
 			time: { value: 0 },
 			scrollY: { value: 0 },
-			fadeoutProgress: { value: 0 }
+			fadeoutProgress: { value: 0 },
+ 			mousePlaneIntersection : { value: mousePlaneIntersection }
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
 		uniforms.fadeoutProgress.value={fadeoutProgress.current}
+		uniforms.mousePlaneIntersection.value={mousePlaneIntersection}
 	/>
 </T.Points>

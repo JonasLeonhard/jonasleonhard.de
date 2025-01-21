@@ -58,7 +58,8 @@
 					opacity: 0,
 					x: '-100%'
 				}}
-				class="block w-screen bg-gradient-to-r from-muted via-primary/40 to-muted/50 bg-[length:400%_400%] pb-[1px] [animation-duration:10s]"
+				class="block w-screen border border-dashed border-spacing-8"
+				style="border-dash-pattern: 16px 16px"
 			></div>
 		{/if}
 	</header>

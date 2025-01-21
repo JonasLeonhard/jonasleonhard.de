@@ -117,7 +117,7 @@
 
 <div class="w-screen overflow-hidden">
 	<Marqueeck
-		class="w-full border border-muted"
+		class="w-full border border-dashed border-muted"
 		--marqueeck-padding-y="2rem"
 		options={{ paddingX: 200, gap: 10, speed: 5 }}
 	>

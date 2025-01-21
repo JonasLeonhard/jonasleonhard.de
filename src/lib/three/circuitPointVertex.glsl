@@ -1,12 +1,17 @@
 uniform float time;
 uniform float scrollY;
 uniform float fadeoutProgress;
+uniform vec3 mousePlaneIntersection;
+
 attribute float bloomOpacity;
 attribute float lineIndex;
+
 varying float vBloomOpacity;
 varying float vLineIndex;
 varying float vDistanceFromCenter;
 varying vec2 vOriginalPosition;
+varying float vDistanceFromMouse;
+
 const float PI2 = 6.283185307179586;
 
 // Stable random function
@@ -88,11 +93,13 @@ void main() {
         vBloomOpacity = bloomOpacity;
     }
 
+    vLineIndex = lineIndex;
+    vDistanceFromMouse = distance(newPosition, mousePlaneIntersection);
+
     // Keep original point size behavior
     float depth = (newPosition.z + 20.0) / 40.0;
     float finalPointSize = mix(100.0, 20.0, depth * scrollFactor);
-    gl_PointSize = finalPointSize;
 
-    vLineIndex = lineIndex;
+    gl_PointSize = finalPointSize;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }
