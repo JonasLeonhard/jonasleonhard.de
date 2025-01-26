@@ -20,27 +20,26 @@
 	let mousePlaneIntersection = $state(new Vector3());
 	const fadeoutThreshhold = 600;
 	const raycaster = new Raycaster();
-  const { camera, renderer } = useThrelte();
+	const { camera, renderer } = useThrelte();
 	let raycastPlane: Plane;
 
+	function handleMouseMove(event: MouseEvent) {
+		if (!$camera || !raycastPlane || !renderer) return;
 
-function handleMouseMove(event: MouseEvent) {
-    if (!$camera || !raycastPlane || !renderer) return;
+		const rect = renderer.domElement.getBoundingClientRect();
 
-    const rect = renderer.domElement.getBoundingClientRect();
+		// Calculate normalized device coordinates (-1 to +1)
+		mousePosition.x = (event.clientX / rect.width) * 2 - 1;
+		mousePosition.y = -(event.clientY / rect.height) * 2 + 1;
 
-    // Calculate normalized device coordinates (-1 to +1)
-    mousePosition.x = ((event.clientX) / rect.width) * 2 - 1;
-    mousePosition.y = -((event.clientY) / rect.height) * 2 + 1;
+		raycaster.setFromCamera(mousePosition, $camera);
 
-    raycaster.setFromCamera(mousePosition, $camera);
-
-    // Since we cannot intersect with Point-Particles directly, we intersect with the Ground raycastPlane below, and use that in the Shader for mouse positions
-    const intersection = new Vector3();
-    if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
-      mousePlaneIntersection.set(intersection.x, intersection.y, intersection.z);
-    }
-  }
+		// Since we cannot intersect with Point-Particles directly, we intersect with the Ground raycastPlane below, and use that in the Shader for mouse positions
+		const intersection = new Vector3();
+		if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
+			mousePlaneIntersection.set(intersection.x, intersection.y, intersection.z);
+		}
+	}
 
 	$effect(() => {
 		if (scrollY >= fadeoutThreshhold && !hasTriggeredFadeout) {
@@ -67,17 +66,17 @@ function handleMouseMove(event: MouseEvent) {
 	});
 </script>
 
-<svelte:window bind:scrollY  on:mousemove={handleMouseMove} />
+<svelte:window bind:scrollY on:mousemove={handleMouseMove} />
 
 <T.Plane
-  args={[new Vector3(0, 0, 1), 0]}
-  visible={false}
-  attach={({ ref }) => {
-    raycastPlane = ref;
-    return () => {
-      raycastPlane = undefined;
-    };
-  }}
+	args={[new Vector3(0, 0, 1), 0]}
+	visible={false}
+	attach={({ ref }) => {
+		raycastPlane = ref;
+		return () => {
+			raycastPlane = undefined;
+		};
+	}}
 />
 <T.Points>
 	<T.BufferGeometry>
@@ -122,7 +121,7 @@ function handleMouseMove(event: MouseEvent) {
 			time: { value: 0 },
 			scrollY: { value: 0 },
 			fadeoutProgress: { value: 0 },
- 			mousePlaneIntersection : { value: mousePlaneIntersection }
+			mousePlaneIntersection: { value: mousePlaneIntersection }
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
