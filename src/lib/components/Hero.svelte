@@ -16,7 +16,7 @@
 	/>
 
 	<div class="prose mx-auto flex flex-col items-center justify-center dark:prose-invert">
-		<h1 class="!mb-0">{metadata.title}</h1>
+		<h1 class="mb-0!">{metadata.title}</h1>
 
 		<div class="flex gap-2">
 			<p class="border-r pr-2 text-sm">{metadata.author}</p>

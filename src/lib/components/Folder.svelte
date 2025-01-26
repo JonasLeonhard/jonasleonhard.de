@@ -18,7 +18,7 @@
 
 <div class={className}>
 	<button
-		class="flex items-center gap-[3px] border-none bg-transparent text-sm font-medium outline-none"
+		class="flex items-center gap-[3px] border-none bg-transparent text-sm font-medium outline-hidden"
 		onmousedown={toggle}
 	>
 		{#if expanded}
@@ -32,7 +32,7 @@
 				stroke-width="1.4"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				class="border-none outline-none"
+				class="border-none outline-hidden"
 				><path
 					d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
 				/></svg
@@ -48,7 +48,7 @@
 				stroke-width="1.4"
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				class="border-none outline-none"
+				class="border-none outline-hidden"
 				><path
 					d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
 				/></svg

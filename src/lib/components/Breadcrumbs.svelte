@@ -128,7 +128,7 @@
 			<a
 				use:useLink
 				href={item.href}
-				class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
+				class="inline-flex w-full items-center text-ellipsis text-sm font-medium"
 				class:hover:dark:text-accent={item.href}
 				class:hover:underline={item.href}
 				class:hover:text-accent={item.href}
@@ -150,7 +150,7 @@
 			</a>
 		{:else}
 			<div
-				class="inline-flex w-full items-center overflow-ellipsis text-sm font-medium"
+				class="inline-flex w-full items-center text-ellipsis text-sm font-medium"
 				class:hover:dark:text-accent={item.href}
 				class:hover:underline={item.href}
 				class:hover:text-accent={item.href}

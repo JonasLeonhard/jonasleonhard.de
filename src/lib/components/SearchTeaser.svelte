@@ -35,12 +35,12 @@
 	class="group relative col-span-12 mb-10 border border-muted-foreground/50 text-left transition-all duration-1000 hover:border-muted-foreground"
 >
 	<div
-		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
+		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-linear-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 	></div>
 
 	<MoveRight class="absolute right-12 top-8 z-10 transition-all duration-500 group-hover:right-8" />
 	<div
-		class="relative flex flex-col overflow-hidden bg-gradient-to-b from-muted to-background pl-8 pr-8 pt-8"
+		class="relative flex flex-col overflow-hidden bg-linear-to-b from-muted to-background pl-8 pr-8 pt-8"
 	>
 		<a class="z-10" use:useLink href={url?.replace('.html', '')}>
 			<h3 class="mb-2 max-w-[calc(100%-32px)] font-mono text-3xl">{headline}</h3>

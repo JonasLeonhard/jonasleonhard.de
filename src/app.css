@@ -1,21 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@font-face {
-	font-family: 'Commit Mono';
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url(/fonts/CommitMono-400-Regular.woff2) format('woff2');
-}
+@config '../tailwind.config.ts';
 
-@font-face {
-	font-family: 'Hubot Sans';
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url(/fonts/HubotSans-Medium.woff2) format('woff2');
+@layer utilities {
+	@font-face {
+		font-family: 'Commit Mono';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url(/fonts/CommitMono-400-Regular.woff2) format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Hubot Sans';
+		font-style: normal;
+		font-weight: 400;
+		font-display: swap;
+		src: url(/fonts/HubotSans-Medium.woff2) format('woff2');
+	}
 }
 
 @layer base {
@@ -86,7 +88,7 @@
 
 @layer base {
 	* {
-		@apply border-border ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+		@apply border-border ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden;
 	}
 	body {
 		@apply bg-background text-foreground;

@@ -18,15 +18,15 @@
 
 <div
 	role="presentation"
-	class="group relative max-w-screen-lg border border-muted-foreground/50 transition-all duration-1000 hover:border-muted-foreground"
+	class="group relative max-w-(--breakpoint-lg) border border-muted-foreground/50 transition-all duration-1000 hover:border-muted-foreground"
 >
 	<div
-		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
+		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-linear-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 	></div>
 
 	<MoveRight class="absolute right-12 top-8 z-10 transition-all duration-500 group-hover:right-8" />
 	<a
-		class="relative flex flex-col overflow-hidden bg-gradient-to-b from-muted to-background pl-8 pr-8 pt-8"
+		class="relative flex flex-col overflow-hidden bg-linear-to-b from-muted to-background pl-8 pr-8 pt-8"
 		{href}
 		use:useLink
 	>
@@ -38,7 +38,7 @@
 		</div>
 
 		<div
-			class="rounded-r-l z-10 translate-y-[10%] rounded-t-lg bg-gradient-to-b from-muted-foreground/50 to-transparent p-px shadow-2xl transition-all duration-500 group-hover:translate-y-0 lg:mx-10"
+			class="rounded-r-l z-10 translate-y-[10%] rounded-t-lg bg-linear-to-b from-muted-foreground/50 to-transparent p-px shadow-2xl transition-all duration-500 group-hover:translate-y-0 lg:mx-10"
 		>
 			<div class="rounded-r-l rounded-t-lg bg-background">
 				<div class="flex flex-col items-center border-b border-muted bg-muted/50 py-2">

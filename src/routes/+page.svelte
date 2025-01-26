@@ -55,7 +55,7 @@
 
 <section class="container mx-auto -mt-20 flex flex-col pb-60 pt-4">
 	<h3
-		class="relative z-10 w-full max-w-3xl bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
+		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
 	>
 		Jonas,
 	</h3>
@@ -65,7 +65,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute left-0 top-0 z-10 w-full max-w-3xl bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
+					class="absolute left-0 top-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
 				>
 					{description}
 				</h3>
@@ -89,7 +89,7 @@
 		<a href="/contact" use:useLink class="underline hover:text-accent">contact</a>
 	</p>
 	<p
-		class="flex flex-wrap items-center gap-2 text-muted-foreground before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-gradient-to-br before:from-green-400 before:to-green-800"
+		class="flex flex-wrap items-center gap-2 text-muted-foreground before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
 	>
 		Building Experiences at <a
 			class="underline hover:text-accent"
@@ -287,7 +287,7 @@
 </section>
 
 <div
-	class="text- container mx-auto mb-80 bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
+	class="text- container mx-auto mb-80 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
 >
 	"Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
 	ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt

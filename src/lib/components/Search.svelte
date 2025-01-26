@@ -200,7 +200,7 @@
 			</h3>
 
 			<span
-				class="relative z-10 mb-4 block bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+				class="relative z-10 mb-4 block bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
 			>
 				Thoughts, tutorials, explainations and my work. You can find them all here.
 			</span>

@@ -45,7 +45,7 @@
 
 <div class="h-[300px]">
 	<header
-		class={`fixed z-50 flex w-full flex-col to-transparent transition-all duration-700 after:absolute after:top-0 after:-z-10 after:contents after:w-full after:bg-gradient-to-b after:from-white after:to-transparent after:backdrop-blur-[2px] after:transition-all after:duration-1000 dark:after:from-black ${classesHeaderDocked}`}
+		class={`fixed z-50 flex w-full flex-col to-transparent transition-all duration-700 after:absolute after:top-0 after:-z-10 after:contents after:w-full after:bg-linear-to-b after:from-white after:to-transparent after:backdrop-blur-[2px] after:transition-all after:duration-1000 dark:after:from-black ${classesHeaderDocked}`}
 		class:top-0={headerVisible}
 		class:-top-20={!headerVisible}
 	>

@@ -276,10 +276,10 @@
 					)}
 				/>
 				<div
-					class="absolute top-0 -z-10 h-full w-full bg-gradient-to-r from-white to-transparent dark:from-black"
+					class="absolute top-0 -z-10 h-full w-full bg-linear-to-r from-white to-transparent dark:from-black"
 				></div>
 				<div
-					class="absolute top-0 -z-10 h-full w-full bg-gradient-to-b from-muted to-transparent"
+					class="absolute top-0 -z-10 h-full w-full bg-linear-to-b from-muted to-transparent"
 				></div>
 			</footer>
 		</div>

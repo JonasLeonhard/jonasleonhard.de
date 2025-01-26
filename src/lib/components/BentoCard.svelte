@@ -19,12 +19,12 @@
 	{href}
 	use:useLink
 	class={cn(
-		'group relative col-span-3 flex max-w-screen-lg flex-col border border-muted-foreground/50 bg-gradient-to-b from-muted to-background transition-all duration-1000 hover:border-muted-foreground',
+		'group relative col-span-3 flex max-w-(--breakpoint-lg) flex-col border border-muted-foreground/50 bg-linear-to-b from-muted to-background transition-all duration-1000 hover:border-muted-foreground',
 		className
 	)}
 >
 	<div
-		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-gradient-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
+		class="absolute left-[50%] top-0 z-10 h-[1px] -translate-x-[50%] animate-border-width rounded-full bg-linear-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 	></div>
 
 	<MoveRight
