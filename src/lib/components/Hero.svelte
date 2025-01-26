@@ -15,7 +15,7 @@
 		alt={metadata.coverImage.alt}
 	/>
 
-	<div class="prose mx-auto flex flex-col items-center justify-center dark:prose-invert">
+	<div class="prose dark:prose-invert mx-auto flex flex-col items-center justify-center">
 		<h1 class="mb-0!">{metadata.title}</h1>
 
 		<div class="flex gap-2">

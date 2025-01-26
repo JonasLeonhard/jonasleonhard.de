@@ -4,7 +4,7 @@
 </script>
 
 <div
-	class="container fixed left-[50%] top-[50%] mx-auto flex w-full -translate-x-[50%] flex-row justify-center gap-4"
+	class="fixed top-[50%] left-[50%] container mx-auto flex w-full -translate-x-[50%] flex-row justify-center gap-4"
 >
 	<BatteryWarning />
 	<h1><span class="text-accent">{$page.status}</span> {$page.error?.message}</h1>

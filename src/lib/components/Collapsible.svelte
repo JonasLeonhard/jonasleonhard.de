@@ -20,7 +20,7 @@
 
 	{#if isExpanded}
 		<div
-			class="ml-2 border-l border-dashed border-muted-foreground pl-4"
+			class="border-muted-foreground ml-2 border-l border-dashed pl-4"
 			transition:slide={{ duration: 300 }}
 		>
 			{@render expanded()}

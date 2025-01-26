@@ -117,15 +117,15 @@
 
 <div class="w-screen overflow-hidden">
 	<Marqueeck
-		class="w-full border border-dashed border-muted"
+		class="border-muted w-full border border-dashed"
 		--marqueeck-padding-y="2rem"
 		options={{ paddingX: 200, gap: 10, speed: 5 }}
 	>
-		<div class="mr-auto flex w-max pl-4 pr-4 text-sm text-foreground">
-			<span class="w-max text-sm text-muted-foreground">{date} Jonas Leonhard -</span>
+		<div class="text-foreground mr-auto flex w-max pr-4 pl-4 text-sm">
+			<span class="text-muted-foreground w-max text-sm">{date} Jonas Leonhard -</span>
 			<a
 				use:useLink
-				class="pl-2 text-muted-foreground hover:text-accent"
+				class="text-muted-foreground hover:text-accent pl-2"
 				href={`https://github.com/JonasLeonhard/jonasleonhard.de/commit/${currentGitHash}`}
 				target="_blank"
 				>{currentGitHash?.slice(0, 7)}
@@ -145,9 +145,9 @@
 		<div class="fixed bottom-0 h-[570px] w-full @xl/footer:h-[360px]">
 			<footer class="relative shadow-inner">
 				<div
-					class="mt-px-4 container relative mx-auto pb-2 pt-12 @lg/footer:flex @lg/footer:justify-between md:items-center"
+					class="mt-px-4 relative container mx-auto pt-12 pb-2 md:items-center @lg/footer:flex @lg/footer:justify-between"
 				>
-					<div class="mt-4 flex space-x-5 @lg/footer:mt-0 sm:justify-center rtl:space-x-reverse">
+					<div class="mt-4 flex space-x-5 sm:justify-center @lg/footer:mt-0 rtl:space-x-reverse">
 						<MouseDrag>
 							<a
 								use:useLink
@@ -173,10 +173,10 @@
 				<div class="container mx-auto mt-4 w-full">
 					<div class="grid grid-cols-2 gap-8 py-6 @xl/footer:grid-cols-4 @xl/footer:py-8">
 						<div>
-							<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							<h2 class="text-foreground/80 mb-6 font-mono text-2xl font-semibold uppercase">
 								About Me
 							</h2>
-							<ul class="font-medium text-foreground/60">
+							<ul class="text-foreground/60 font-medium">
 								<li class="mb-4">
 									<a use:useLink href="/about" class=" hover:text-accent hover:underline">About</a>
 								</li>
@@ -194,10 +194,10 @@
 						</div>
 
 						<div>
-							<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							<h2 class="text-foreground/80 mb-6 font-mono text-2xl font-semibold uppercase">
 								Contact
 							</h2>
-							<ul class="font-medium text-foreground/60">
+							<ul class="text-foreground/60 font-medium">
 								<li class="mb-4">
 									<a
 										use:useLink
@@ -215,10 +215,10 @@
 						</div>
 
 						<div>
-							<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							<h2 class="text-foreground/80 mb-6 font-mono text-2xl font-semibold uppercase">
 								Boring
 							</h2>
-							<ul class="font-medium text-foreground/60">
+							<ul class="text-foreground/60 font-medium">
 								<li class="mb-4">
 									<a use:useLink href="/credits" class="hover:text-accent hover:underline"
 										>Credits</a
@@ -233,10 +233,10 @@
 						</div>
 
 						<div>
-							<h2 class="mb-6 font-mono text-2xl font-semibold uppercase text-foreground/80">
+							<h2 class="text-foreground/80 mb-6 font-mono text-2xl font-semibold uppercase">
 								Read More
 							</h2>
-							<ul class="font-medium text-foreground/60">
+							<ul class="text-foreground/60 font-medium">
 								<li class="mb-4">
 									<a use:useLink href="/c?q=articles" class="hover:text-accent hover:underline"
 										>Blog</a
@@ -247,7 +247,7 @@
 										>Resources</a
 									>
 								</li>
-								<li class="mb-4 text-accent">
+								<li class="text-accent mb-4">
 									<a use:useLink href="/rss" class="hover:text-accent hover:underline">Rss Feed</a>
 								</li>
 							</ul>
@@ -279,7 +279,7 @@
 					class="absolute top-0 -z-10 h-full w-full bg-linear-to-r from-white to-transparent dark:from-black"
 				></div>
 				<div
-					class="absolute top-0 -z-10 h-full w-full bg-linear-to-b from-muted to-transparent"
+					class="from-muted absolute top-0 -z-10 h-full w-full bg-linear-to-b to-transparent"
 				></div>
 			</footer>
 		</div>

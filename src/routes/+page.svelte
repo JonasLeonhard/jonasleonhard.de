@@ -53,9 +53,9 @@
 
 <svelte:window bind:scrollY />
 
-<section class="container mx-auto -mt-20 flex flex-col pb-60 pt-4">
+<section class="container mx-auto -mt-20 flex flex-col pt-4 pb-60">
 	<h3
-		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
+		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
 		Jonas,
 	</h3>
@@ -65,7 +65,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute left-0 top-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl"
+					class="absolute top-0 left-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 				>
 					{description}
 				</h3>
@@ -82,24 +82,24 @@
 	aria-hidden={scrollY > 250}
 >
 	<p
-		class="md:text-1xl mr-auto mt-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
+		class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
 	>
-		<a href="/c" use:useLink class="underline hover:text-accent">blog</a>
-		<a href="/#projects" use:useLink class="underline hover:text-accent">projects</a>
-		<a href="/contact" use:useLink class="underline hover:text-accent">contact</a>
+		<a href="/c" use:useLink class="hover:text-accent underline">blog</a>
+		<a href="/#projects" use:useLink class="hover:text-accent underline">projects</a>
+		<a href="/contact" use:useLink class="hover:text-accent underline">contact</a>
 	</p>
 	<p
-		class="flex flex-wrap items-center gap-2 text-muted-foreground before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
+		class="text-muted-foreground flex flex-wrap items-center gap-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
 	>
 		Building Experiences at <a
-			class="underline hover:text-accent"
+			class="hover:text-accent underline"
 			href="https://www.fork.de/"
 			target="_blank">Fork</a
 		>
 	</p>
 </section>
 
-<div class="pointer-events-none fixed left-0 top-0 -z-50 h-full w-full">
+<div class="pointer-events-none fixed top-0 left-0 -z-50 h-full w-full">
 	<Canvas>
 		<Circuit />
 		<T.PerspectiveCamera
@@ -115,7 +115,7 @@
 	</Canvas>
 </div>
 
-<section class="container mx-auto mb-40 mt-[50vh]">
+<section class="container mx-auto mt-[50vh] mb-40">
 	<div
 		id="projects"
 		class="mb-40 transition-all duration-1000"
@@ -232,32 +232,32 @@
 
 <div class="w-screen overflow-hidden">
 	<Marqueeck
-		class="mb-40 w-full border border-dashed border-muted"
+		class="border-muted mb-40 w-full border border-dashed"
 		--marqueeck-padding-y="2rem"
 		options={{ paddingX: 200, gap: 200, speed: 40 }}
 	>
 		<div
-			class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 		>
 			<Home /> Buerkert
 		</div>
 		<div
-			class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 		>
 			<Home /> Hapeko
 		</div>
 		<div
-			class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 		>
 			<Home /> Obi
 		</div>
 		<div
-			class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 		>
 			<Home /> Hapeko
 		</div>
 		<div
-			class="flex items-center gap-1 text-3xl text-accent grayscale transition-all duration-1000 hover:grayscale-0"
+			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 		>
 			<Home /> Landesanstalt für Medien NRW
 		</div>

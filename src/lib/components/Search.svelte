@@ -194,7 +194,7 @@
 	<div class="mb-32 flex flex-col gap-4 lg:flex-row lg:gap-10">
 		<div>
 			<h3
-				class="mb-4 mt-4 flex items-center gap-2 border border-dashed p-4 text-3xl sm:w-max sm:text-4xl md:text-5xl lg:text-6xl"
+				class="mt-4 mb-4 flex items-center gap-2 border border-dashed p-4 text-3xl sm:w-max sm:text-4xl md:text-5xl lg:text-6xl"
 			>
 				Blog, Projects & Shorts
 			</h3>
@@ -268,7 +268,7 @@
 					</div>
 				</Folder>
 
-				<button onmousedown={resetSearch} class="underline hover:text-accent">clear filters</button>
+				<button onmousedown={resetSearch} class="hover:text-accent underline">clear filters</button>
 			</div>
 
 			<!-- Results Right -->

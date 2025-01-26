@@ -201,5 +201,5 @@
 	bind:this={canvas}
 	width={CONFIG.CANVAS_SIZE}
 	height={CONFIG.CANVAS_SIZE}
-	class="h-auto w-full border-l border-r border-t border-dashed"
+	class="h-auto w-full border-t border-r border-l border-dashed"
 ></canvas>
