@@ -10,12 +10,8 @@
 	import Marqueeck from '@arisbh/marqueeck';
 
 	import { Home } from 'lucide-svelte';
-	import type { PageData } from './$types';
 
-	interface Props {
-		data: PageData;
-	}
-	let { data }: Props = $props();
+	let { data } = $props();
 
 	let scrollY = $state(0);
 	let currentDescIndex = $state(0);

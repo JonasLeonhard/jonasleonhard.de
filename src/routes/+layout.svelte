@@ -3,14 +3,7 @@
 	import { page } from '$app/stores';
 	import { cn, Header, Footer, Toaster, GridPattern } from '$lib';
 
-	import type { Snippet } from 'svelte';
-	import type { PageData } from './$types';
-
-	interface Props {
-		children: Snippet;
-		data: PageData;
-	}
-	let { children, data }: Props = $props();
+	let { children, data } = $props();
 </script>
 
 <svelte:head>

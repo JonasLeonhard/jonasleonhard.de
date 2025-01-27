@@ -1,13 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import { Hero } from '$lib';
-	import type { PageData } from '../$types';
 
-	interface Props {
-		data: PageData;
-		children: Snippet;
-	}
-	let { children, data }: Props = $props();
+	let { children, data } = $props();
 </script>
 
 <article
