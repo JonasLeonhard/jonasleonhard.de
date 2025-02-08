@@ -4,13 +4,74 @@
 	import vertexShader from '$lib/three/circuitPointVertex.glsl?raw';
 	import fragmentShader from '$lib/three/circuitPointFragment.glsl?raw';
 	import computedSvg from '$lib/three/precomputedSvg';
-	import { Plane, Raycaster, Vector2, Vector3 } from 'three';
+	import { Plane, Raycaster, Vector2, Vector3, SplineCurve } from 'three';
 
-	const positions = $state(new Float32Array(computedSvg.positions));
-	const bloomOpacity = $state(new Float32Array(computedSvg.bloomOpacity));
-	const lineIndexes = $state(new Float32Array(computedSvg.lineIndexes));
-	let scrollY = $state(0);
+	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
+	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
+
+	const curves = $state(
+		computedSvg.curves.map(
+			(curveData) =>
+				new SplineCurve(curveData.points.map((point) => new Vector2(point[0], point[1])))
+		)
+	);
+
+	function getPositions(time: number, curves: SplineCurve[]) {
+		const scaleX = computedSvg.metadata.width / 2;
+		const scaleY = computedSvg.metadata.height / 2;
+
+		const newPositions = curves.flatMap((curve, curveIndex) => {
+			const points: number[] = [];
+			// Calculate the length of the curve
+			const curveLength = curve.getLength();
+
+			// Calculate how many particles this curve should have based on its length
+			// and the target spacing between particles
+			const particleCount = Math.max(1, Math.round(curveLength / TARGET_PARTICLE_SPACING));
+
+			// Add offset based on curve index
+			const curveOffset = curveIndex * CURVE_TIME_OFFSET;
+
+			for (let i = 0; i < particleCount; i++) {
+				const baseT = i / particleCount;
+				// Add curve offset to create staggered start times
+				const t =
+					(baseT + ((time * 0.1 + curveOffset) * TARGET_PARTICLE_SPACING) / curveLength) % 1;
+
+				// Get point at the current position
+				const point = curve.getPoint(t);
+
+				points.push(point.x * scaleX, point.y * scaleY, 0);
+			}
+			return points;
+		});
+
+		return new Float32Array(newPositions);
+	}
+
 	let time = $state(0);
+	const positions = $derived(getPositions(time, curves));
+	const opacity = $state(
+		new Float32Array(positions.length / 3).fill(0).map(() => Math.random().toFixed(2))
+	);
+	const lineIndex = $state(
+		new Float32Array(positions.length / 3).fill(0).map((_, i) => {
+			// Find which curve this particle belongs to
+			let particleSum = 0;
+			for (let curveIndex = 0; curveIndex < curves.length; curveIndex++) {
+				const curve = curves[curveIndex];
+				const curveLength = curve.getLength();
+				const particleCount = Math.max(1, Math.round(curveLength / TARGET_PARTICLE_SPACING));
+				particleSum += particleCount;
+				if (i < particleSum) {
+					return curveIndex;
+				}
+			}
+			return curves.length - 1; // fallback to last curve
+		})
+	);
+
+	let scrollY = $state(0);
 	const fadeoutProgress = new Spring(1, {
 		stiffness: 0.03,
 		damping: 0.8
@@ -25,16 +86,11 @@
 
 	function handleMouseMove(event: MouseEvent) {
 		if (!$camera || !raycastPlane || !renderer) return;
-
 		const rect = renderer.domElement.getBoundingClientRect();
-
-		// Calculate normalized device coordinates (-1 to +1)
 		mousePosition.x = (event.clientX / rect.width) * 2 - 1;
 		mousePosition.y = -(event.clientY / rect.height) * 2 + 1;
-
 		raycaster.setFromCamera(mousePosition, $camera);
 
-		// Since we cannot intersect with Point-Particles directly, we intersect with the Ground raycastPlane below, and use that in the Shader for mouse positions
 		const intersection = new Vector3();
 		if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
 			mousePlaneIntersection.set(intersection.x, intersection.y, intersection.z);
@@ -67,7 +123,6 @@
 </script>
 
 <svelte:window bind:scrollY on:mousemove={handleMouseMove} />
-
 <T.Plane
 	args={[new Vector3(0, 0, 1), 0]}
 	visible={false}
@@ -82,18 +137,16 @@
 	<T.BufferGeometry>
 		<T.BufferAttribute
 			args={[positions, 3]}
+			needsUpdate
 			attach={({ parent, ref }) => {
 				parent.setAttribute('position', ref);
-				return () => {
-					// cleanup function called when ref changes or the component unmounts
-					// https://threlte.xyz/docs/reference/core/t#attach
-				};
+				return () => {};
 			}}
 		/>
 		<T.BufferAttribute
-			args={[bloomOpacity, 1]}
+			args={[opacity, 1]}
 			attach={({ parent, ref }) => {
-				parent.setAttribute('bloomOpacity', ref);
+				parent.setAttribute('opacity', ref);
 				return () => {
 					// cleanup function called when ref changes or the component unmounts
 					// https://threlte.xyz/docs/reference/core/t#attach
@@ -101,7 +154,7 @@
 			}}
 		/>
 		<T.BufferAttribute
-			args={[lineIndexes, 1]}
+			args={[lineIndex, 1]}
 			attach={({ parent, ref }) => {
 				parent.setAttribute('lineIndex', ref);
 				return () => {
@@ -120,12 +173,10 @@
 		uniforms={{
 			time: { value: 0 },
 			scrollY: { value: 0 },
-			fadeoutProgress: { value: 0 },
-			mousePlaneIntersection: { value: mousePlaneIntersection }
+			fadeoutProgress: { value: 0 }
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
 		uniforms.fadeoutProgress.value={fadeoutProgress.current}
-		uniforms.mousePlaneIntersection.value={mousePlaneIntersection}
 	/>
 </T.Points>

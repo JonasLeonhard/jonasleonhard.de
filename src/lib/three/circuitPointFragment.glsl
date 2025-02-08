@@ -1,13 +1,13 @@
 uniform float time;
-varying float vBloomOpacity;
+varying float vOpacity;
 varying float vLineIndex;
-varying float vDistanceFromCenter;
-varying vec2 vOriginalPosition;
 varying float vDistanceFromMouse;
 
 const float CENTER_SIZE = 0.05;
 const float BLOOM_FALLOFF = 1.5;
 const float MOUSE_INFLUENCE_RADIUS = 50.0;
+const float LINE_COLOR_SHIFT = 0.1;
+
 const vec3 HOVER_COLOR = vec3(1.0, 0.7, 0.0);
 const vec3 COLOR_1 = vec3(0.0, 0.749, 1.0);
 const vec3 COLOR_2 = vec3(0.615, 0.204, 1.0);
@@ -36,21 +36,14 @@ void main() {
 
     // Bloom effect
     float alpha = (1.0 - smoothstep(0.0, 1.0, distanceFromCenter * BLOOM_FALLOFF))
-                 * (CENTER_SIZE * vBloomOpacity) / distanceFromCenter;
-    alpha = clamp(alpha * vBloomOpacity, 0.0, 1.0);
+                 * (CENTER_SIZE * vOpacity) / distanceFromCenter;
+    alpha = clamp(alpha * vOpacity, 0.0, 1.0);
 
-    // Color calculation
+    // Color calculation with line index influence
     float angle = atan(cUv.y, cUv.x) / (2.0 * 3.14159) + 0.5;
-    float colorT = fract(angle + time * 0.05);
+    float lineOffset = vLineIndex * LINE_COLOR_SHIFT; // Shift color based on line index
+    float colorT = fract(angle + time * 0.05 + lineOffset);
     vec3 baseColor = getGradientColor(colorT);
 
-    // Modified mouse hover effect with smoother transition
-    float mouseInfluence = 1.0 - smoothstep(0.0, MOUSE_INFLUENCE_RADIUS, vDistanceFromMouse);
-
-    vec3 finalColor = mix(baseColor, HOVER_COLOR, mouseInfluence);
-
-    // Optional: Smooth brightness increase near mouse
-    alpha = mix(alpha, alpha * 1.2, mouseInfluence); // Reduced brightness boost for smoother effect
-
-    gl_FragColor = vec4(finalColor, alpha);
+    gl_FragColor = vec4(baseColor, alpha);
 }
