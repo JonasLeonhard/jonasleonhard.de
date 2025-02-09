@@ -4,7 +4,10 @@
 	import vertexShader from '$lib/three/circuitPointVertex.glsl?raw';
 	import fragmentShader from '$lib/three/circuitPointFragment.glsl?raw';
 	import computedSvg from '$lib/three/precomputedSvg';
-	import { Plane, Raycaster, Vector2, Vector3, SplineCurve } from 'three';
+	import { Plane, Raycaster, Vector2, Vector3, SplineCurve, CanvasTexture, Uniform } from 'three';
+	import Portal from 'svelte-portal';
+	import glowUrl from '$lib/assets/three/glow.png';
+	import { onMount } from 'svelte';
 
 	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
@@ -49,13 +52,8 @@
 		return new Float32Array(newPositions);
 	}
 
-	let time = $state(0);
-	const positions = $derived(getPositions(time, curves));
-	const opacity = $state(
-		new Float32Array(positions.length / 3).fill(0).map(() => Math.random().toFixed(2))
-	);
-	const lineIndex = $state(
-		new Float32Array(positions.length / 3).fill(0).map((_, i) => {
+	function getLineIndex() {
+		return new Float32Array(positions.length / 3).fill(0).map((_, i) => {
 			// Find which curve this particle belongs to
 			let particleSum = 0;
 			for (let curveIndex = 0; curveIndex < curves.length; curveIndex++) {
@@ -68,24 +66,47 @@
 				}
 			}
 			return curves.length - 1; // fallback to last curve
-		})
-	);
+		});
+	}
+
+	function getOpacity() {
+		return new Float32Array(positions.length / 3).fill(0).map(() => Math.random().toFixed(2));
+	}
+
+	function getGlowImage() {
+		const image = new Image();
+		image.src = glowUrl;
+		return image;
+	}
+
+	let time = $state(0);
+	const positions = $derived(getPositions(time, curves));
+	const opacity = $state(getOpacity());
+	const lineIndex = $state(getLineIndex());
 
 	let scrollY = $state(0);
+	let innerHeight = $state(0);
+	let innerWidth = $state(0);
 	const fadeoutProgress = new Spring(1, {
 		stiffness: 0.03,
 		damping: 0.8
 	});
 	let hasTriggeredFadeout = $state(false);
 	let mousePosition = $state(new Vector2(0, 0));
-	let mousePlaneIntersection = $state(new Vector3());
+	let planeIntersection: Vector2 | undefined = $state(undefined);
 	const fadeoutThreshhold = 600;
 	const raycaster = new Raycaster();
 	const { camera, renderer } = useThrelte();
 	let raycastPlane: Plane;
 
+	let mouseTrailCanvas: HTMLCanvasElement | undefined = $state();
+	let mouseTrailCtx: CanvasRenderingContext2D | null = $state(null);
+	let glowImage = $state(getGlowImage());
+	let mouseTrailCanvasTexture: CanvasTexture | undefined = $state();
+
 	function handleMouseMove(event: MouseEvent) {
-		if (!$camera || !raycastPlane || !renderer) return;
+		if (!$camera || !raycastPlane || !renderer || !mouseTrailCanvas) return;
+
 		const rect = renderer.domElement.getBoundingClientRect();
 		mousePosition.x = (event.clientX / rect.width) * 2 - 1;
 		mousePosition.y = -(event.clientY / rect.height) * 2 + 1;
@@ -93,7 +114,14 @@
 
 		const intersection = new Vector3();
 		if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
-			mousePlaneIntersection.set(intersection.x, intersection.y, intersection.z);
+			// Normalize based on renderer size 0 to 1
+			const normalizedX = event.clientX / rect.width;
+			const normalizedY = event.clientY / rect.height;
+
+			planeIntersection = new Vector2(
+				normalizedX * mouseTrailCanvas.width,
+				normalizedY * mouseTrailCanvas.height
+			);
 		}
 	}
 
@@ -115,14 +143,47 @@
 		}
 	});
 
+	onMount(() => {
+		if (!mouseTrailCanvas) {
+			return;
+		}
+		mouseTrailCtx = mouseTrailCanvas.getContext('2d');
+		mouseTrailCanvasTexture = new CanvasTexture(mouseTrailCanvas);
+	});
+
 	useTask((delta) => {
 		if (!hasTriggeredFadeout) {
 			time += delta;
 		}
+
+		if (
+			mouseTrailCanvas &&
+			mouseTrailCtx &&
+			glowImage.complete &&
+			planeIntersection &&
+			mouseTrailCanvasTexture
+		) {
+			mouseTrailCtx.globalCompositeOperation = 'source-over';
+			mouseTrailCtx.globalAlpha = 0.04;
+			mouseTrailCtx.fillRect(0, 0, mouseTrailCanvas.width, mouseTrailCanvas.height);
+
+			const glowSize = mouseTrailCanvas.width * 0.1;
+			mouseTrailCtx.globalCompositeOperation = 'lighten';
+			mouseTrailCtx.globalAlpha = 1;
+			mouseTrailCtx.drawImage(
+				glowImage,
+				planeIntersection.x - glowSize / 2,
+				planeIntersection.y - glowSize / 2,
+				glowSize,
+				glowSize
+			);
+
+			mouseTrailCanvasTexture.needsUpdate = true;
+		}
 	});
 </script>
 
-<svelte:window bind:scrollY on:mousemove={handleMouseMove} />
+<svelte:window bind:innerHeight bind:innerWidth bind:scrollY on:mousemove={handleMouseMove} />
 <T.Plane
 	args={[new Vector3(0, 0, 1), 0]}
 	visible={false}
@@ -171,12 +232,23 @@
 		{vertexShader}
 		{fragmentShader}
 		uniforms={{
-			time: { value: 0 },
-			scrollY: { value: 0 },
-			fadeoutProgress: { value: 0 }
+			time: new Uniform(0),
+			scrollY: new Uniform(0),
+			fadeoutProgress: new Uniform(0),
+			mouseTrailCanvasTexture: new Uniform(mouseTrailCanvasTexture)
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
 		uniforms.fadeoutProgress.value={fadeoutProgress.current}
+		uniforms.mouseTrailCanvasTexture.value={mouseTrailCanvasTexture}
 	/>
 </T.Points>
+
+<Portal target="body">
+	<canvas
+		bind:this={mouseTrailCanvas}
+		class="border-primary fixed top-0 left-0 hidden border"
+		width={innerWidth * 0.25}
+		height={innerHeight * 0.25}
+	></canvas>
+</Portal>

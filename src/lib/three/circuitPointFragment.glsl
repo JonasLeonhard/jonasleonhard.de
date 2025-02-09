@@ -2,6 +2,7 @@ uniform float time;
 varying float vOpacity;
 varying float vLineIndex;
 varying float vDistanceFromMouse;
+varying float vMouseTrail;
 
 const float CENTER_SIZE = 0.05;
 const float BLOOM_FALLOFF = 1.5;
@@ -45,5 +46,7 @@ void main() {
     float colorT = fract(angle + time * 0.05 + lineOffset);
     vec3 baseColor = getGradientColor(colorT);
 
-    gl_FragColor = vec4(baseColor, alpha);
+    vec3 finalColor = mix(baseColor, HOVER_COLOR, vMouseTrail);
+
+    gl_FragColor = vec4(finalColor, alpha);
 }
