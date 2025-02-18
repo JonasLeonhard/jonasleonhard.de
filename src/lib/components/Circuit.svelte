@@ -94,7 +94,7 @@
 	let hasTriggeredFadeout = $state(false);
 	let mousePosition = $state(new Vector2(0, 0));
 	let planeIntersection: Vector2 | undefined = $state(undefined);
-	const fadeoutThreshhold = 600;
+	const fadeoutThreshhold = 2000;
 	const raycaster = new Raycaster();
 	const { camera, renderer } = useThrelte();
 	let raycastPlane: Plane;

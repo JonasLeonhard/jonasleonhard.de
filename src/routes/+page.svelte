@@ -5,6 +5,7 @@
 	import { inview } from 'svelte-inview';
 	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
 	import { MediaQuery } from 'runed';
+	import { Spring } from 'svelte/motion';
 
 	import { useLink, ProjectTeaser, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
@@ -13,14 +14,78 @@
 
 	let { data } = $props();
 
+	const isDesktop = new MediaQuery('(min-width: 1024px)');
 	let scrollY = $state(0);
+	interface Keyframe {
+		scroll: number;
+		camera: {
+			position: [number, number, number];
+			rotation: [number, number, number];
+		};
+	}
+
+	const desktopKeyframes: Keyframe[] = [
+		{
+			scroll: 0,
+			camera: {
+				position: [-200, 0, 620],
+				rotation: [0, 0, 0]
+			}
+		},
+		{
+			scroll: 600,
+			camera: {
+				position: [0, 0, 550],
+				rotation: [0, 0, Math.PI / 12]
+			}
+		},
+		{
+			scroll: 2000,
+			camera: {
+				position: [0, 0, 400],
+				rotation: [0, 0, Math.PI / 4]
+			}
+		}
+	];
+
+	const mobileKeyframes: Keyframe[] = [
+		{
+			scroll: 0,
+			camera: {
+				position: [0, 0, 550],
+				rotation: [0, 0, 0]
+			}
+		},
+		{
+			scroll: 600,
+			camera: {
+				position: [0, 0, 550],
+				rotation: [0, 0, Math.PI / 12]
+			}
+		},
+		{
+			scroll: 2000,
+			camera: {
+				position: [200, 100, 400],
+				rotation: [Math.PI / 8, 0, Math.PI / 6]
+			}
+		}
+	];
+	let keyframes = $derived(isDesktop.matches ? desktopKeyframes : mobileKeyframes);
+	const camera = new Spring(
+		isDesktop.matches ? desktopKeyframes[0].camera : mobileKeyframes[0].camera,
+		{
+			stiffness: 0.3,
+			damping: 0.7
+		}
+	);
+
 	let currentDescIndex = $state(0);
 	let visibleProjectsHeadline = $state(false);
 	let visibleProject01 = $state(false);
 	let visibleProject02 = $state(false);
 	let visibleProject03 = $state(false);
 	let visibleProject04 = $state(false);
-	const isDesktop = new MediaQuery('(min-width: 1024px)');
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -34,6 +99,34 @@
 		'Neovim and a terminal is all i need',
 		'Suck it uncle bob!'
 	];
+
+	$effect(() => {
+		const nextKeyframeIndex = keyframes.findIndex((k) => k.scroll > scrollY);
+		if (nextKeyframeIndex === -1) {
+			// Past the last keyframe, stay at last position
+			camera.set(keyframes[keyframes.length - 1].camera);
+			return;
+		}
+		if (nextKeyframeIndex === 0) {
+			// Before first keyframe, stay at first position
+			camera.set(keyframes[0].camera);
+			return;
+		}
+		const currentKeyframe = keyframes[nextKeyframeIndex - 1];
+		const nextKeyframe = keyframes[nextKeyframeIndex];
+
+		const progress =
+			(scrollY - currentKeyframe.scroll) / (nextKeyframe.scroll - currentKeyframe.scroll);
+
+		camera.set({
+			position: currentKeyframe.camera.position.map(
+				(start, i) => start + (nextKeyframe.camera.position[i] - start) * progress
+			) as [number, number, number],
+			rotation: currentKeyframe.camera.rotation.map(
+				(start, i) => start + (nextKeyframe.camera.rotation[i] - start) * progress
+			) as [number, number, number]
+		});
+	});
 
 	$effect(() => {
 		const onInterval = () => {
@@ -100,18 +193,14 @@
 		<Circuit />
 		<T.PerspectiveCamera
 			makeDefault
-			position={[
-				isDesktop.matches ? lerp(scrollY, 0, 600, -200, 0) : 0,
-				0,
-				lerp(scrollY, 0, 1000, 620, 550)
-			]}
+			position={camera.current.position}
+			rotation={camera.current.rotation}
 			fov={50}
-			rotation={[0, 0, lerp(scrollY, 0, 1000, 0, Math.PI / 10)]}
 		/>
 	</Canvas>
 </div>
 
-<section class="container mx-auto mt-[50vh] mb-40">
+<section class="container mx-auto mt-[200vh] mb-40">
 	<div
 		id="projects"
 		class="mb-40 transition-all duration-1000"
