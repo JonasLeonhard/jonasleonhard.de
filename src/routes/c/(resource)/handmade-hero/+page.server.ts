@@ -3,7 +3,7 @@ import coverImage from '$lib/assets/images/cover.png?enhanced';
 import type { PageServerLoad } from './$types';
 
 export const _metadata: MetaData = {
-	title: '0DE5',
+	title: 'Handmade Hero',
 	author: 'Casey Muratori',
 	description:
 		'Building a Game from Scratch in C++. No engine, nothing but syscalls. A must watch with everything ranging from C basics, to the Windows API, DirectSound, Tile Maps, Bitmaps, Arena Allocators, Textures, Simd, ui, entities',

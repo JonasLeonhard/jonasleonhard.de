@@ -6,5 +6,5 @@
 	<h2>{data.metadata.title}</h2>
 	<p>{data.metadata.description}</p>
 
-	<a href="https://www.0de5.net/explore" target="_blank"> 0DE5 </a>
+	<a href="https://hero.handmade.network/" target="_blank"> Handmade Hero </a>
 </section>
