@@ -218,8 +218,8 @@
 	>
 		<div class="m-auto grid w-full grid-cols-8">
 			<div class="col-span-3 col-start-1 my-auto">
-				<HackedText class="text-8xl" text="I love" scrambled={!visibleProjects} />
-				<HackedText class="text-8xl" text="a good Team" scrambled={!visibleProjects} />
+				<HackedText class="text-8xl" text="I love a" scrambled={!visibleProjects} />
+				<HackedText class="text-8xl" text="good Team" scrambled={!visibleProjects} />
 			</div>
 
 			<div
