@@ -197,7 +197,9 @@
 
 <div class="pointer-events-none fixed top-0 left-0 -z-50 h-full w-full">
 	<Canvas>
-		<Circuit />
+		{#if scrollY < 3700}
+			<Circuit />
+		{/if}
 		<T.PerspectiveCamera
 			makeDefault
 			position={camera.current.position}

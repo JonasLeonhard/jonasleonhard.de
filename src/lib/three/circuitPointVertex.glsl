@@ -61,6 +61,6 @@ void main() {
     }
 
     vLineIndex = lineIndex;
-    gl_PointSize = 200.0;
+    gl_PointSize = 50.0;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }

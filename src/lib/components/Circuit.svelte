@@ -11,6 +11,7 @@
 
 	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
+	const fadeoutAt = 3000;
 
 	const curves = $state(
 		computedSvg.curves.map(
@@ -94,7 +95,6 @@
 	let hasTriggeredFadeout = $state(false);
 	let mousePosition = $state(new Vector2(0, 0));
 	let planeIntersection: Vector2 | undefined = $state(undefined);
-	const fadeoutThreshhold = 8000;
 	const raycaster = new Raycaster();
 	const { camera, renderer } = useThrelte();
 	let raycastPlane: Plane;
@@ -126,21 +126,7 @@
 	}
 
 	$effect(() => {
-		if (scrollY >= fadeoutThreshhold && !hasTriggeredFadeout) {
-			hasTriggeredFadeout = true;
-			fadeoutProgress.set(1);
-		} else if (scrollY < fadeoutThreshhold && hasTriggeredFadeout) {
-			hasTriggeredFadeout = false;
-			fadeoutProgress.set(0);
-		}
-	});
-
-	$effect(() => {
-		if (scrollY < 0) {
-			fadeoutProgress.set(1);
-		} else if (scrollY >= 0) {
-			fadeoutProgress.set(0);
-		}
+		fadeoutProgress.set(0);
 	});
 
 	onMount(() => {
@@ -235,6 +221,7 @@
 			time: new Uniform(0),
 			scrollY: new Uniform(0),
 			fadeoutProgress: new Uniform(0),
+			fadeoutAt: new Uniform(fadeoutAt),
 			mouseTrailCanvasTexture: new Uniform(mouseTrailCanvasTexture)
 		}}
 		uniforms.time.value={time}
@@ -246,8 +233,8 @@
 
 <Portal target="body">
 	<canvas
-		bind:this={mouseTrailCanvas}
 		class="border-primary fixed top-0 left-0 hidden border"
+		bind:this={mouseTrailCanvas}
 		width={innerWidth * 0.25}
 		height={innerHeight * 0.25}
 	></canvas>
