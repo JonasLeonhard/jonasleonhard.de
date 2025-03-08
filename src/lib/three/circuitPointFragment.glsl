@@ -10,7 +10,7 @@ const float CENTER_SIZE = 0.05;
 const float BLOOM_FALLOFF = 1.5;
 const float MOUSE_INFLUENCE_RADIUS = 50.0;
 const float LINE_COLOR_SHIFT = 0.1;
-const float FADE_DISTANCE = 6000.0; // Distance over which the fade occurs after fadeoutAt
+const float FADE_DISTANCE = 4000.0; // Distance over which the fade occurs after fadeoutAt
 const vec3 HOVER_COLOR = vec3(1.0, 0.7, 0.0);
 const vec3 COLOR_1 = vec3(0.0, 0.749, 1.0);
 const vec3 COLOR_2 = vec3(0.615, 0.204, 1.0);
@@ -62,7 +62,7 @@ void main() {
         }
 
         // Calculate fadeout radius that expands as we scroll
-        float fadeoutRadius = 100.0 + scrollProgress * 600.0;
+        float fadeoutRadius = scrollProgress * 600.0;
 
         // Soft edge width
         float edgeWidth = 10.0;
