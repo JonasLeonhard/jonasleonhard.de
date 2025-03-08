@@ -90,7 +90,7 @@
 
 {#snippet Text()}
 	{@const text = getDisplayText()}
-	<div class={cn('font-mono', className)}>
+	<div class={cn('font-mono text-nowrap', className)}>
 		{#if text === ''}
 			<p class="w-0 overflow-hidden">{@html '&nbsp'}</p>
 		{:else}
