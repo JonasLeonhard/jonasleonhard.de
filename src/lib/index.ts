@@ -27,7 +27,6 @@ import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
-import { lerp } from './lerp';
 import { send, receive } from './transition';
 import { useLink } from './useLink.svelte';
 
@@ -62,7 +61,6 @@ export {
 	ThemeToggle,
 	Toaster,
 	badgeVariants,
-	lerp,
 	receive,
 	send,
 	useLink,

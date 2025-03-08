@@ -3,11 +3,10 @@
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
 	import { inview } from 'svelte-inview';
-	import someStaticImage from '$lib/assets/images/cover.png?enhanced';
 	import { MediaQuery } from 'runed';
 	import { Spring } from 'svelte/motion';
 
-	import { useLink, ProjectTeaser, BentoGrid, BentoCard, Circuit, HackedText, lerp } from '$lib';
+	import { useLink, BentoGrid, BentoCard, Circuit, HackedText } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
 
 	import { Home } from 'lucide-svelte';
@@ -40,7 +39,7 @@
 			}
 		},
 		{
-			scroll: 2000,
+			scroll: 6000,
 			camera: {
 				position: [0, 0, 400],
 				rotation: [0, 0, Math.PI / 4]
@@ -67,7 +66,7 @@
 			scroll: 2000,
 			camera: {
 				position: [200, 100, 400],
-				rotation: [Math.PI / 8, 0, Math.PI / 6]
+				rotation: [Math.PI / 12, 0, Math.PI / 6]
 			}
 		}
 	];
@@ -80,12 +79,9 @@
 		}
 	);
 
+	let loadedPage = $state(false);
 	let currentDescIndex = $state(0);
-	let visibleProjectsHeadline = $state(false);
-	let visibleProject01 = $state(false);
-	let visibleProject02 = $state(false);
-	let visibleProject03 = $state(false);
-	let visibleProject04 = $state(false);
+	let visibleProjects = $state(false);
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -129,6 +125,8 @@
 	});
 
 	$effect(() => {
+		loadedPage = true;
+
 		const onInterval = () => {
 			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
 		};
@@ -146,8 +144,9 @@
 	<h3
 		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
-		Jonas,
+		Jonas
 	</h3>
+
 	<div class="relative h-[120px]">
 		{#each descriptions as description, index}
 			{#if index === currentDescIndex}
@@ -166,19 +165,27 @@
 <section
 	class="container mx-auto flex w-full flex-wrap justify-between gap-4 transition-all duration-1000 lg:gap-60"
 	class:opacity-0={scrollY > 250}
-	class:-translate-y-2={scrollY > 250}
 	class:pointer-events-none={scrollY > 250}
 	aria-hidden={scrollY > 250}
 >
-	<p
+	<div
 		class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
 	>
-		<a href="/c" use:useLink class="hover:text-accent underline">blog</a>
-		<a href="/#projects" use:useLink class="hover:text-accent underline">projects</a>
-		<a href="/contact" use:useLink class="hover:text-accent underline">contact</a>
-	</p>
+		<a href="/c" use:useLink class="hover:text-accent underline">
+			<HackedText text="blog" scrambled={!loadedPage || scrollY > 250} />
+		</a>
+		<a href="/#projects" use:useLink class="hover:text-accent underline">
+			<HackedText text="projects" scrambled={!loadedPage || scrollY > 250} />
+		</a>
+		<a href="/contact" use:useLink class="hover:text-accent underline">
+			<HackedText text="contact" scrambled={!loadedPage || scrollY > 250} />
+		</a>
+	</div>
+
 	<p
-		class="text-muted-foreground flex flex-wrap items-center gap-2 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
+		class="text-muted-foreground flex flex-wrap items-center gap-2 transition-all delay-700 duration-500 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
+		class:opacity-100={loadedPage}
+		class:opacity-0={!loadedPage}
 	>
 		Building Experiences at <a
 			class="hover:text-accent underline"
@@ -200,118 +207,44 @@
 	</Canvas>
 </div>
 
-<section class="container mx-auto mt-[200vh] mb-40">
+<section class="container mx-auto mt-[200vh] mb-40 h-[400vh]">
 	<div
 		id="projects"
-		class="mb-40 transition-all duration-1000"
-		class:opacity-0={!visibleProjectsHeadline}
-		use:inview={{ threshold: 0, rootMargin: '-60% 0% 50% 0%' }}
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
 		oninview_change={(event) => {
-			visibleProjectsHeadline = !event.detail.inView;
+			visibleProjects = event.detail.inView;
 		}}
 	>
-		<HackedText
-			class="w-max font-mono text-6xl lg:text-8xl"
-			text="Projects"
-			scrambled={!visibleProjectsHeadline}
-		/>
-	</div>
+		<div class="m-auto grid w-full grid-cols-8">
+			<div class="col-span-3 col-start-1 my-auto">
+				<HackedText class="text-8xl" text="I love" scrambled={!visibleProjects} />
+				<HackedText class="text-8xl" text="a good Team" scrambled={!visibleProjects} />
+			</div>
 
-	<!-- these enter when in the viewport -->
-	<div
-		class="mb-40 transition-all duration-1000"
-		class:opacity-0={!visibleProject01}
-		use:inview={{ threshold: 0.1 }}
-		oninview_change={(event) => {
-			visibleProject01 = event.detail.inView;
-		}}
-	>
-		<ProjectTeaser
-			href="/?TODO=true"
-			headline="Buerkert"
-			description="B2B Ecommerce Platform in Vue"
-			company="Fork"
-			pageUrl="buerkert.de"
-			year="2021-2024"
-		>
-			<enhanced:img
-				class="h-full w-full object-cover"
-				src={someStaticImage}
-				alt="describe what can be seeon here!"
-			/>
-		</ProjectTeaser>
-	</div>
+			<div
+				class="text-muted-foreground col-span-2 col-start-4 mx-auto mb-auto -translate-y-20 font-mono"
+			>
+				<HackedText text="Roles // 52 6F 6C 65 73" scrambled={!visibleProjects} />
+				<HackedText text="& Architecture // QXJjaGl0ZWN0dXJl" scrambled={!visibleProjects} />
+			</div>
 
-	<div
-		class="mb-40 transition-all duration-1000"
-		class:opacity-0={!visibleProject02}
-		use:inview={{ threshold: 0.1 }}
-		oninview_change={(event) => {
-			visibleProject02 = event.detail.inView;
-		}}
-	>
-		<ProjectTeaser
-			href="/?TODO=true"
-			headline="Hapeko"
-			description="Personal Beratung und Jobbörse"
-			company="Fork"
-			pageUrl="hapeko.de"
-			year="2023-2024"
-		>
-			<enhanced:img
-				class="h-full w-full object-cover"
-				src={someStaticImage}
-				alt="describe what can be seeon here!"
-			/>
-		</ProjectTeaser>
-	</div>
+			<div class="col-span-3 col-start-6 mb-auto ml-auto">
+				<HackedText
+					class="mb-auto text-right text-8xl"
+					text="Projects"
+					scrambled={!visibleProjects}
+				/>
+			</div>
 
-	<div
-		class="mb-40 transition-all duration-1000"
-		class:opacity-0={!visibleProject03}
-		use:inview={{ threshold: 0.1 }}
-		oninview_change={(event) => {
-			visibleProject03 = event.detail.inView;
-		}}
-	>
-		<ProjectTeaser
-			href="/?TODO=true"
-			headline="Futurium"
-			description="Futuristic Museum right in the hearth of Berlin"
-			company="Fork"
-			pageUrl="futurium.de"
-			year="2021-2022"
-		>
-			<enhanced:img
-				class="h-full w-full object-cover"
-				src={someStaticImage}
-				alt="describe what can be seeon here!"
-			/>
-		</ProjectTeaser>
-	</div>
-
-	<div
-		class="mb-40 transition-all duration-1000"
-		class:opacity-0={!visibleProject04}
-		use:inview={{ threshold: 0.1 }}
-		oninview_change={(event) => {
-			visibleProject04 = event.detail.inView;
-		}}
-	>
-		<ProjectTeaser
-			href="/?TODO=true"
-			headline="Landesanstalt für Medien"
-			description="Zebra"
-			company="Fork"
-			year="2020"
-			pageUrl="fragzebra.de"
-		>
-			<enhanced:img
-				class="h-full w-full object-cover"
-				src={someStaticImage}
-				alt="describe what can be seeon here!"
-			/>
-		</ProjectTeaser>
+			<div class="col-span-3 col-start-1 mt-6 mb-auto">
+				<HackedText
+					class="text-muted-foreground mb-auto font-mono text-xl"
+					text="Chpt 01. // ⠠⠉⠓⠁⠏⠞⠀⠼⠚⠁⠲"
+					scrambled={!visibleProjects}
+				/>
+			</div>
+		</div>
 	</div>
 </section>
 
