@@ -44,7 +44,7 @@
 
 <MouseDrag>
 	<button
-		class="flex h-8 w-8 items-center justify-center"
+		class="flex h-8 w-8 cursor-pointer items-center justify-center"
 		onclick={onSwitchTheme}
 		id="theme-toggle"
 		title="Toggle Theme"

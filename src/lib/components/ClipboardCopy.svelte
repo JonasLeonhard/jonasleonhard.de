@@ -28,7 +28,10 @@
 </script>
 
 <MouseDrag>
-	<button class="relative flex h-8 w-8 items-center justify-center" onclick={onCopyToClipboard}>
+	<button
+		class="relative flex h-8 w-8 cursor-pointer items-center justify-center"
+		onclick={onCopyToClipboard}
+	>
 		{#if copiedToClipboard}
 			<div class="absolute top-[50%] -translate-y-[50%]" transition:scale>
 				{@render copied?.()}
