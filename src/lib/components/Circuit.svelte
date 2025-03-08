@@ -11,7 +11,7 @@
 
 	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
-	const fadeoutAt = 3000;
+	const fadeoutAt = 1500;
 
 	const curves = $state(
 		computedSvg.curves.map(
