@@ -2,7 +2,6 @@
 	import { cn } from '$lib';
 	import { Tween } from 'svelte/motion';
 	import type { ClassValue } from 'clsx';
-
 	interface Props {
 		class?: ClassValue;
 		text: string;
@@ -11,7 +10,6 @@
 		revealDuration?: number;
 		charset?: string;
 	}
-
 	let {
 		text,
 		class: className = '',
@@ -21,36 +19,42 @@
 		charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,./<>?'
 	}: Props = $props();
 
+	let prevScrambled = $state(scrambled);
+
 	let widthTween = new Tween(scrambled ? 0 : 1, { duration: widthDuration });
 	let revealTween = new Tween(scrambled ? 0 : 1, { duration: revealDuration });
 
 	let visibleWidth = $derived(Math.ceil(widthTween.current * text.length));
 	let revealedChars = $derived(Math.ceil(revealTween.current * visibleWidth));
-	let randomChars = $state(Array(text.length).fill(''));
+	let randomChars = $state(
+		Array(text.length)
+			.fill('')
+			.map(() => getRandomChar())
+	);
 	let interval: Timer;
-	let initialized = $state(false);
 
 	function getRandomChar() {
 		return charset[Math.floor(Math.random() * charset.length)];
 	}
 
 	$effect(() => {
-		if (!initialized) {
-			initialized = true;
-			return;
+		if (prevScrambled !== scrambled) {
+			const animate = async () => {
+				if (scrambled) {
+					// First reset reveal, then width
+					await revealTween.set(0);
+					await widthTween.set(0);
+				} else {
+					// First expand width, then reveal
+					await widthTween.set(1);
+					await revealTween.set(1);
+				}
+			};
+
+			animate();
 		}
 
-		const animate = async () => {
-			if (scrambled) {
-				await revealTween.set(0);
-				widthTween.set(0);
-			} else {
-				await widthTween.set(1);
-				revealTween.set(1);
-			}
-		};
-
-		animate();
+		prevScrambled = scrambled;
 	});
 
 	$effect(() => {
