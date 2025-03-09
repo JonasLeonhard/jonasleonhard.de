@@ -82,6 +82,14 @@
 	let loadedPage = $state(false);
 	let currentDescIndex = $state(0);
 	let visibleProjects = $state(false);
+	let visibleProjectsStPauli = $state(false);
+	let visibleProjectsBuerkert = $state(false);
+	let visibleProjectsHapeko = $state(false);
+	let visibleProjectsVw = $state(false);
+	let visibleProjectsFuturium = $state(false);
+	let visibleProjectsZebra = $state(false);
+	let visibleProjectsObi = $state(false);
+	let visibleProjectsOverview = $state(false);
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -209,7 +217,7 @@
 	</Canvas>
 </div>
 
-<section class="container mx-auto mt-[200vh] mb-40 h-[400vh]">
+<section class="container mx-auto mb-40 h-[400vh]">
 	<div
 		id="projects"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -250,39 +258,288 @@
 	</div>
 </section>
 
-<div class="w-screen overflow-hidden">
-	<Marqueeck
-		class="border-muted mb-40 w-full border border-dashed"
-		--marqueeck-padding-y="2rem"
-		options={{ paddingX: 200, gap: 200, speed: 40 }}
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-1"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsStPauli = event.detail.inView;
+		}}
 	>
-		<div
-			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-		>
-			<Home /> Buerkert
+		<div class="m-auto w-full">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Lead Frontend // upcoming"
+				scrambled={!visibleProjectsStPauli}
+			/>
+			<HackedText class="text-8xl" text="FC St. Pauli" scrambled={!visibleProjectsStPauli} />
+			<HackedText class="text-8xl" text="Sports Club" scrambled={!visibleProjectsStPauli} />
 		</div>
-		<div
-			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-		>
-			<Home /> Hapeko
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-1"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsBuerkert = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full text-right">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Lead Frontend // 3I85$C/PD5LE"
+				scrambled={!visibleProjectsBuerkert}
+			/>
+			<HackedText class="text-8xl" text="Buerkert" scrambled={!visibleProjectsBuerkert} />
+			<HackedText class="text-8xl" text="Eccomerce" scrambled={!visibleProjectsBuerkert} />
 		</div>
-		<div
-			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-		>
-			<Home /> Obi
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-2"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsHapeko = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Frontend & Backend // nmuEGyI%"
+				scrambled={!visibleProjectsHapeko}
+			/>
+			<HackedText class="text-8xl" text="Hapeko" scrambled={!visibleProjectsHapeko} />
+			<HackedText class="text-8xl" text="Consulting" scrambled={!visibleProjectsHapeko} />
 		</div>
-		<div
-			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-		>
-			<Home /> Hapeko
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-1"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsVw = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full text-right">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Frontend // ...- .--"
+				scrambled={!visibleProjectsVw}
+			/>
+			<HackedText class="text-8xl" text="VW" scrambled={!visibleProjectsVw} />
+			<HackedText class="text-8xl" text="ID 4" scrambled={!visibleProjectsVw} />
 		</div>
-		<div
-			class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-		>
-			<Home /> Landesanstalt für Medien NRW
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-1"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsFuturium = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Frontend & Backend // !?==="
+				scrambled={!visibleProjectsFuturium}
+			/>
+			<HackedText class="text-8xl" text="Futurium" scrambled={!visibleProjectsFuturium} />
+			<HackedText class="text-8xl" text="Museum" scrambled={!visibleProjectsFuturium} />
 		</div>
-	</Marqueeck>
-</div>
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-2"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsZebra = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full text-right">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Frontend & Backend // arbez"
+				scrambled={!visibleProjectsZebra}
+			/>
+			<HackedText class="text-8xl" text="Zebra" scrambled={!visibleProjectsZebra} />
+			<HackedText class="text-8xl" text="Media Authority NRW" scrambled={!visibleProjectsZebra} />
+		</div>
+	</div>
+</section>
+
+<section class="container mx-auto mb-40 h-[200vh]">
+	<div
+		id="projects-slider-2"
+		class="sticky top-0 flex h-screen items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsObi = event.detail.inView;
+		}}
+	>
+		<div class="m-auto w-full">
+			<HackedText
+				class="text-muted-foreground text-xl"
+				text="Frontend & Backend // obi"
+				scrambled={!visibleProjectsObi}
+			/>
+			<HackedText class="text-8xl" text="Obi" scrambled={!visibleProjectsObi} />
+			<HackedText class="text-8xl" text="Machbar" scrambled={!visibleProjectsObi} />
+		</div>
+	</div>
+</section>
+
+<section class="mb-40 h-[200vh]">
+	<div
+		id="projects-overview"
+		class="sticky top-0 flex h-screen flex-col items-center justify-center"
+		use:inview={{ threshold: 1, rootMargin: '50px' }}
+		oninview_change={(event) => {
+			visibleProjectsOverview = event.detail.inView;
+		}}
+	>
+		<div class="container mx-auto mb-8 grid grid-cols-8">
+			<HackedText
+				class="text-muted-foreground col-span-3 col-start-1 text-xl"
+				text="Fullstack // Js - Rust - Php - Go"
+				scrambled={!visibleProjectsOverview}
+			/>
+			<HackedText
+				class="col-span-3 col-start-1 text-6xl"
+				text="And Many More…"
+				scrambled={!visibleProjectsOverview}
+			/>
+			<p
+				class="col-span-4 col-start-5 transition-all delay-500 duration-1000 ease-in"
+				class:opacity-0={!visibleProjectsOverview}
+			>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+				cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</p>
+		</div>
+
+		<div
+			class="col-span-full mb-8 w-screen overflow-hidden transition-all delay-700 duration-1000 ease-in"
+			class:opacity-0={!visibleProjectsOverview}
+		>
+			<Marqueeck
+				class="border-muted w-full border border-dashed"
+				--marqueeck-padding-y="2rem"
+				options={{ paddingX: 200, gap: 200, speed: 40 }}
+			>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> FC St. Pauli
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Buerkert
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Hapeko
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Futurium
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Obi
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Landesanstalt für Medien NRW
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Merck
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Aareal
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Otto
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Fintropolis
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Gambit
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Wasserried
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Berenberg
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> Initiative Milch
+				</div>
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home /> VDP
+				</div>
+			</Marqueeck>
+		</div>
+
+		<div class="container mx-auto grid grid-cols-8">
+			<p
+				class="col-span-4 col-start-5 transition-all delay-1000 duration-1000 ease-in"
+				class:opacity-0={!visibleProjectsOverview}
+			>
+				Lorem ipsum odor amet, consectetuer adipiscing elit. Nisl platea sodales aliquam volutpat
+				integer lacus fames. Laoreet sed praesent sed eget dui elementum nunc gravida. Facilisi
+				lobortis faucibus vel primis orci massa. Adipiscing bibendum hendrerit sed urna vehicula;
+				odio at maecenas. Dolor netus auctor potenti tempor; pharetra nam magna. Arcu nam nostra
+				metus fermentum venenatis habitant hendrerit. Rhoncus aliquam phasellus pharetra cursus
+				commodo fringilla. Consectetur neque nullam nec, maecenas quis natoque fames. Iaculis orci
+				ridiculus
+			</p>
+		</div>
+	</div>
+</section>
 
 <section class="container mx-auto mb-40">
 	<HackedText class="mb-40 w-max font-mono text-6xl lg:text-8xl" text="Latest Posts" />
