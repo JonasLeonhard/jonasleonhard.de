@@ -2,6 +2,7 @@
 import * as Drawer from './components/ui/drawer';
 import * as Pagination from './components/ui/pagination';
 import * as Select from './components/ui/select';
+import AsciiProgressBar from './components/AsciiProgressBar.svelte';
 import BentoCard from './components/BentoCard.svelte';
 import BentoGrid from './components/BentoGrid.svelte';
 import BreadCrumbs from './components/Breadcrumbs.svelte';
@@ -18,8 +19,8 @@ import Hero from './components/Hero.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import ProjectTeaser from './components/ProjectTeaser.svelte';
 import Search from './components/Search.svelte';
-import SearchTeaser from './components/SearchTeaser.svelte';
 import SearchPath from './components/SearchPath.svelte';
+import SearchTeaser from './components/SearchTeaser.svelte';
 import ThemeToggle from './components/ThemeToggle.svelte';
 import { Badge, badgeVariants } from './components/ui/badge';
 import { Button } from './components/ui/button';
@@ -29,9 +30,11 @@ import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 import { send, receive } from './transition';
 import { useLink } from './useLink.svelte';
+import { useStickyProgress } from './useStickyProgress.svelte';
 
 import type { MetaData } from './types.d.ts';
 export {
+	AsciiProgressBar,
 	Badge,
 	BentoCard,
 	BentoGrid,
@@ -64,6 +67,7 @@ export {
 	receive,
 	send,
 	useLink,
+	useStickyProgress,
 	type MetaData
 };
 export * from './utils';
