@@ -18,6 +18,7 @@ import Headroom from './components/Headroom.svelte';
 import Hero from './components/Hero.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import ProjectTeaser from './components/ProjectTeaser.svelte';
+import ProjectsProgress from './components/ProjectsProgress.svelte';
 import Search from './components/Search.svelte';
 import SearchPath from './components/SearchPath.svelte';
 import SearchTeaser from './components/SearchTeaser.svelte';
@@ -56,9 +57,10 @@ export {
 	MouseDrag,
 	Pagination,
 	ProjectTeaser,
+	ProjectsProgress,
 	Search,
-	SearchTeaser,
 	SearchPath,
+	SearchTeaser,
 	Select,
 	Skeleton,
 	ThemeToggle,

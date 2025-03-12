@@ -5,7 +5,7 @@
 	import { inview } from 'svelte-inview';
 	import { MediaQuery } from 'runed';
 	import { Spring } from 'svelte/motion';
-	import { useStickyProgress, AsciiProgressBar } from '$lib';
+	import { useStickyProgress, AsciiProgressBar, ProjectsProgress } from '$lib';
 
 	import { useLink, BentoGrid, BentoCard, Circuit, HackedText } from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
@@ -40,10 +40,10 @@
 			}
 		},
 		{
-			scroll: 6000,
+			scroll: 5000,
 			camera: {
 				position: [0, 0, 400],
-				rotation: [0, 0, Math.PI / 4]
+				rotation: [0, 0, Math.PI / 2]
 			}
 		}
 	];
@@ -226,6 +226,7 @@
 		{#if scrollY < 3700}
 			<Circuit />
 		{/if}
+		<ProjectsProgress />
 		<T.PerspectiveCamera
 			makeDefault
 			position={camera.current.position}
@@ -235,7 +236,7 @@
 	</Canvas>
 </div>
 
-<section class="container mx-auto mb-40 h-[400vh]">
+<section class="container mx-auto h-[400vh]">
 	<div
 		id="projects"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -274,7 +275,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-1"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -297,7 +298,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-1"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -320,7 +321,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-2"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -343,7 +344,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-1"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -366,7 +367,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-1"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -389,7 +390,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-2"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -412,7 +413,7 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40 h-[200vh]">
+<section class="container mx-auto h-[200vh]">
 	<div
 		id="projects-slider-2"
 		class="sticky top-0 flex h-screen items-center justify-center"
@@ -549,6 +550,11 @@
 				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
 			>
 				<Home /> VDP
+			</div>
+			<div
+				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+			>
+				<Home /> Lufthansa Technik
 			</div>
 		</Marqueeck>
 	</div>
