@@ -2,112 +2,35 @@
 	import { Canvas } from '@threlte/core';
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
-	import { inview } from 'svelte-inview';
 	import { MediaQuery } from 'runed';
 	import { Spring } from 'svelte/motion';
-	import { useStickyProgress, AsciiProgressBar, ProjectsProgress } from '$lib';
-
-	import { useLink, BentoGrid, BentoCard, Circuit, HackedText } from '$lib';
+	import {
+		useLink,
+		AsciiProgressBar,
+		BentoGrid,
+		BentoCard,
+		Circuit,
+		HackedText,
+		ProjectsProgress
+	} from '$lib'; // TODO: rename ProjectsProgress
 	import Marqueeck from '@arisbh/marqueeck';
-
 	import { Home } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import gsap from 'gsap';
+	import ScrollTrigger from 'gsap/ScrollTrigger';
 
-	let { data } = $props();
+	interface ProjectState {
+		visible: boolean;
+		progress: number;
 
-	const isDesktop = new MediaQuery('(min-width: 1024px)');
-	let scrollY = $state(0);
-	interface Keyframe {
-		scroll: number;
-		camera: {
-			position: [number, number, number];
-			rotation: [number, number, number];
-		};
+		title: string;
+		subtitle: string;
+		role: string;
+		roleKey: string;
+		alignment: 'left' | 'right';
 	}
 
-	const desktopKeyframes: Keyframe[] = [
-		{
-			scroll: 0,
-			camera: {
-				position: [-200, 0, 620],
-				rotation: [0, 0, 0]
-			}
-		},
-		{
-			scroll: 600,
-			camera: {
-				position: [0, 0, 550],
-				rotation: [0, 0, Math.PI / 12]
-			}
-		},
-		{
-			scroll: 5000,
-			camera: {
-				position: [0, 0, 400],
-				rotation: [0, 0, Math.PI / 2]
-			}
-		}
-	];
-
-	const mobileKeyframes: Keyframe[] = [
-		{
-			scroll: 0,
-			camera: {
-				position: [0, 0, 550],
-				rotation: [0, 0, 0]
-			}
-		},
-		{
-			scroll: 600,
-			camera: {
-				position: [0, 0, 550],
-				rotation: [0, 0, Math.PI / 12]
-			}
-		},
-		{
-			scroll: 2000,
-			camera: {
-				position: [200, 100, 400],
-				rotation: [Math.PI / 12, 0, Math.PI / 6]
-			}
-		}
-	];
-	let keyframes = $derived(isDesktop.matches ? desktopKeyframes : mobileKeyframes);
-	const camera = new Spring(
-		isDesktop.matches ? desktopKeyframes[0].camera : mobileKeyframes[0].camera,
-		{
-			stiffness: 0.3,
-			damping: 0.7
-		}
-	);
-
-	let loadedPage = $state(false);
-	let currentDescIndex = $state(0);
-
-	let visibleProjects = $state(false);
-	let projectsProgress = new Spring(0);
-
-	let visibleProjectsStPauli = $state(false);
-	let stPauliProgress = new Spring(0);
-
-	let visibleProjectsBuerkert = $state(false);
-	let buerkertProgress = new Spring(0);
-
-	let visibleProjectsHapeko = $state(false);
-	let hapekoProgress = new Spring(0);
-
-	let visibleProjectsVw = $state(false);
-	let vwProgress = new Spring(0);
-
-	let visibleProjectsFuturium = $state(false);
-	let futuriumProgress = new Spring(0);
-
-	let visibleProjectsZebra = $state(false);
-	let zebraProgress = new Spring(0);
-
-	let visibleProjectsObi = $state(false);
-	let obiProgress = new Spring(0);
-
-	let visibleProjectsOverview = $state(false);
+	let { data } = $props();
 
 	const descriptions = [
 		'Fullstack Developer.',
@@ -122,44 +45,272 @@
 		'Suck it uncle bob!'
 	];
 
-	$effect(() => {
-		const nextKeyframeIndex = keyframes.findIndex((k) => k.scroll > scrollY);
-		if (nextKeyframeIndex === -1) {
-			// Past the last keyframe, stay at last position
-			camera.set(keyframes[keyframes.length - 1].camera);
-			return;
+	const projectsData: Record<string, ProjectState> = {
+		stPauli: {
+			visible: false,
+			progress: 0,
+			title: 'FC St. Pauli',
+			subtitle: 'Sports Club',
+			role: 'Lead Frontend',
+			roleKey: 'upcoming',
+			alignment: 'left'
+		},
+		buerkert: {
+			visible: false,
+			progress: 0,
+			title: 'Buerkert',
+			subtitle: 'Eccomerce',
+			role: 'Lead Frontend',
+			roleKey: '3I85$C/PD5LE',
+			alignment: 'right'
+		},
+		hapeko: {
+			visible: false,
+			progress: 0,
+			title: 'Hapeko',
+			subtitle: 'Consulting',
+			role: 'Frontend & Backend',
+			roleKey: 'nmuEGyI%',
+			alignment: 'left'
+		},
+		vw: {
+			visible: false,
+			progress: 0,
+			title: 'VW',
+			subtitle: 'ID 4',
+			role: 'Frontend',
+			roleKey: '...- .--',
+			alignment: 'right'
+		},
+		futurium: {
+			visible: false,
+			progress: 0,
+			title: 'Futurium',
+			subtitle: 'Museum',
+			role: 'Frontend & Backend',
+			roleKey: '!?===',
+			alignment: 'left'
+		},
+		zebra: {
+			visible: false,
+			progress: 0,
+			title: 'Zebra',
+			subtitle: 'Media Authority NRW',
+			role: 'Frontend & Backend',
+			roleKey: 'arbez',
+			alignment: 'right'
+		},
+		obi: {
+			visible: false,
+			progress: 0,
+			title: 'Obi',
+			subtitle: 'Machbar',
+			role: 'Frontend & Backend',
+			roleKey: 'obi',
+			alignment: 'left'
 		}
-		if (nextKeyframeIndex === 0) {
-			// Before first keyframe, stay at first position
-			camera.set(keyframes[0].camera);
-			return;
+	};
+
+	const isDesktop = new MediaQuery('(min-width: 1024px)');
+	let scrollY = $state(0);
+
+	const desktopPositions = {
+		start: {
+			position: [-200, 0, 620],
+			rotation: [0, 0, 0]
+		},
+		team: {
+			position: [0, 0, 550],
+			rotation: [0, 0, Math.PI / 12]
+		},
+		end: {
+			position: [0, 0, 400],
+			rotation: [0, 0, Math.PI / 2]
 		}
-		const currentKeyframe = keyframes[nextKeyframeIndex - 1];
-		const nextKeyframe = keyframes[nextKeyframeIndex];
+	};
 
-		const progress =
-			(scrollY - currentKeyframe.scroll) / (nextKeyframe.scroll - currentKeyframe.scroll);
+	const mobilePositions = {
+		start: {
+			position: [0, 0, 550],
+			rotation: [0, 0, 0]
+		},
+		team: {
+			position: [0, 0, 550],
+			rotation: [0, 0, Math.PI / 12]
+		},
+		end: {
+			position: [200, 100, 400],
+			rotation: [Math.PI / 12, 0, Math.PI / 6]
+		}
+	};
 
-		camera.set({
-			position: currentKeyframe.camera.position.map(
-				(start, i) => start + (nextKeyframe.camera.position[i] - start) * progress
-			) as [number, number, number],
-			rotation: currentKeyframe.camera.rotation.map(
-				(start, i) => start + (nextKeyframe.camera.rotation[i] - start) * progress
-			) as [number, number, number]
-		});
+	const positions = isDesktop.matches ? desktopPositions : mobilePositions;
+
+	let camera = $state({
+		position: isDesktop.matches ? desktopPositions.start.position : mobilePositions.start.position,
+		rotation: isDesktop.matches ? desktopPositions.start.rotation : mobilePositions.start.rotation
 	});
 
-	$effect(() => {
-		loadedPage = true;
+	let projectsState = $state<Record<string, ProjectState>>(projectsData);
+	let teamState = $state({ visible: false, progress: 0 });
+	let overviewState = $state({ visible: false });
+	let currentDescIndex = $state(0);
+	let loadedPage = $state(false);
+	let outlineProgress = $state(0);
+	let imageOpacity = $state(0);
 
-		const onInterval = () => {
+	onMount(() => {
+		loadedPage = true;
+		gsap.registerPlugin(ScrollTrigger);
+
+		const interval = setInterval(() => {
 			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
-		};
-		const interval = setInterval(onInterval, 4500);
+		}, 4500);
+
+		// CameraMovement 01: Intro -> Team camera
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: 'body',
+				endTrigger: '#team',
+				start: 'top top',
+				end: 'bottom bottom',
+				scrub: 1,
+				onUpdate: (self) => {
+					const progress = self.progress;
+
+					const startPos = positions.start;
+					const endPos = positions.team;
+
+					// Interpolate position
+					camera.position = [
+						startPos.position[0] + (endPos.position[0] - startPos.position[0]) * progress,
+						startPos.position[1] + (endPos.position[1] - startPos.position[1]) * progress,
+						startPos.position[2] + (endPos.position[2] - startPos.position[2]) * progress
+					];
+
+					// Interpolate rotation
+					camera.rotation = [
+						startPos.rotation[0] + (endPos.rotation[0] - startPos.rotation[0]) * progress,
+						startPos.rotation[1] + (endPos.rotation[1] - startPos.rotation[1]) * progress,
+						startPos.rotation[2] + (endPos.rotation[2] - startPos.rotation[2]) * progress
+					];
+				}
+			}
+		});
+
+		// Camera Movement 02: Team
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: '#team',
+				start: 'top top',
+				scrub: 1,
+				onUpdate: (self) => {
+					const progress = self.progress;
+
+					const startPos = positions.team;
+					const endPos = positions.end;
+
+					// Interpolate position
+					camera.position = [
+						startPos.position[0] + (endPos.position[0] - startPos.position[0]) * progress,
+						startPos.position[1] + (endPos.position[1] - startPos.position[1]) * progress,
+						startPos.position[2] + (endPos.position[2] - startPos.position[2]) * progress
+					];
+
+					// Interpolate rotation
+					camera.rotation = [
+						startPos.rotation[0] + (endPos.rotation[0] - startPos.rotation[0]) * progress,
+						startPos.rotation[1] + (endPos.rotation[1] - startPos.rotation[1]) * progress,
+						startPos.rotation[2] + (endPos.rotation[2] - startPos.rotation[2]) * progress
+					];
+				}
+			}
+		});
+
+		// Display the Team Section
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: `#team`,
+				start: 'top 0%',
+				end: 'bottom 0%',
+				scrub: 1,
+				markers: false, // Uncomment for timeline debugging
+				onUpdate: (self) => {
+					teamState.progress = self.progress;
+					teamState.visible = self.isActive;
+				}
+			}
+		});
+		// Team image outline
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: '#team',
+				start: 'top 0%',
+				end: 'bottom 0%',
+				scrub: 1,
+				onUpdate: (self) => {
+					outlineProgress = self.progress;
+				}
+			}
+		});
+
+		// Projects
+		Object.keys(projectsState).forEach((projectId) => {
+			gsap.timeline({
+				scrollTrigger: {
+					trigger: `#${projectId}`,
+					start: 'top 0%',
+					end: 'bottom 0%',
+					scrub: 1,
+					onUpdate: (self) => {
+						projectsState[projectId].progress = self.progress;
+						projectsState[projectId].visible = self.isActive;
+					}
+				}
+			});
+		});
+
+		// Overview
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: `#overview`,
+				start: 'top 50%',
+				end: 'bottom 0%',
+				scrub: 1,
+				onUpdate: (self) => {
+					overviewState.visible = self.isActive;
+				}
+			}
+		});
+
+		// Animate Image opacity in
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: '#stPauli',
+				start: 'top 0%',
+				end: 'bottom 0%',
+				scrub: 1,
+				onUpdate: (self) => {
+					imageOpacity = self.progress;
+				}
+			}
+		});
+
+		// fade in / out the nav-bar
+		gsap.to('#intro-nav-bar', {
+			scrollTrigger: {
+				trigger: 'body',
+				start: 'top top',
+				end: '250 top',
+				scrub: true
+			},
+			opacity: 0,
+			pointerEvents: 'none'
+		});
 
 		return () => {
 			clearInterval(interval);
+			ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 		};
 	});
 </script>
@@ -189,22 +340,20 @@
 </section>
 
 <section
+	id="intro-nav-bar"
 	class="container mx-auto flex w-full flex-wrap justify-between gap-4 transition-all duration-1000 lg:gap-60"
-	class:opacity-0={scrollY > 250}
-	class:pointer-events-none={scrollY > 250}
-	aria-hidden={scrollY > 250}
 >
 	<div
 		class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
 	>
 		<a href="/c" use:useLink class="hover:text-accent underline">
-			<HackedText text="blog" scrambled={!loadedPage || scrollY > 250} />
+			<HackedText text="blog" scrambled={!loadedPage} />
 		</a>
 		<a href="/#projects" use:useLink class="hover:text-accent underline">
-			<HackedText text="projects" scrambled={!loadedPage || scrollY > 250} />
+			<HackedText text="projects" scrambled={!loadedPage} />
 		</a>
 		<a href="/contact" use:useLink class="hover:text-accent underline">
-			<HackedText text="contact" scrambled={!loadedPage || scrollY > 250} />
+			<HackedText text="contact" scrambled={!loadedPage} />
 		</a>
 	</div>
 
@@ -226,238 +375,83 @@
 		{#if scrollY < 3700}
 			<Circuit />
 		{/if}
-		<ProjectsProgress />
+
+		<ProjectsProgress {outlineProgress} {imageOpacity} />
+
 		<T.PerspectiveCamera
 			makeDefault
-			position={camera.current.position}
-			rotation={camera.current.rotation}
+			position={camera.position}
+			rotation={camera.rotation}
 			fov={50}
 		/>
 	</Canvas>
 </div>
 
+<!-- Special handling for the first "Team" section -->
 <section class="container mx-auto h-[400vh]">
-	<div
-		id="projects"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => projectsProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjects = event.detail.inView;
-		}}
-	>
+	<div id="team" class="sticky top-0 flex h-screen items-center justify-center">
 		<div class="m-auto grid w-full grid-cols-8">
 			<div class="col-span-3 col-start-1 my-auto">
-				<HackedText class="text-8xl" text="I love a" scrambled={!visibleProjects} />
-				<HackedText class="text-8xl" text="good Team" scrambled={!visibleProjects} />
+				<HackedText class="text-8xl" text="I love a" scrambled={!teamState.visible} />
+				<HackedText class="text-8xl" text="good Team" scrambled={!teamState.visible} />
 			</div>
 
 			<div
 				class="text-muted-foreground col-span-2 col-start-4 mx-auto mb-auto -translate-y-20 font-mono"
 			>
-				<HackedText text="Roles // 52 6F 6C 65 73" scrambled={!visibleProjects} />
-				<HackedText text="& Architecture // QXJjaGl0ZWN0dXJl" scrambled={!visibleProjects} />
+				<HackedText text="Roles // 52 6F 6C 65 73" scrambled={!teamState.visible} />
+				<HackedText text="& Architecture // QXJjaGl0ZWN0dXJl" scrambled={!teamState.visible} />
 			</div>
 
 			<div class="col-span-3 col-start-6 mb-auto ml-auto">
 				<HackedText
 					class="mb-auto text-right text-8xl"
 					text="Projects"
-					scrambled={!visibleProjects}
+					scrambled={!teamState.visible}
 				/>
 			</div>
 
-			<AsciiProgressBar
-				class="col-span-3 col-start-1 mt-6 mb-auto"
-				progress={projectsProgress.current}
-			/>
+			<AsciiProgressBar class="col-span-3 col-start-1 mt-6 mb-auto" progress={teamState.progress} />
 		</div>
 	</div>
 </section>
 
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-1"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => stPauliProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsStPauli = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Lead Frontend // upcoming"
-				scrambled={!visibleProjectsStPauli}
-			/>
-			<HackedText class="text-8xl" text="FC St. Pauli" scrambled={!visibleProjectsStPauli} />
-			<HackedText class="text-8xl" text="Sports Club" scrambled={!visibleProjectsStPauli} />
-			<AsciiProgressBar progress={stPauliProgress.current} />
+<!-- ProjectsState -->
+{#each Object.entries(projectsState) as [projectId, project]}
+	<section class="container mx-auto h-[200vh]">
+		<div id={projectId} class="sticky top-0 flex h-screen items-center justify-center">
+			<div class="m-auto w-full {project.alignment === 'right' ? 'text-right' : ''}">
+				<HackedText
+					class="text-muted-foreground text-xl"
+					text={`${project.role} // ${project.roleKey}`}
+					scrambled={!project.visible}
+				/>
+				<HackedText class="text-8xl" text={project.title} scrambled={!project.visible} />
+				{#if project.subtitle}
+					<HackedText class="text-8xl" text={project.subtitle} scrambled={!project.visible} />
+				{/if}
+				<AsciiProgressBar progress={project.progress} />
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
+{/each}
 
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-1"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => buerkertProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsBuerkert = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full text-right">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Lead Frontend // 3I85$C/PD5LE"
-				scrambled={!visibleProjectsBuerkert}
-			/>
-			<HackedText class="text-8xl" text="Buerkert" scrambled={!visibleProjectsBuerkert} />
-			<HackedText class="text-8xl" text="Eccomerce" scrambled={!visibleProjectsBuerkert} />
-			<AsciiProgressBar progress={buerkertProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-2"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => hapekoProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsHapeko = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Frontend & Backend // nmuEGyI%"
-				scrambled={!visibleProjectsHapeko}
-			/>
-			<HackedText class="text-8xl" text="Hapeko" scrambled={!visibleProjectsHapeko} />
-			<HackedText class="text-8xl" text="Consulting" scrambled={!visibleProjectsHapeko} />
-			<AsciiProgressBar progress={hapekoProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-1"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => vwProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsVw = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full text-right">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Frontend // ...- .--"
-				scrambled={!visibleProjectsVw}
-			/>
-			<HackedText class="text-8xl" text="VW" scrambled={!visibleProjectsVw} />
-			<HackedText class="text-8xl" text="ID 4" scrambled={!visibleProjectsVw} />
-			<AsciiProgressBar progress={vwProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-1"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => futuriumProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsFuturium = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Frontend & Backend // !?==="
-				scrambled={!visibleProjectsFuturium}
-			/>
-			<HackedText class="text-8xl" text="Futurium" scrambled={!visibleProjectsFuturium} />
-			<HackedText class="text-8xl" text="Museum" scrambled={!visibleProjectsFuturium} />
-			<AsciiProgressBar progress={futuriumProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-2"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => zebraProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsZebra = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full text-right">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Frontend & Backend // arbez"
-				scrambled={!visibleProjectsZebra}
-			/>
-			<HackedText class="text-8xl" text="Zebra" scrambled={!visibleProjectsZebra} />
-			<HackedText class="text-8xl" text="Media Authority NRW" scrambled={!visibleProjectsZebra} />
-			<AsciiProgressBar progress={zebraProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section class="container mx-auto h-[200vh]">
-	<div
-		id="projects-slider-2"
-		class="sticky top-0 flex h-screen items-center justify-center"
-		use:inview={{ threshold: 1, rootMargin: '50px' }}
-		use:useStickyProgress={{ onProgress: (progress) => obiProgress.set(progress) }}
-		oninview_change={(event) => {
-			visibleProjectsObi = event.detail.inView;
-		}}
-	>
-		<div class="m-auto w-full">
-			<HackedText
-				class="text-muted-foreground text-xl"
-				text="Frontend & Backend // obi"
-				scrambled={!visibleProjectsObi}
-			/>
-			<HackedText class="text-8xl" text="Obi" scrambled={!visibleProjectsObi} />
-			<HackedText class="text-8xl" text="Machbar" scrambled={!visibleProjectsObi} />
-			<AsciiProgressBar progress={obiProgress.current} />
-		</div>
-	</div>
-</section>
-
-<section
-	id="projects-overview"
-	class="mb-40 flex flex-col items-center justify-center"
-	use:inview={{ threshold: 1, rootMargin: '50px' }}
-	oninview_change={(event) => {
-		visibleProjectsOverview = event.detail.inView;
-	}}
->
+<!-- Overview -->
+<section id="overview" class="mb-40 flex flex-col items-center justify-center">
 	<div class="container mx-auto mb-8 grid grid-cols-8">
 		<HackedText
 			class="text-muted-foreground col-span-3 col-start-1 text-xl"
-			text="Fullstack // Js - Rust - Php - Go"
-			scrambled={!visibleProjectsOverview}
+			text="Fullstack / Js - Rust - Php - Go"
+			scrambled={!overviewState.visible}
 		/>
 		<HackedText
 			class="col-span-3 col-start-1 text-6xl"
 			text="And Many More…"
-			scrambled={!visibleProjectsOverview}
+			scrambled={!overviewState.visible}
 		/>
 		<p
 			class="col-span-4 col-start-5 transition-all delay-500 duration-1000 ease-in"
-			class:opacity-0={!visibleProjectsOverview}
+			class:opacity-0={!overviewState.visible}
 		>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
 			labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
@@ -469,100 +463,28 @@
 
 	<div
 		class="col-span-full mb-8 w-screen overflow-hidden transition-all delay-700 duration-1000 ease-in"
-		class:opacity-0={!visibleProjectsOverview}
+		class:opacity-0={!overviewState.visible}
 	>
 		<Marqueeck
 			class="border-muted w-full border border-dashed"
 			--marqueeck-padding-y="2rem"
 			options={{ paddingX: 200, gap: 200, speed: 40 }}
 		>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> FC St. Pauli
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Buerkert
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Hapeko
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Futurium
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Obi
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Landesanstalt für Medien NRW
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Merck
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Aareal
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Otto
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Fintropolis
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Gambit
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Wasserried
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Berenberg
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Initiative Milch
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> VDP
-			</div>
-			<div
-				class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
-			>
-				<Home /> Lufthansa Technik
-			</div>
+			{#each ['FC St. Pauli', 'Buerkert', 'Hapeko', 'Futurium', 'Obi', 'Landesanstalt für Medien NRW', 'Merck', 'Aareal', 'Otto', 'Fintropolis', 'Gambit', 'Wasserried', 'Berenberg', 'Initiative Milch', 'VDP', 'Lufthansa Technik'] as company}
+				<div
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+				>
+					<Home />
+					{company}
+				</div>
+			{/each}
 		</Marqueeck>
 	</div>
 
 	<div class="container mx-auto grid grid-cols-8">
 		<p
 			class="col-span-4 col-start-5 transition-all delay-1000 duration-1000 ease-in"
-			class:opacity-0={!visibleProjectsOverview}
+			class:opacity-0={!overviewState.visible}
 		>
 			Lorem ipsum odor amet, consectetuer adipiscing elit. Nisl platea sodales aliquam volutpat
 			integer lacus fames. Laoreet sed praesent sed eget dui elementum nunc gravida. Facilisi
