@@ -376,7 +376,7 @@
 		<a href="/c" use:useLink class="hover:text-accent underline">
 			<HackedText text="blog" scrambled={!loadedPage} />
 		</a>
-		<a href="/#projects" use:useLink class="hover:text-accent underline">
+		<a href="/" use:useLink class="hover:text-accent underline">
 			<HackedText text="projects" scrambled={!loadedPage} />
 		</a>
 		<a href="/contact" use:useLink class="hover:text-accent underline">
