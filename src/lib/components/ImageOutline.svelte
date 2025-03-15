@@ -1,22 +1,18 @@
 <script lang="ts">
-	import { T, useTask } from '@threlte/core';
-	import { onMount } from 'svelte';
-	import { Vector3, TextureLoader, CatmullRomCurve3, Texture } from 'three';
+	import { T } from '@threlte/core';
+	import { Vector3, CatmullRomCurve3 } from 'three';
 	import { MeshLineGeometry, MeshLineMaterial } from '@threlte/extras';
 
 	interface Props {
 		outlineProgress: number;
-		imageOpacity: number;
 	}
 
-	const { outlineProgress, imageOpacity }: Props = $props();
+	const { outlineProgress }: Props = $props();
 
 	const OUTLINE_COLOR = '#00ffff';
 	const OUTLINE_WIDTH = 2;
 	const PLANE_WIDTH = 135;
 	const PLANE_HEIGHT = 135;
-
-	let imageTexture: Texture | null = $state(null);
 
 	// Create a spline for a more interesting outline shape
 	const createSplineCurve = () => {
@@ -63,15 +59,6 @@
 	const splineCurve = createSplineCurve();
 	const splinePoints = 100;
 
-	// Load image texture
-	onMount(() => {
-		const loader = new TextureLoader();
-		// Replace with your image URL
-		loader.load('https://placehold.co/400x400', (texture) => {
-			imageTexture = texture;
-		});
-	});
-
 	function getVisibleLinePoints() {
 		if (outlineProgress <= 0) return [];
 
@@ -105,14 +92,6 @@
 				opacity={1}
 				attenuate={false}
 			/>
-		</T.Mesh>
-	{/if}
-
-	<!-- Image with opacity controlled by GSAP -->
-	{#if imageTexture && imageOpacity > 0}
-		<T.Mesh>
-			<T.PlaneGeometry args={[PLANE_WIDTH, PLANE_HEIGHT]} />
-			<T.MeshBasicMaterial map={imageTexture} transparent={true} opacity={imageOpacity} />
 		</T.Mesh>
 	{/if}
 </T.Group>

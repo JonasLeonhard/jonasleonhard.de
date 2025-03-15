@@ -1,3 +1,17 @@
+<script module lang="ts">
+	export interface ProjectState {
+		visible: boolean;
+		progress: number;
+
+		title: string;
+		subtitle: string;
+		role: string;
+		roleKey: string;
+		alignment: 'left' | 'right';
+		imagePath: string;
+	}
+</script>
+
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
 	import { fade, fly } from 'svelte/transition';
@@ -10,28 +24,18 @@
 		BentoCard,
 		Circuit,
 		HackedText,
-		ProjectsProgress
-	} from '$lib'; // TODO: rename ProjectsProgress
+		ImageOutline
+	} from '$lib';
 	import Marqueeck from '@arisbh/marqueeck';
 	import { Home } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
 	import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+	import ImageProject from '$lib/components/ImageProject.svelte';
 
 	if (browser) {
 		gsap.registerPlugin(ScrollTrigger);
-	}
-
-	interface ProjectState {
-		visible: boolean;
-		progress: number;
-
-		title: string;
-		subtitle: string;
-		role: string;
-		roleKey: string;
-		alignment: 'left' | 'right';
 	}
 
 	let { data } = $props();
@@ -57,7 +61,8 @@
 			subtitle: 'Sports Club',
 			role: 'Lead Frontend',
 			roleKey: 'upcoming',
-			alignment: 'left'
+			alignment: 'left',
+			imagePath: 'https://placehold.co/400x400/FF4136/FFFFFF?text=St.Pauli' // Added image path
 		},
 		buerkert: {
 			visible: false,
@@ -66,8 +71,10 @@
 			subtitle: 'Eccomerce',
 			role: 'Lead Frontend',
 			roleKey: '3I85$C/PD5LE',
-			alignment: 'right'
+			alignment: 'right',
+			imagePath: 'https://placehold.co/400x400/0074D9/FFFFFF?text=Buerkert' // Added image path
 		},
+		// Add imagePath for all other projects similarly
 		hapeko: {
 			visible: false,
 			progress: 0,
@@ -75,7 +82,8 @@
 			subtitle: 'Consulting',
 			role: 'Frontend & Backend',
 			roleKey: 'nmuEGyI%',
-			alignment: 'left'
+			alignment: 'left',
+			imagePath: 'https://placehold.co/400x400/2ECC40/FFFFFF?text=Hapeko'
 		},
 		vw: {
 			visible: false,
@@ -84,7 +92,8 @@
 			subtitle: 'ID 4',
 			role: 'Frontend',
 			roleKey: '...- .--',
-			alignment: 'right'
+			alignment: 'right',
+			imagePath: 'https://placehold.co/400x400/FFDC00/333333?text=VW'
 		},
 		futurium: {
 			visible: false,
@@ -93,7 +102,8 @@
 			subtitle: 'Museum',
 			role: 'Frontend & Backend',
 			roleKey: '!?===',
-			alignment: 'left'
+			alignment: 'left',
+			imagePath: 'https://placehold.co/400x400/B10DC9/FFFFFF?text=Futurium'
 		},
 		zebra: {
 			visible: false,
@@ -102,7 +112,8 @@
 			subtitle: 'Media Authority NRW',
 			role: 'Frontend & Backend',
 			roleKey: 'arbez',
-			alignment: 'right'
+			alignment: 'right',
+			imagePath: 'https://placehold.co/400x400/01FF70/333333?text=Zebra'
 		},
 		obi: {
 			visible: false,
@@ -111,7 +122,8 @@
 			subtitle: 'Machbar',
 			role: 'Frontend & Backend',
 			roleKey: 'obi',
-			alignment: 'left'
+			alignment: 'left',
+			imagePath: 'https://placehold.co/400x400/FF851B/FFFFFF?text=OBI'
 		}
 	};
 
@@ -161,7 +173,8 @@
 	let currentDescIndex = $state(0);
 	let loadedPage = $state(false);
 	let outlineProgress = $state(0);
-	let imageOpacity = $state(0);
+	let imageFadeIn = $state(0);
+	let imageFadeOut = $state(0);
 
 	onMount(() => {
 		loadedPage = true;
@@ -286,15 +299,26 @@
 			}
 		});
 
-		// Animate Image opacity in
+		// Animate Image opacity in/out
 		gsap.timeline({
 			scrollTrigger: {
-				trigger: '#stPauli',
+				trigger: `#team-done`,
 				start: 'top 0%',
-				end: 'bottom 0%',
+				end: 'bottom 50%',
 				scrub: 1,
 				onUpdate: (self) => {
-					imageOpacity = self.progress;
+					imageFadeIn = self.progress;
+				}
+			}
+		});
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: '#overview',
+				start: 'top 100%',
+				end: 'bottom 20%',
+				scrub: 1,
+				onUpdate: (self) => {
+					imageFadeOut = self.progress * 2;
 				}
 			}
 		});
@@ -376,10 +400,12 @@
 <div class="pointer-events-none fixed top-0 left-0 -z-50 h-full w-full">
 	<Canvas>
 		{#if scrollY < 3700}
-			<Circuit />
+			<Circuit dissolveProgress={imageFadeIn} />
 		{/if}
 
-		<ProjectsProgress {outlineProgress} {imageOpacity} />
+		<ImageOutline outlineProgress={outlineProgress - imageFadeOut} />
+
+		<ImageProject allProjects={projectsState} {imageFadeIn} {imageFadeOut} />
 
 		<T.PerspectiveCamera
 			makeDefault
@@ -391,7 +417,7 @@
 </div>
 
 <!-- Special handling for the first "Team" section -->
-<section class="container mx-auto h-[400vh]">
+<section class="container mx-auto h-[200vh]">
 	<div id="team" class="sticky top-0 flex h-screen items-center justify-center">
 		<div class="m-auto grid w-full grid-cols-8">
 			<div class="col-span-3 col-start-1 my-auto">
@@ -417,12 +443,14 @@
 			<AsciiProgressBar class="col-span-3 col-start-1 mt-6 mb-auto" progress={teamState.progress} />
 		</div>
 	</div>
+
+	<div id="team-done" class="h-[100vh]"></div>
 </section>
 
 <!-- ProjectsState -->
 {#each Object.entries(projectsState) as [projectId, project]}
-	<section class="container mx-auto h-[200vh]">
-		<div id={projectId} class="sticky top-0 flex h-screen items-center justify-center">
+	<section class="container mx-auto h-[200vh]" id={projectId}>
+		<div class="sticky top-0 flex h-screen items-center justify-center">
 			<div class="m-auto w-full {project.alignment === 'right' ? 'text-right' : ''}">
 				<HackedText
 					class="text-muted-foreground text-xl"
@@ -433,7 +461,7 @@
 				{#if project.subtitle}
 					<HackedText class="text-8xl" text={project.subtitle} scrambled={!project.visible} />
 				{/if}
-				<AsciiProgressBar progress={project.progress} />
+				<AsciiProgressBar progress={Math.min(project.progress * 2, 1)} />
 			</div>
 		</div>
 	</section>

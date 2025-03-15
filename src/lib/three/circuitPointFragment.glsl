@@ -1,5 +1,5 @@
 uniform float time;
-uniform float fadeoutAt; // Absolute scrollY position where fadeout begins (e.g., 3000)
+uniform float dissolveProgress; // Absolute scrollY position where fadeout begins (e.g., 3000)
 uniform float scrollY; // Current scrollY position from the application
 varying float vOpacity;
 varying float vLineIndex;
@@ -10,7 +10,6 @@ const float CENTER_SIZE = 0.05;
 const float BLOOM_FALLOFF = 1.5;
 const float MOUSE_INFLUENCE_RADIUS = 50.0;
 const float LINE_COLOR_SHIFT = 0.1;
-const float FADE_DISTANCE = 4000.0; // Distance over which the fade occurs after fadeoutAt
 const vec3 HOVER_COLOR = vec3(1.0, 0.7, 0.0);
 const vec3 COLOR_1 = vec3(0.0, 0.749, 1.0);
 const vec3 COLOR_2 = vec3(0.615, 0.204, 1.0);
@@ -42,10 +41,7 @@ void main() {
                  * (CENTER_SIZE * vOpacity) / distanceFromCenter;
 
     // Only apply the fadeout if we're scrolling past the fadeout point
-    if (scrollY >= fadeoutAt) {
-        // Calculate the base scroll progress (0 to 1)
-        float scrollProgress = clamp((scrollY - fadeoutAt) / FADE_DISTANCE, 0.0, 1.0);
-
+    if (dissolveProgress > 0.0) {
         // Create fixed dissolve centers
         vec2 dissolveCenters[5];
         dissolveCenters[0] = vec2(100.0, 100.0);
@@ -62,14 +58,14 @@ void main() {
         }
 
         // Calculate fadeout radius that expands as we scroll
-        float fadeoutRadius = scrollProgress * 600.0;
+        float dissolveRadius = dissolveProgress * 600.0;
 
         // Soft edge width
         float edgeWidth = 10.0;
 
         // Apply fadeout based on distance to nearest center
-        if (minDistance < fadeoutRadius) {
-            float fadeFactor = smoothstep(fadeoutRadius - edgeWidth, fadeoutRadius, minDistance); // with a soft edge!
+        if (minDistance < dissolveRadius) {
+            float fadeFactor = smoothstep(dissolveRadius - edgeWidth, dissolveRadius, minDistance); // with a soft edge!
             alpha *= fadeFactor;
         }
     }

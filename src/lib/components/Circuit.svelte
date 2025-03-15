@@ -9,9 +9,14 @@
 	import glowUrl from '$lib/assets/three/glow.png';
 	import { onMount } from 'svelte';
 
+	interface Props {
+		dissolveProgress: number;
+	}
+
+	const { dissolveProgress }: Props = $props();
+
 	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
-	const fadeoutAt = 1500;
 
 	const curves = $state(
 		computedSvg.curves.map(
@@ -221,12 +226,13 @@
 			time: new Uniform(0),
 			scrollY: new Uniform(0),
 			fadeoutProgress: new Uniform(0),
-			fadeoutAt: new Uniform(fadeoutAt),
+			dissolveProgress: new Uniform(0),
 			mouseTrailCanvasTexture: new Uniform(mouseTrailCanvasTexture)
 		}}
 		uniforms.time.value={time}
 		uniforms.scrollY.value={scrollY}
 		uniforms.fadeoutProgress.value={fadeoutProgress.current}
+		uniforms.dissolveProgress.value={dissolveProgress}
 		uniforms.mouseTrailCanvasTexture.value={mouseTrailCanvasTexture}
 	/>
 </T.Points>
