@@ -3,7 +3,6 @@
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
 	import { MediaQuery } from 'runed';
-	import { Spring } from 'svelte/motion';
 	import {
 		useLink,
 		AsciiProgressBar,
@@ -16,8 +15,13 @@
 	import Marqueeck from '@arisbh/marqueeck';
 	import { Home } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import gsap from 'gsap';
-	import ScrollTrigger from 'gsap/ScrollTrigger';
+	import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+
+	if (browser) {
+		gsap.registerPlugin(ScrollTrigger);
+	}
 
 	interface ProjectState {
 		visible: boolean;
@@ -161,7 +165,6 @@
 
 	onMount(() => {
 		loadedPage = true;
-		gsap.registerPlugin(ScrollTrigger);
 
 		const interval = setInterval(() => {
 			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
