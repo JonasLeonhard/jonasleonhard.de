@@ -184,81 +184,92 @@
 			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
 		}, 4500);
 
-		// CameraMovement 01: Intro -> Team camera
+		// CameraMovement
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: 'body',
 				endTrigger: '#team',
-				start: 'top top',
-				end: 'bottom bottom',
+				start: 'top 0%',
+				end: 'bottom 100%',
 				scrub: 1,
+				// markers: true, // Uncomment for debugging
 				onUpdate: (self) => {
-					const progress = self.progress;
+					let progress = self.progress;
 
-					const startPos = positions.start;
-					const endPos = positions.team;
+					// The midpoint where we should transition from first to second animation
+					const midpoint = 0.5;
 
-					// Interpolate position
-					camera.position = [
-						startPos.position[0] + (endPos.position[0] - startPos.position[0]) * progress,
-						startPos.position[1] + (endPos.position[1] - startPos.position[1]) * progress,
-						startPos.position[2] + (endPos.position[2] - startPos.position[2]) * progress
-					];
+					if (progress < midpoint) {
+						// First half of the scroll
+						const normalizedProgress = progress / midpoint; // 0-1
 
-					// Interpolate rotation
-					camera.rotation = [
-						startPos.rotation[0] + (endPos.rotation[0] - startPos.rotation[0]) * progress,
-						startPos.rotation[1] + (endPos.rotation[1] - startPos.rotation[1]) * progress,
-						startPos.rotation[2] + (endPos.rotation[2] - startPos.rotation[2]) * progress
-					];
+						const startPos = positions.start;
+						const endPos = positions.team;
+
+						// Interpolate position
+						camera.position = [
+							startPos.position[0] +
+								(endPos.position[0] - startPos.position[0]) * normalizedProgress,
+							startPos.position[1] +
+								(endPos.position[1] - startPos.position[1]) * normalizedProgress,
+							startPos.position[2] +
+								(endPos.position[2] - startPos.position[2]) * normalizedProgress
+						];
+
+						// Interpolate rotation
+						camera.rotation = [
+							startPos.rotation[0] +
+								(endPos.rotation[0] - startPos.rotation[0]) * normalizedProgress,
+							startPos.rotation[1] +
+								(endPos.rotation[1] - startPos.rotation[1]) * normalizedProgress,
+							startPos.rotation[2] +
+								(endPos.rotation[2] - startPos.rotation[2]) * normalizedProgress
+						];
+					} else {
+						// Second half of the scroll
+						const normalizedProgress = (progress - midpoint) / (1 - midpoint); // 0-1
+
+						const startPos = positions.team;
+						const endPos = positions.end;
+
+						// Interpolate position
+						camera.position = [
+							startPos.position[0] +
+								(endPos.position[0] - startPos.position[0]) * normalizedProgress,
+							startPos.position[1] +
+								(endPos.position[1] - startPos.position[1]) * normalizedProgress,
+							startPos.position[2] +
+								(endPos.position[2] - startPos.position[2]) * normalizedProgress
+						];
+
+						// Interpolate rotation
+						camera.rotation = [
+							startPos.rotation[0] +
+								(endPos.rotation[0] - startPos.rotation[0]) * normalizedProgress,
+							startPos.rotation[1] +
+								(endPos.rotation[1] - startPos.rotation[1]) * normalizedProgress,
+							startPos.rotation[2] +
+								(endPos.rotation[2] - startPos.rotation[2]) * normalizedProgress
+						];
+					}
 				}
 			}
 		});
 
-		// Camera Movement 02: Team
-		gsap.timeline({
-			scrollTrigger: {
-				trigger: '#team',
-				start: 'top top',
-				scrub: 1,
-				onUpdate: (self) => {
-					const progress = self.progress;
-
-					const startPos = positions.team;
-					const endPos = positions.end;
-
-					// Interpolate position
-					camera.position = [
-						startPos.position[0] + (endPos.position[0] - startPos.position[0]) * progress,
-						startPos.position[1] + (endPos.position[1] - startPos.position[1]) * progress,
-						startPos.position[2] + (endPos.position[2] - startPos.position[2]) * progress
-					];
-
-					// Interpolate rotation
-					camera.rotation = [
-						startPos.rotation[0] + (endPos.rotation[0] - startPos.rotation[0]) * progress,
-						startPos.rotation[1] + (endPos.rotation[1] - startPos.rotation[1]) * progress,
-						startPos.rotation[2] + (endPos.rotation[2] - startPos.rotation[2]) * progress
-					];
-				}
-			}
-		});
-
-		// Display the Team Section
+		// Team
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: `#team`,
 				start: 'top 0%',
 				end: 'bottom 0%',
 				scrub: 1,
-				markers: false, // Uncomment for timeline debugging
 				onUpdate: (self) => {
 					teamState.progress = self.progress;
 					teamState.visible = self.isActive;
 				}
 			}
 		});
-		// Team image outline
+		// Team - image outline
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: '#team',
@@ -430,8 +441,12 @@
 </div>
 
 <!-- Special handling for the first "Team" section -->
-<section class="container mx-auto h-[200vh]">
-	<div id="team" class="sticky top-0 flex h-screen items-center justify-center">
+<section class="container mx-auto h-[200vh]" id="team">
+	<div
+		class="pointer-events-auto fixed top-0 flex h-screen items-center justify-center transition-all duration-200"
+		class:pointer-events-none={teamState.progress === 0 || teamState.progress === 1}
+		class:opacity-0={teamState.progress === 0 || teamState.progress === 1}
+	>
 		<div class="mt-auto mb-8 grid w-full grid-cols-8 overflow-hidden lg:m-auto">
 			<div
 				class="text-muted-foreground col-span-full mx-auto mb-4 font-mono text-sm sm:text-base md:col-span-2 md:col-start-4 md:mb-auto"
@@ -444,12 +459,12 @@
 				<HackedText
 					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text="I love a"
-					scrambled={!teamState.visible}
+					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
 				<HackedText
 					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text="good Team"
-					scrambled={!teamState.visible}
+					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
 			</div>
 
@@ -457,7 +472,7 @@
 				<HackedText
 					class="mb-auto text-right text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text="Projects"
-					scrambled={!teamState.visible}
+					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
 			</div>
 
@@ -467,14 +482,20 @@
 			/>
 		</div>
 	</div>
-
-	<div id="team-done" class="h-[100vh]"></div>
 </section>
+
+<section id="team-done" class="h-[100vh]"></section>
 
 <!-- ProjectsState -->
 {#each Object.entries(projectsState) as [projectId, project]}
-	<section class="container mx-auto h-[200vh]" id={projectId}>
-		<div class="sticky top-0 flex h-screen items-center justify-center">
+	{@const progress = Math.min(project.progress * 2, 1)}
+	<section class="h-[200vh]" id={projectId}>
+		<div
+			class="pointer-events-auto fixed top-0 left-1/2 container mx-auto flex h-screen -translate-x-1/2 items-center justify-center transition-all duration-200"
+			class:pointer-events-none={progress === 0 || progress === 1}
+			class:opacity-0={progress === 0 || progress === 1}
+			aria-hidden={progress === 0 || progress === 1}
+		>
 			<div
 				class="mt-auto mb-8 w-full overflow-hidden lg:m-auto"
 				class:text-right={project.alignment === 'right'}
@@ -482,24 +503,21 @@
 				<HackedText
 					class="text-muted-foreground sm:text:base mb-2 text-sm md:text-xl"
 					text={`${project.role} // ${project.roleKey}`}
-					scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
+					scrambled={progress === 0 || progress === 1}
 				/>
 				<HackedText
 					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text={project.title}
-					scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
+					scrambled={progress === 0 || progress === 1}
 				/>
 				{#if project.subtitle}
 					<HackedText
 						class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 						text={project.subtitle}
-						scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
+						scrambled={progress === 0 || progress === 1}
 					/>
 				{/if}
-				<AsciiProgressBar
-					class="mt-4 text-sm md:text-base"
-					progress={Math.min(project.progress * 2, 1)}
-				/>
+				<AsciiProgressBar class="mt-4 text-sm md:text-base" {progress} />
 			</div>
 		</div>
 	</section>
