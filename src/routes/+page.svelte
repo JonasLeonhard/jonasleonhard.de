@@ -16,7 +16,6 @@
 	import { Canvas } from '@threlte/core';
 	import { fade, fly } from 'svelte/transition';
 	import { T } from '@threlte/core';
-	import { MediaQuery } from 'runed';
 	import {
 		useLink,
 		AsciiProgressBar,
@@ -33,6 +32,7 @@
 	import gsap from 'gsap';
 	import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 	import ImageProject from '$lib/components/ImageProject.svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	if (browser) {
 		gsap.registerPlugin(ScrollTrigger);
@@ -160,11 +160,11 @@
 		}
 	};
 
-	const positions = $derived(isDesktop.matches ? desktopPositions : mobilePositions);
+	const positions = $derived(isDesktop.current ? desktopPositions : mobilePositions);
 
 	let camera = $state({
-		position: isDesktop.matches ? desktopPositions.start.position : mobilePositions.start.position,
-		rotation: isDesktop.matches ? desktopPositions.start.rotation : mobilePositions.start.rotation
+		position: isDesktop.current ? desktopPositions.start.position : mobilePositions.start.position,
+		rotation: isDesktop.current ? desktopPositions.start.rotation : mobilePositions.start.rotation
 	});
 
 	let projectsState = $state<Record<string, ProjectState>>(projectsData);

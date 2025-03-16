@@ -8,12 +8,14 @@
 	import Portal from 'svelte-portal';
 	import glowUrl from '$lib/assets/three/glow.png';
 	import { onMount } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	interface Props {
 		dissolveProgress: number;
 	}
 
 	const { dissolveProgress }: Props = $props();
+	const isDesktop = new MediaQuery('(min-width: 1140px)');
 
 	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
@@ -147,30 +149,31 @@
 			time += delta;
 		}
 
-		if (
-			mouseTrailCanvas &&
-			mouseTrailCtx &&
-			glowImage.complete &&
-			planeIntersection &&
-			mouseTrailCanvasTexture
-		) {
-			mouseTrailCtx.globalCompositeOperation = 'source-over';
-			mouseTrailCtx.globalAlpha = 0.04;
-			mouseTrailCtx.fillRect(0, 0, mouseTrailCanvas.width, mouseTrailCanvas.height);
+		if (isDesktop.current)
+			if (
+				mouseTrailCanvas &&
+				mouseTrailCtx &&
+				glowImage.complete &&
+				planeIntersection &&
+				mouseTrailCanvasTexture
+			) {
+				mouseTrailCtx.globalCompositeOperation = 'source-over';
+				mouseTrailCtx.globalAlpha = 0.04;
+				mouseTrailCtx.fillRect(0, 0, mouseTrailCanvas.width, mouseTrailCanvas.height);
 
-			const glowSize = mouseTrailCanvas.width * 0.1;
-			mouseTrailCtx.globalCompositeOperation = 'lighten';
-			mouseTrailCtx.globalAlpha = 1;
-			mouseTrailCtx.drawImage(
-				glowImage,
-				planeIntersection.x - glowSize / 2,
-				planeIntersection.y - glowSize / 2,
-				glowSize,
-				glowSize
-			);
+				const glowSize = mouseTrailCanvas.width * 0.1;
+				mouseTrailCtx.globalCompositeOperation = 'lighten';
+				mouseTrailCtx.globalAlpha = 1;
+				mouseTrailCtx.drawImage(
+					glowImage,
+					planeIntersection.x - glowSize / 2,
+					planeIntersection.y - glowSize / 2,
+					glowSize,
+					glowSize
+				);
 
-			mouseTrailCanvasTexture.needsUpdate = true;
-		}
+				mouseTrailCanvasTexture.needsUpdate = true;
+			}
 	});
 </script>
 

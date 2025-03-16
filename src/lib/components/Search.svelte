@@ -16,9 +16,9 @@
 		send,
 		receive
 	} from '$lib';
-	import { MediaQuery } from 'runed';
 	import { onMount } from 'svelte';
 	import type { Selected } from 'bits-ui';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	interface PagefindResultItem {
 		id: string;
@@ -85,7 +85,7 @@
 		value: 'publishDate-desc'
 	});
 	let paginationPage = $state(1);
-	const paginationSiblingCount = $derived(isDesktop.matches ? 1 : 0);
+	const paginationSiblingCount = $derived(isDesktop.current ? 1 : 0);
 	let paginatedSearchResults: PagefindResultItem[] = $derived(
 		searchResult?.results?.slice(
 			(paginationPage - 1) * paginationPageSize,
