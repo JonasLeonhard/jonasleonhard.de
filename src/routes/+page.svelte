@@ -482,18 +482,18 @@
 				<HackedText
 					class="text-muted-foreground sm:text:base mb-2 text-sm md:text-xl"
 					text={`${project.role} // ${project.roleKey}`}
-					scrambled={!project.visible}
+					scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
 				/>
 				<HackedText
 					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text={project.title}
-					scrambled={!project.visible}
+					scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
 				/>
 				{#if project.subtitle}
 					<HackedText
 						class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 						text={project.subtitle}
-						scrambled={!project.visible}
+						scrambled={!project.visible || Math.min(project.progress * 2, 1) === 1}
 					/>
 				{/if}
 				<AsciiProgressBar

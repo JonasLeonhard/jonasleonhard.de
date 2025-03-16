@@ -14,8 +14,8 @@
 		text,
 		class: className = '',
 		scrambled = false,
-		widthDuration = 500,
-		revealDuration = 500,
+		widthDuration = 100,
+		revealDuration = 200,
 		charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,./<>?'
 	}: Props = $props();
 
