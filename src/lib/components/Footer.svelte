@@ -115,7 +115,7 @@
 	</svg>
 {/snippet}
 
-<div class="w-screen overflow-hidden">
+<div class="w-full overflow-hidden">
 	<Marqueeck
 		class="border-muted w-full border border-dashed"
 		--marqueeck-padding-y="2rem"

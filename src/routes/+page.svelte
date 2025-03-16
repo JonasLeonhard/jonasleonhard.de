@@ -127,7 +127,7 @@
 		}
 	};
 
-	const isDesktop = new MediaQuery('(min-width: 1024px)');
+	const isDesktop = new MediaQuery('(min-width: 1140px)');
 	let scrollY = $state(0);
 
 	const desktopPositions = {
@@ -147,20 +147,20 @@
 
 	const mobilePositions = {
 		start: {
-			position: [0, 0, 550],
+			position: [0, 70, 550],
 			rotation: [0, 0, 0]
 		},
 		team: {
-			position: [0, 0, 550],
+			position: [0, 12, 550],
 			rotation: [0, 0, Math.PI / 12]
 		},
 		end: {
-			position: [200, 100, 400],
-			rotation: [Math.PI / 12, 0, Math.PI / 6]
+			position: [0, 12, 400],
+			rotation: [0, 0, Math.PI / 2]
 		}
 	};
 
-	const positions = isDesktop.matches ? desktopPositions : mobilePositions;
+	const positions = $derived(isDesktop.matches ? desktopPositions : mobilePositions);
 
 	let camera = $state({
 		position: isDesktop.matches ? desktopPositions.start.position : mobilePositions.start.position,
@@ -170,6 +170,7 @@
 	let projectsState = $state<Record<string, ProjectState>>(projectsData);
 	let teamState = $state({ visible: false, progress: 0 });
 	let overviewState = $state({ visible: false });
+	let postsState = $state({ visible: false });
 	let currentDescIndex = $state(0);
 	let loadedPage = $state(false);
 	let outlineProgress = $state(0);
@@ -323,6 +324,18 @@
 			}
 		});
 
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: `#posts`,
+				start: 'top 50%',
+				end: 'bottom 0%',
+				scrub: 1,
+				onUpdate: (self) => {
+					postsState.visible = self.isActive;
+				}
+			}
+		});
+
 		// fade in / out the nav-bar
 		gsap.to('#intro-nav-bar', {
 			scrollTrigger: {
@@ -346,7 +359,7 @@
 
 <section class="container mx-auto -mt-20 flex flex-col pt-4 pb-60">
 	<h3
-		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
 		Jonas
 	</h3>
@@ -357,7 +370,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute top-0 left-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-4xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+					class="absolute top-0 left-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 				>
 					{description}
 				</h3>
@@ -368,7 +381,7 @@
 
 <section
 	id="intro-nav-bar"
-	class="container mx-auto flex w-full flex-wrap justify-between gap-4 transition-all duration-1000 lg:gap-60"
+	class="fixed bottom-8 left-1/2 container flex w-full -translate-x-1/2 flex-wrap justify-between gap-4 transition-all duration-1000 lg:bottom-16 lg:gap-60"
 >
 	<div
 		class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
@@ -385,7 +398,7 @@
 	</div>
 
 	<p
-		class="text-muted-foreground flex flex-wrap items-center gap-2 transition-all delay-700 duration-500 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800"
+		class="text-muted-foreground flex flex-wrap items-center gap-2 text-xs transition-all delay-700 duration-500 before:h-2 before:w-2 before:animate-pulse before:rounded-full before:bg-linear-to-br before:from-green-400 before:to-green-800 sm:text-base"
 		class:opacity-100={loadedPage}
 		class:opacity-0={!loadedPage}
 	>
@@ -419,28 +432,39 @@
 <!-- Special handling for the first "Team" section -->
 <section class="container mx-auto h-[200vh]">
 	<div id="team" class="sticky top-0 flex h-screen items-center justify-center">
-		<div class="m-auto grid w-full grid-cols-8">
-			<div class="col-span-3 col-start-1 my-auto">
-				<HackedText class="text-8xl" text="I love a" scrambled={!teamState.visible} />
-				<HackedText class="text-8xl" text="good Team" scrambled={!teamState.visible} />
-			</div>
-
+		<div class="mt-auto mb-8 grid w-full grid-cols-8 overflow-hidden lg:m-auto">
 			<div
-				class="text-muted-foreground col-span-2 col-start-4 mx-auto mb-auto -translate-y-20 font-mono"
+				class="text-muted-foreground col-span-full mx-auto mb-4 font-mono text-sm sm:text-base md:col-span-2 md:col-start-4 md:mb-auto"
 			>
 				<HackedText text="Roles // 52 6F 6C 65 73" scrambled={!teamState.visible} />
 				<HackedText text="& Architecture // QXJjaGl0ZWN0dXJl" scrambled={!teamState.visible} />
 			</div>
 
+			<div class="col-span-3 col-start-1 my-auto">
+				<HackedText
+					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					text="I love a"
+					scrambled={!teamState.visible}
+				/>
+				<HackedText
+					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					text="good Team"
+					scrambled={!teamState.visible}
+				/>
+			</div>
+
 			<div class="col-span-3 col-start-6 mb-auto ml-auto">
 				<HackedText
-					class="mb-auto text-right text-8xl"
+					class="mb-auto text-right text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text="Projects"
 					scrambled={!teamState.visible}
 				/>
 			</div>
 
-			<AsciiProgressBar class="col-span-3 col-start-1 mt-6 mb-auto" progress={teamState.progress} />
+			<AsciiProgressBar
+				class="col-span-full mt-6 mb-auto text-sm md:col-span-3 md:col-start-1 md:text-base"
+				progress={teamState.progress}
+			/>
 		</div>
 	</div>
 
@@ -451,17 +475,31 @@
 {#each Object.entries(projectsState) as [projectId, project]}
 	<section class="container mx-auto h-[200vh]" id={projectId}>
 		<div class="sticky top-0 flex h-screen items-center justify-center">
-			<div class="m-auto w-full {project.alignment === 'right' ? 'text-right' : ''}">
+			<div
+				class="mt-auto mb-8 w-full overflow-hidden lg:m-auto"
+				class:text-right={project.alignment === 'right'}
+			>
 				<HackedText
-					class="text-muted-foreground text-xl"
+					class="text-muted-foreground sm:text:base mb-2 text-sm md:text-xl"
 					text={`${project.role} // ${project.roleKey}`}
 					scrambled={!project.visible}
 				/>
-				<HackedText class="text-8xl" text={project.title} scrambled={!project.visible} />
+				<HackedText
+					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					text={project.title}
+					scrambled={!project.visible}
+				/>
 				{#if project.subtitle}
-					<HackedText class="text-8xl" text={project.subtitle} scrambled={!project.visible} />
+					<HackedText
+						class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+						text={project.subtitle}
+						scrambled={!project.visible}
+					/>
 				{/if}
-				<AsciiProgressBar progress={Math.min(project.progress * 2, 1)} />
+				<AsciiProgressBar
+					class="mt-4 text-sm md:text-base"
+					progress={Math.min(project.progress * 2, 1)}
+				/>
 			</div>
 		</div>
 	</section>
@@ -469,19 +507,19 @@
 
 <!-- Overview -->
 <section id="overview" class="mb-40 flex flex-col items-center justify-center">
-	<div class="container mx-auto mb-8 grid grid-cols-8">
+	<div class="container mx-auto mb-8 grid grid-cols-8 overflow-hidden">
 		<HackedText
-			class="text-muted-foreground col-span-3 col-start-1 text-xl"
+			class="text-muted-foreground col-span-full mb-2 text-sm sm:text-base md:col-span-3 md:col-start-1"
 			text="Fullstack / Js - Rust - Php - Go"
 			scrambled={!overviewState.visible}
 		/>
 		<HackedText
-			class="col-span-3 col-start-1 text-6xl"
-			text="And Many More…"
+			class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
+			text="And More…"
 			scrambled={!overviewState.visible}
 		/>
 		<p
-			class="col-span-4 col-start-5 transition-all delay-500 duration-1000 ease-in"
+			class="col-span-full transition-all delay-500 duration-1000 ease-in lg:col-span-4 lg:col-start-5"
 			class:opacity-0={!overviewState.visible}
 		>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -493,7 +531,7 @@
 	</div>
 
 	<div
-		class="col-span-full mb-8 w-screen overflow-hidden transition-all delay-700 duration-1000 ease-in"
+		class="col-span-full mb-8 w-full overflow-hidden transition-all delay-700 duration-1000 ease-in"
 		class:opacity-0={!overviewState.visible}
 	>
 		<Marqueeck
@@ -514,7 +552,7 @@
 
 	<div class="container mx-auto grid grid-cols-8">
 		<p
-			class="col-span-4 col-start-5 transition-all delay-1000 duration-1000 ease-in"
+			class="col-span-full transition-all delay-1000 duration-1000 ease-in lg:col-span-4 lg:col-start-5"
 			class:opacity-0={!overviewState.visible}
 		>
 			Lorem ipsum odor amet, consectetuer adipiscing elit. Nisl platea sodales aliquam volutpat
@@ -527,10 +565,21 @@
 	</div>
 </section>
 
-<section class="container mx-auto mb-40">
-	<HackedText class="mb-40 w-max font-mono text-6xl lg:text-8xl" text="Latest Posts" />
+<section id="posts" class="container mx-auto mb-40">
+	<HackedText
+		class="text-muted-foreground col-span-full mb-2 text-sm sm:text-base md:col-span-3 md:col-start-1"
+		text="Looking for content?"
+		scrambled={!postsState.visible}
+	/>
+	<HackedText
+		class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-12 lg:text-8xl"
+		text="Lates Post"
+		scrambled={!postsState.visible}
+	/>
 
-	<div class="mb-16 flex items-center justify-center">
+	<div
+		class="mb-16 flex items-center justify-center delay-[200ms] delay-[400ms] delay-[600ms] delay-[800ms]"
+	>
 		<BentoGrid>
 			{#each data.posts.slice(0, 4) as post, index}
 				<BentoCard
@@ -540,7 +589,8 @@
 					cta="View Post"
 					class="col-span-3 {index % 4 === 0 || index % 4 === 3
 						? 'lg:col-span-1'
-						: 'lg:col-span-2'}"
+						: 'lg:col-span-2'} transition-all opacity-{postsState.visible ? 1 : 0} delay-[{index *
+						200}ms]"
 				></BentoCard>
 			{/each}
 		</BentoGrid>
@@ -548,11 +598,3 @@
 
 	<a use:useLink href="/c" class="hover:text-accent hover:underline">View All</a>
 </section>
-
-<div
-	class="text- container mx-auto mb-80 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-3xl text-transparent dark:from-white dark:to-white/40"
->
-	"Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus, sit aut alias placeat neque
-	ipsam reprehenderit impedit similique odit cupiditate iste optio, natus architecto incidunt
-	aliquid vel perspiciatis praesentium vitae."
-</div>
