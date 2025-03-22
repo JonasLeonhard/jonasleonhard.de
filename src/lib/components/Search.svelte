@@ -202,8 +202,18 @@
 			<h3
 				class="relative z-10 mt-4 mb-4 max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 			>
-				Blog, Projects & Shorts
+				Content I Love
 			</h3>
+
+			<p class="max-w-lg">
+				I love to Program. I really do. And ever since i was a Kid, i liked to nerd out with my
+				Friends. And now years later. I get the same feeling i used to get with my Friends, when
+				Nerding out with my Coworkers or random People on the Internet who take their time to teach
+				others about what they have learned, make Youtube Videos, give Courses, write Blogposts or
+				even Books about Programming. I would love to contribute to this discussion. You can find
+				both my Blogposts, aswell as any Resource i find worth sharing in my Content collection
+				below. I hope you will enjoy this list as much as i did!
+			</p>
 		</div>
 	</div>
 

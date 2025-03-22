@@ -596,7 +596,8 @@
 		text="Content i Love"
 		scrambled={!postsState.visible}
 	/>
-	<p class="mb-16">
+
+	<p class="mb-16 max-w-lg">
 		I love to Program. I really do. And ever since i was a Kid, i liked to nerd out with my Friends.
 		And now years later. I get the same feeling i used to get with my Friends, when Nerding out with
 		my Coworkers or random People on the Internet who take their time to teach others about what
