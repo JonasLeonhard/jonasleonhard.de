@@ -200,7 +200,7 @@
 			</span>
 
 			<h3
-				class="relative z-10 mt-4 mb-4 w-max max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+				class="relative z-10 mt-4 mb-4 max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 			>
 				Blog, Projects & Shorts
 			</h3>
