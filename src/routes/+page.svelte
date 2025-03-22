@@ -588,14 +588,23 @@
 <section id="posts" class="container mx-auto mb-40">
 	<HackedText
 		class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-base sm:text-base md:col-span-3 md:col-start-1 md:text-xl"
-		text="Looking for content?"
+		text="Y'all got any more of them blogposts?"
 		scrambled={!postsState.visible}
 	/>
 	<HackedText
-		class="col-span-full mb-20 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl dark:from-white dark:to-white/40"
-		text="Latest Post"
+		class="col-span-full mb-8 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+		text="Content i Love"
 		scrambled={!postsState.visible}
 	/>
+	<p class="mb-16">
+		I love to Program. I really do. And ever since i was a Kid, i liked to nerd out with my Friends.
+		And now years later. I get the same feeling i used to get with my Friends, when Nerding out with
+		my Coworkers or random People on the Internet who take their time to teach others about what
+		they have learned, make Youtube Videos, give Courses, write Blogposts or even Books about
+		Programming. I would love to contribute to this discussion. You can find both my Blogposts,
+		aswell as any Resource i find worth sharing in my Content collection below. I hope you will
+		enjoy this list as much as i did!
+	</p>
 
 	<div
 		class="mb-16 flex items-center justify-center delay-[200ms] delay-[400ms] delay-[600ms] delay-[800ms]"
