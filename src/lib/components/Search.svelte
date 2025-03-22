@@ -177,7 +177,7 @@
 		if (!pagefind) return;
 
 		searchInput = '';
-		await loadFilters();
+		tags = {};
 		performSearch(searchInput, tags, sortBy);
 	}
 
@@ -194,9 +194,9 @@
 	<div class="mb-32 flex flex-col gap-4 lg:flex-row lg:gap-10">
 		<div>
 			<span
-				class="relative z-10 mb-4 block max-w-max border border-dashed bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-sm text-transparent dark:from-white dark:to-white/40"
+				class="text-muted-foreground relative z-10 mb-4 block max-w-max border border-dashed text-base"
 			>
-				Thoughts, tutorials, explainations and my work. You can find them all here.
+				These are the droids you are looking for.
 			</span>
 
 			<h3
@@ -273,7 +273,7 @@
 
 			<!-- Results Right -->
 			<div
-				class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto font-mono text-xs @xl/search-results:p-4"
+				class="grid h-full w-full auto-rows-max grid-cols-12 gap-0 overflow-y-auto font-mono text-base @xl/search-results:p-4"
 			>
 				<div class="col-span-12 mb-8 ml-auto">
 					<span class="text-accent">{searchResult ? searchResult?.results?.length : 0}</span> Results
@@ -296,10 +296,9 @@
 								excerpt={data.excerpt}
 								selectedTags={tags}
 								tags={data.meta.tags}
-								image={data.meta.image}
-								imageAlt={data.meta.image_alt || 'teaser'}
 								author={data.meta?.author}
 								description={data.meta?.description}
+								isFiltered={searchInput !== ''}
 								url={data.meta?.url}
 							/>
 						{:catch error}

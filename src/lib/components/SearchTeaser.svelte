@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { MoveRight } from 'lucide-svelte';
-	import { Collapsible, Badge, useLink } from '$lib';
+	import { Badge, useLink } from '$lib';
 	interface PagefindFilter {
 		[key: string]: number;
 	}
@@ -11,10 +11,9 @@
 		excerpt: string;
 		tags?: string;
 		selectedTags?: PagefindFilter;
-		image?: string;
-		imageAlt?: string;
 		author?: string;
 		description?: string;
+		isFiltered?: boolean;
 	}
 
 	const {
@@ -23,11 +22,10 @@
 		excerpt,
 		tags,
 		selectedTags,
-		image,
-		imageAlt,
 		author,
 		description,
-		url
+		url,
+		isFiltered
 	}: Props = $props();
 </script>
 
@@ -39,66 +37,33 @@
 		<a class="z-10" use:useLink href={url?.replace('.html', '')}>
 			<h3 class="mb-2 max-w-[calc(100%-32px)] font-mono text-3xl">{headline}</h3>
 			<div class="mb-20">
-				<span class="font-mono">{date}</span>
-				<span class="text-muted-foreground"> -- {@html excerpt}</span>
+				<span class="font-mono text-base">{date}</span>
+				<span class="text-muted-foreground text-base"> --- {author}</span>
+				<span class="text-muted-foreground text-base">
+					---
+					{#if isFiltered}
+						{@html excerpt}
+					{:else}
+						{description}
+					{/if}
+				</span>
 			</div>
 		</a>
 
-		<Collapsible class="z-10 pb-4">
-			<div class="flex items-center gap-2">
-				{#if tags}
-					<div class="col-span-1 mt-2 mb-4 flex flex-wrap gap-1">
-						{#each tags.split(',') as tag}
-							<Badge
-								variant={Object.keys(selectedTags || {}).includes(tag.trim())
-									? 'selected'
-									: 'default'}
-							>
-								{tag}
-							</Badge>
-						{/each}
-					</div>
-				{/if}
-				<span
-					class="border-muted-foreground text-muted-foreground hover:text-accent border-b border-dashed"
-					>more</span
-				>
-			</div>
-			{#snippet expanded()}
-				{#if image}
-					<span class="text-muted-foreground font-mono">TEASER:</span>
-					<img
-						src={image}
-						alt={imageAlt || 'Teaser Image'}
-						class="border-muted-foreground col-span-12 h-auto w-[150px] border"
-						width="150px"
-						loading="lazy"
-					/>
-				{/if}
-
-				{#if author}
-					<p class="mb-1 w-max">
-						<span class="text-muted-foreground font-mono">AUTHOR:</span>
-						{author}
-					</p>
-				{/if}
-
-				{#if description}
-					<p class="mb-1 w-max">
-						<span class="text-muted-foreground font-mono">DESCRIPTION:</span>
-						{description}
-					</p>
-				{/if}
-
-				<a
-					class="text-accent mt-3 block w-max underline"
-					use:useLink
-					href={url?.replace('.html', '')}
-					class:flex={image}
-				>
-					READ
-				</a>
-			{/snippet}
-		</Collapsible>
+		<div class="flex items-center gap-2">
+			{#if tags}
+				<div class="col-span-1 mt-2 mb-4 flex flex-wrap gap-1">
+					{#each tags.split(',') as tag}
+						<Badge
+							variant={Object.keys(selectedTags || {}).includes(tag.trim())
+								? 'selected'
+								: 'default'}
+						>
+							{tag}
+						</Badge>
+					{/each}
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>

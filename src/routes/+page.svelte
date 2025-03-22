@@ -381,7 +381,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute top-0 left-0 z-10 mt-4 max-w-3xl max-w-max bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+					class="absolute top-0 left-0 z-10 mt-4 max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 				>
 					{description}
 				</h3>
@@ -457,12 +457,12 @@
 
 			<div class="col-span-3 col-start-1 my-auto">
 				<HackedText
-					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					class="bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 					text="I love a"
 					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
 				<HackedText
-					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					class="bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 					text="good Team"
 					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
@@ -470,7 +470,7 @@
 
 			<div class="col-span-3 col-start-6 mb-auto ml-auto">
 				<HackedText
-					class="mb-auto text-right text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					class="mb-auto bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-right text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 					text="Projects"
 					scrambled={!teamState.visible || teamState.progress === 0 || teamState.progress === 1}
 				/>
@@ -501,18 +501,18 @@
 				class:text-right={project.alignment === 'right'}
 			>
 				<HackedText
-					class={`text-muted-foreground sm:text:base mb-2 w-max border border-dashed text-sm md:text-xl ${project.alignment === 'right' ? 'ml-auto' : ''}`}
+					class={`text-muted-foreground mb-2 w-max border border-dashed text-base md:text-xl ${project.alignment === 'right' ? 'ml-auto' : ''}`}
 					text={`${project.role} // ${project.roleKey}`}
 					scrambled={progress === 0 || progress === 1}
 				/>
 				<HackedText
-					class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+					class="bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 					text={project.title}
 					scrambled={progress === 0 || progress === 1}
 				/>
 				{#if project.subtitle}
 					<HackedText
-						class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
+						class="bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 						text={project.subtitle}
 						scrambled={progress === 0 || progress === 1}
 					/>
@@ -527,12 +527,12 @@
 <section id="overview" class="mb-40 flex flex-col items-center justify-center">
 	<div class="container mx-auto mb-8 grid grid-cols-8 overflow-hidden">
 		<HackedText
-			class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-sm sm:text-base md:col-span-3 md:col-start-1"
+			class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-base md:col-span-3 md:col-start-1 md:text-xl"
 			text="Fullstack / Js - Rust - Php - Go"
 			scrambled={!overviewState.visible}
 		/>
 		<HackedText
-			class="col-span-full mb-20 h-max text-5xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
+			class="col-span-full mb-20 h-max bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 			text="And More…"
 			scrambled={!overviewState.visible}
 		/>
@@ -585,12 +585,12 @@
 
 <section id="posts" class="container mx-auto mb-40">
 	<HackedText
-		class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-sm sm:text-base md:col-span-3 md:col-start-1"
+		class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-base sm:text-base md:col-span-3 md:col-start-1 md:text-xl"
 		text="Looking for content?"
 		scrambled={!postsState.visible}
 	/>
 	<HackedText
-		class="col-span-full mb-20 text-5xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl"
+		class="col-span-full mb-20 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl dark:from-white dark:to-white/40"
 		text="Latest Post"
 		scrambled={!postsState.visible}
 	/>

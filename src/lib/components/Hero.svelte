@@ -8,7 +8,7 @@
 	const { metadata }: Props = $props();
 </script>
 
-<div class="prose dark:prose-invert mx-auto flex flex-col">
+<div class="prose dark:prose-invert mx-auto mb-16 flex flex-col">
 	<h1
 		class="relative z-10 mt-4 mb-4 bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
