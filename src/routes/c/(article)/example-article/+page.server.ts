@@ -6,7 +6,7 @@ import coverImage from '$lib/assets/images/cover.png?enhanced';
 export const _metadata: MetaData = {
 	title: 'Example Post',
 	author: 'Jonas Leonhard',
-	description: 'Example Article',
+	description: 'Example Article description',
 	publishDate: new Date('10 May 2024'),
 	updatedDate: new Date('11 May 2024'),
 	tags: ['draft'],

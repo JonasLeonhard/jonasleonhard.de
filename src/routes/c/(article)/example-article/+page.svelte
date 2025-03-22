@@ -7,6 +7,8 @@
 </script>
 
 <section>
+	<p>{data.metadata.description}</p>
+
 	<h2>Using a Svelte component</h2>
 	<MouseDrag>
 		<Home />
@@ -14,7 +16,6 @@
 </section>
 
 <section>
-	<h2>Code for {data.metadata.title}</h2>
 	<p># Using a Code prerendered html-code-block - look at +layout.server.ts</p>
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html data.codeExample}

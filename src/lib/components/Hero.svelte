@@ -9,14 +9,12 @@
 </script>
 
 <section class="container mx-auto -mt-28">
-	<enhanced:img
-		class="max-h-screen/3 mx-auto mb-6 w-full max-w-[1000px] object-cover"
-		src={metadata.coverImage.src}
-		alt={metadata.coverImage.alt}
-	/>
-
-	<div class="prose dark:prose-invert mx-auto flex flex-col items-center justify-center">
-		<h1 class="mb-0!">{metadata.title}</h1>
+	<div class="prose dark:prose-invert mx-auto flex flex-col">
+		<h1
+			class="relative z-10 mt-4 mb-4 w-max max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+		>
+			{metadata.title}
+		</h1>
 
 		<div class="flex gap-2">
 			<p class="border-r pr-2 text-sm">{metadata.author}</p>

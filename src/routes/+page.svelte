@@ -370,7 +370,7 @@
 
 <section class="container mx-auto -mt-20 flex flex-col pt-4 pb-60">
 	<h3
-		class="relative z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+		class="relative z-10 w-max max-w-3xl border border-dashed bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
 		Jonas
 	</h3>
@@ -381,7 +381,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute top-0 left-0 z-10 w-full max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+					class="absolute top-0 left-0 z-10 mt-4 w-max max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 				>
 					{description}
 				</h3>
@@ -449,7 +449,7 @@
 	>
 		<div class="mt-auto mb-8 grid w-full grid-cols-8 overflow-hidden lg:m-auto">
 			<div
-				class="text-muted-foreground col-span-full mx-auto mb-4 font-mono text-sm sm:text-base md:col-span-2 md:col-start-4 md:mb-auto"
+				class="text-muted-foreground col-span-full mx-auto mb-4 border border-dashed font-mono text-sm sm:text-base md:col-span-2 md:col-start-4 md:mb-auto"
 			>
 				<HackedText text="Roles // 52 6F 6C 65 73" scrambled={!teamState.visible} />
 				<HackedText text="& Architecture // QXJjaGl0ZWN0dXJl" scrambled={!teamState.visible} />
@@ -501,7 +501,7 @@
 				class:text-right={project.alignment === 'right'}
 			>
 				<HackedText
-					class="text-muted-foreground sm:text:base mb-2 text-sm md:text-xl"
+					class={`text-muted-foreground sm:text:base mb-2 w-max border border-dashed text-sm md:text-xl ${project.alignment === 'right' ? 'ml-auto' : ''}`}
 					text={`${project.role} // ${project.roleKey}`}
 					scrambled={progress === 0 || progress === 1}
 				/>
@@ -527,12 +527,12 @@
 <section id="overview" class="mb-40 flex flex-col items-center justify-center">
 	<div class="container mx-auto mb-8 grid grid-cols-8 overflow-hidden">
 		<HackedText
-			class="text-muted-foreground col-span-full mb-2 text-sm sm:text-base md:col-span-3 md:col-start-1"
+			class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-sm sm:text-base md:col-span-3 md:col-start-1"
 			text="Fullstack / Js - Rust - Php - Go"
 			scrambled={!overviewState.visible}
 		/>
 		<HackedText
-			class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
+			class="col-span-full mb-4 h-max text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
 			text="And More…"
 			scrambled={!overviewState.visible}
 		/>
@@ -585,13 +585,13 @@
 
 <section id="posts" class="container mx-auto mb-40">
 	<HackedText
-		class="text-muted-foreground col-span-full mb-2 text-sm sm:text-base md:col-span-3 md:col-start-1"
+		class="text-muted-foreground col-span-full mb-2 w-max border border-dashed text-sm sm:text-base md:col-span-3 md:col-start-1"
 		text="Looking for content?"
 		scrambled={!postsState.visible}
 	/>
 	<HackedText
-		class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-12 lg:text-8xl"
-		text="Lates Post"
+		class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl"
+		text="Latest Post"
 		scrambled={!postsState.visible}
 	/>
 

@@ -3,7 +3,6 @@
 </script>
 
 <section>
-	<h2>{data.metadata.title}</h2>
 	<p>{data.metadata.description}</p>
 
 	<ul>

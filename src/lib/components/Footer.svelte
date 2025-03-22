@@ -143,7 +143,7 @@
 		style="clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%)"
 	>
 		<div class="fixed bottom-0 h-[570px] w-full @xl/footer:h-[360px]">
-			<footer class="relative shadow-inner">
+			<footer class="relative">
 				<div
 					class="mt-px-4 relative container mx-auto pt-12 pb-2 md:items-center @lg/footer:flex @lg/footer:justify-between"
 				>
@@ -272,15 +272,9 @@
 					width={35}
 					height={35}
 					class={cn(
-						'mx-auto [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
+						'mx-auto opacity-30 [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
 					)}
 				/>
-				<div
-					class="absolute top-0 -z-10 h-full w-full bg-linear-to-r from-white to-transparent dark:from-black"
-				></div>
-				<div
-					class="from-muted absolute top-0 -z-10 h-full w-full bg-linear-to-b to-transparent"
-				></div>
 			</footer>
 		</div>
 	</div>

@@ -2,5 +2,4 @@
 	let { data } = $props();
 </script>
 
-<h2>{data.metadata.title}</h2>
-<p>description about subresource here</p>
+<h2>{data.metadata.description}</h2>

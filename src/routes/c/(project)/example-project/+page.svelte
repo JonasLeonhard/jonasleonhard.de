@@ -3,6 +3,5 @@
 </script>
 
 <section>
-	<h2>{data.metadata.title}</h2>
-	<p>Project description</p>
+	<h2>{data.metadata.description}</h2>
 </section>
