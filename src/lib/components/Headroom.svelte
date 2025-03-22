@@ -35,11 +35,7 @@
 
 	let headerVisible = $derived(getScrollDirection(y) === 'down' ? false : true);
 	let headerDocked = $derived(y <= 0 && getScrollDirection(y) === 'up');
-	let classesHeaderDocked = $derived(
-		headerDocked
-			? 'pt-20 after:h-0 after:opacity-0 after:duration-[0.25s]'
-			: 'after:h-full after:opacity-1'
-	);
+	let classesHeaderDocked = $derived(headerDocked ? 'pt-20' : 'bg-background');
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -47,7 +43,7 @@
 <div class="h-[240px] lg:h-[300px]">
 	<header
 		class={cn(
-			'fixed -top-20 z-50 flex w-full flex-col to-transparent transition-all duration-700 after:absolute after:top-0 after:-z-10 after:contents after:w-full after:bg-linear-to-b after:from-white after:to-transparent after:backdrop-blur-[2px] after:transition-all after:duration-1000 dark:after:from-black',
+			'fixed -top-20 z-50 flex w-full flex-col transition-all duration-700',
 			classesHeaderDocked
 		)}
 		class:top-0={headerVisible}

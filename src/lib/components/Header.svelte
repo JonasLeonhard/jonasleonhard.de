@@ -4,9 +4,11 @@
 </script>
 
 <Headroom offset={40} tolerance={180}>
-	<div class="relative container mx-auto flex h-20 flex-wrap items-center">
+	<div
+		class="relative container mx-auto flex h-20 flex-col justify-center gap-2 md:flex-row md:items-center"
+	>
 		<BreadCrumbs />
-		<div class="ml-auto flex items-center justify-center gap-8 px-2 py-4">
+		<div class="flex w-max items-center justify-center gap-8 md:ml-auto md:py-4">
 			<ClipboardCopy
 				clipboard={`${import.meta.env.VITE_CANONICAL_URL}/rss`}
 				toastMsg="Copied this RSS feed link to your clipboard:"

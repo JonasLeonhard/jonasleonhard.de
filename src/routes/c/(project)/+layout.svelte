@@ -5,6 +5,7 @@
 </script>
 
 <article
+	class="container mx-auto"
 	data-pagefind-body
 	data-pagefind-filter={data.metadata?.draft ? 'visibility:draft' : 'visibility:visible'}
 >
@@ -12,7 +13,7 @@
 		<Hero metadata={data.metadata} />
 	{/if}
 
-	<div class="prose dark:prose-invert mx-auto mb-52 px-4 lg:px-0">
+	<div class="prose dark:prose-invert mx-auto mb-52">
 		{@render children()}
 	</div>
 </article>

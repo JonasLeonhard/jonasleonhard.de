@@ -370,7 +370,7 @@
 
 <section class="container mx-auto -mt-20 flex flex-col pt-4 pb-60">
 	<h3
-		class="relative z-10 w-max max-w-3xl border border-dashed bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+		class="relative z-10 w-max max-w-3xl border border-dashed bg-linear-to-br from-black from-30% to-black/40 bg-clip-text p-4 text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 	>
 		Jonas
 	</h3>
@@ -381,7 +381,7 @@
 				<h3
 					in:fly={{ y: 20, duration: 300 }}
 					out:fade={{ duration: 200 }}
-					class="absolute top-0 left-0 z-10 mt-4 w-max max-w-3xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-2xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
+					class="absolute top-0 left-0 z-10 mt-4 max-w-3xl max-w-max bg-linear-to-br from-black from-30% to-black/40 bg-clip-text text-5xl text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40"
 				>
 					{description}
 				</h3>
@@ -506,13 +506,13 @@
 					scrambled={progress === 0 || progress === 1}
 				/>
 				<HackedText
-					class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+					class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
 					text={project.title}
 					scrambled={progress === 0 || progress === 1}
 				/>
 				{#if project.subtitle}
 					<HackedText
-						class="text-2xl sm:text-6xl md:text-7xl lg:text-8xl"
+						class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
 						text={project.subtitle}
 						scrambled={progress === 0 || progress === 1}
 					/>
@@ -532,7 +532,7 @@
 			scrambled={!overviewState.visible}
 		/>
 		<HackedText
-			class="col-span-full mb-4 h-max text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
+			class="col-span-full mb-20 h-max text-5xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:text-8xl"
 			text="And More…"
 			scrambled={!overviewState.visible}
 		/>
@@ -590,7 +590,7 @@
 		scrambled={!postsState.visible}
 	/>
 	<HackedText
-		class="col-span-full mb-4 text-2xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl"
+		class="col-span-full mb-20 text-5xl sm:text-6xl md:col-span-3 md:col-start-1 md:text-7xl lg:mb-32 lg:text-8xl"
 		text="Latest Post"
 		scrambled={!postsState.visible}
 	/>
