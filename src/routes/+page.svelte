@@ -43,6 +43,7 @@
 	const descriptions = [
 		'Fullstack Developer.',
 		"Works agile, but can't reach his toes",
+		'move slow and fix things',
 		'Actually reads documentation',
 		'Deployed on fridays',
 		'Has a rubber duck',

@@ -15,10 +15,11 @@
 
 <p>
 	- give example where the best in the world always have room to improve / or are overly critical
-	(maybe serral game?s) - don't blame your teammates is a golden rule in leage of legends. It shifts
-	the focus from blaming others to improving yourself, and thereby hands over the control of a game
-	to yourself. That does't mean you ignore the team situation. Any good player knows the faults of
-	his team, but he doesn't let that affect his own performance.
+	(maybe serral game?s) - don't blame your teammates is a golden rule in games. Usually… im looking
+	at you Leage of Legends. It shifts the focus from blaming others to improving yourself, and
+	thereby hands over the control of a game to yourself. That does't mean you ignore the team
+	situation. Any good player knows the faults of his team, but he doesn't let that affect his own
+	performance.
 </p>
 
 <h2>Everyone is more competent than you</h2>
@@ -26,15 +27,17 @@
 <p>
 	In contradication to the point i made above. You always have to assume that everyone can
 	contribute and consider their ideas. You always have to be open to ideas, even if they contradict
-	your own.
+	your own. If you consider yourself the smartest Person in the room. You are in the wrong room.
+	Many peoply can't admit they made a mistake, said something dumb or that they don't know
+	something. Don't be that person.
 </p>
 
 <h2>Learn from the best</h2>
 
 <p>
-	TODO but still question their methods. Don't just adapt popular opinions and play the meta. That
-	way you cannot innovate yourself. Take what works for you and discard or change the rest (eg:
-	Uncle Bobs clean code)
+	Quotestion your methods, Question their methods. Don't just adapt popular opinions and play the
+	meta. That way you cannot innovate yourself. Take what works for you and discard or change the
+	rest (eg: Uncle Bobs clean code)
 </p>
 
 <h2>Believe in Yourself</h2>
