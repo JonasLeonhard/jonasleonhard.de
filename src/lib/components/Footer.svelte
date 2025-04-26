@@ -207,8 +207,10 @@
 									>
 								</li>
 								<li class="mb-4">
-									<a use:useLink href="/contact" class="hover:text-accent hover:underline"
-										>Contact Form</a
+									<a
+										use:useLink
+										href="mailto:mail@jonasleonhard.de"
+										class="hover:text-accent hover:underline">Or send me a Mail</a
 									>
 								</li>
 							</ul>

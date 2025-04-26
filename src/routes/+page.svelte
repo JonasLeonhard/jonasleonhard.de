@@ -404,8 +404,8 @@
 		<a href="/" use:useLink class="hover:text-accent underline">
 			<HackedText text="projects" scrambled={!loadedPage} />
 		</a>
-		<a href="/contact" use:useLink class="hover:text-accent underline">
-			<HackedText text="contact" scrambled={!loadedPage} />
+		<a href="/about" use:useLink class="hover:text-accent underline">
+			<HackedText text="about" scrambled={!loadedPage} />
 		</a>
 	</div>
 
@@ -599,13 +599,8 @@
 	/>
 
 	<p class="mb-16 max-w-lg">
-		I love to Program. I really do. And ever since i was a Kid, i liked to nerd out with my Friends.
-		And now years later. I get the same feeling i used to get with my Friends, when Nerding out with
-		my Coworkers or random People on the Internet who take their time to teach others about what
-		they have learned, make Youtube Videos, give Courses, write Blogposts or even Books about
-		Programming. I would love to contribute to this discussion. You can find both my Blogposts,
-		aswell as any Resource i find worth sharing in my Content collection below. I hope you will
-		enjoy this list as much as i did!
+		You can find both my blogposts, aswell as any resource i find worth sharing in my content
+		collection below. I hope you will enjoy this list as much as i did!
 	</p>
 
 	<div
