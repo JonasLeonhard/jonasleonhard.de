@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import type { Snippet } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { tv } from 'tailwind-variants';
 
 	interface Props {
 		offset?: number;
@@ -36,18 +36,16 @@
 	let headerVisible = $derived(getScrollDirection(y) === 'down' ? false : true);
 	let headerDocked = $derived(y <= 0 && getScrollDirection(y) === 'up');
 	let classesHeaderDocked = $derived(headerDocked ? 'pt-20' : 'bg-background');
+
+	const headroom = tv({
+		base: 'fixed -top-20 z-50 flex w-full flex-col transition-all duration-700'
+	});
 </script>
 
 <svelte:window bind:scrollY={y} />
 
 <div class="h-[240px] lg:h-[300px]">
-	<header
-		class={cn(
-			'fixed -top-20 z-50 flex w-full flex-col transition-all duration-700',
-			classesHeaderDocked
-		)}
-		class:top-0={headerVisible}
-	>
+	<header class={headroom({ class: classesHeaderDocked })} class:top-0={headerVisible}>
 		{@render children?.()}
 		{#if !headerDocked && headerVisible}
 			<div

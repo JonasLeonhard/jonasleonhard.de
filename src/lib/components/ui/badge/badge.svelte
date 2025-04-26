@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { type Variant, badgeVariants } from './index.js';
-	import { cn } from '$lib/utils.js';
 
 	interface Props {
 		class?: string | undefined | null;
@@ -22,7 +21,7 @@
 <svelte:element
 	this={href ? 'a' : 'span'}
 	{href}
-	class={cn(badgeVariants({ variant, className }))}
+	class={badgeVariants({ variant, class: className })}
 	{...rest}
 >
 	{@render children?.()}

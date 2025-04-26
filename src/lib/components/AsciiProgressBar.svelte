@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
-	import type { ClassValue } from 'clsx';
+	import { tv } from 'tailwind-variants';
+
 	interface Props {
 		progress: number;
-
-		class?: ClassValue;
+		class?: string;
 	}
 
 	const { class: classValue, progress }: Props = $props();
+	const asciiProgressBar = tv({
+		base: 'text-muted-foreground font-mono text-xl transition-all duration-500'
+	});
 
 	const getAsciiLoadingBar = (
 		/// number from 0-1
@@ -26,7 +28,7 @@
 </script>
 
 <div
-	class={cn('text-muted-foreground font-mono text-xl transition-all duration-500', classValue)}
+	class={asciiProgressBar({ class: classValue })}
 	class:opacity-0={progress == 0 || progress == 1}
 >
 	{getAsciiLoadingBar(progress)}

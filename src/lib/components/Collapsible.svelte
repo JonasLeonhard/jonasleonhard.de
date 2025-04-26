@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { cn } from '$lib';
-	import type { ClassValue } from 'clsx';
+	import { tv } from 'tailwind-variants';
 	import type { Snippet } from 'svelte';
 	import { slide } from 'svelte/transition';
 
 	interface Props {
-		class?: ClassValue;
+		class?: string;
 		children: Snippet;
 		expanded: Snippet;
 	}
 
 	const { class: className, children, expanded }: Props = $props();
 
+	const button = tv({ base: 'h-max' });
 	let isExpanded = $state(false);
 </script>
 
-<button class={cn('h-max', className)} onclick={() => (isExpanded = !isExpanded)}>
+<button class={button({ class: className })} onclick={() => (isExpanded = !isExpanded)}>
 	{@render children()}
 
 	{#if isExpanded}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { WithElementRef } from 'bits-ui';
-	import { cn } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	let {
 		ref = $bindable(null),
@@ -11,6 +11,10 @@
 	}: WithElementRef<HTMLAttributes<HTMLUListElement>> = $props();
 </script>
 
-<ul bind:this={ref} class={cn('flex flex-row items-center gap-1', className)} {...restProps}>
+<ul
+	bind:this={ref}
+	class={tv({ base: 'flex flex-row items-center gap-1' })({ class: className })}
+	{...restProps}
+>
 	{@render children?.()}
 </ul>

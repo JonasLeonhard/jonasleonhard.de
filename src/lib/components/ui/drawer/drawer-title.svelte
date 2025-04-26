@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { tv } from 'tailwind-variants';
 	import { Drawer as DrawerPrimitive } from 'vaul-svelte';
-	import { cn } from '$lib/utils.js';
 
 	let {
 		ref = $bindable(null),
@@ -11,6 +11,8 @@
 
 <DrawerPrimitive.Title
 	bind:ref
-	class={cn('font-mono text-lg leading-none font-semibold tracking-tight', className)}
+	class={tv({ base: 'font-mono text-lg leading-none font-semibold tracking-tight' })({
+		class: className as string
+	})}
 	{...restProps}
 />

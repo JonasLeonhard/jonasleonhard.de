@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Pagination as PaginationPrimitive } from 'bits-ui';
-
-	import { cn } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	let {
 		ref = $bindable(null),
@@ -12,11 +11,13 @@
 		siblingCount = 1,
 		...restProps
 	}: PaginationPrimitive.RootProps = $props();
+
+	const pagination = tv({ base: 'mx-auto flex w-full flex-col items-center' });
 </script>
 
 <PaginationPrimitive.Root
 	bind:ref
-	class={cn('mx-auto flex w-full flex-col items-center', className)}
+	class={pagination({ class: className })}
 	{count}
 	{perPage}
 	{siblingCount}

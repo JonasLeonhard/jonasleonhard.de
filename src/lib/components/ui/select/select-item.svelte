@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Check from 'lucide-svelte/icons/check';
 	import { Select as SelectPrimitive } from 'bits-ui';
-	import { cn } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	type $$Props = SelectPrimitive.ItemProps;
 	type $$Events = SelectPrimitive.ItemEvents;
 
 	interface Props {
-		class?: $$Props['class'];
+		class?: string;
 		value: $$Props['value'];
 		label?: $$Props['label'];
 		disabled?: $$Props['disabled'];
@@ -29,10 +29,9 @@
 	{value}
 	{disabled}
 	{label}
-	class={cn(
-		'data-highlighted:bg-accent data-highlighted:text-accent-foreground relative flex w-full cursor-default items-center py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50',
-		className
-	)}
+	class={tv({
+		base: 'data-highlighted:bg-accent data-highlighted:text-accent-foreground relative flex w-full cursor-default items-center py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50'
+	})({ class: className })}
 	{...rest}
 	on:click
 	on:keydown

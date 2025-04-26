@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { cn } from '$lib';
 	import { Tween } from 'svelte/motion';
-	import type { ClassValue } from 'clsx';
+	import { tv } from 'tailwind-variants';
 	interface Props {
-		class?: ClassValue;
+		class?: string;
 		text: string;
 		scrambled?: boolean;
 		widthDuration?: number;
@@ -18,6 +17,8 @@
 		revealDuration = 500,
 		charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,./<>?'
 	}: Props = $props();
+
+	const hackedText = tv({ base: 'font-mono text-nowrap' });
 
 	let prevScrambled = $state(scrambled);
 
@@ -94,7 +95,7 @@
 
 {#snippet Text()}
 	{@const text = getDisplayText()}
-	<div class={cn('font-mono text-nowrap', className)}>
+	<div class={hackedText({ class: className })}>
 		{#if text === ''}
 			<p class="w-0 overflow-hidden">{@html '&nbsp'}</p>
 		{:else}

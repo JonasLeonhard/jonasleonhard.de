@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
-	import { cn, Header, Footer, Toaster, GridPattern } from '$lib';
+	import { Header, Footer, Toaster, GridPattern } from '$lib';
+	import { tv } from 'tailwind-variants';
 
 	let { children, data } = $props();
 </script>
@@ -78,9 +79,9 @@
 	<GridPattern
 		width={35}
 		height={35}
-		class={cn(
-			'mx-auto [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] '
-		)}
+		class={tv({
+			base: 'mx-auto [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] '
+		})()}
 	/>
 
 	<main class="min-h-[calc(100vh-15rem)] grow">

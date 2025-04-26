@@ -1,28 +1,23 @@
 <script lang="ts">
 	import { useLink } from '$lib';
-	import { cn } from '$lib/utils';
-	import type { ClassValue } from 'clsx';
 	import { MoveRight } from 'lucide-svelte';
+	import { tv } from 'tailwind-variants';
 
 	interface Props {
-		class?: ClassValue;
+		class?: string;
 		name: string;
 		description: string;
 		href: string;
 		cta: string;
 	}
+	const bentoCard = tv({
+		base: 'group border-muted-foreground/50 hover:border-muted-foreground relative col-span-3 flex max-w-(--breakpoint-lg) flex-col border transition-all duration-1000'
+	});
 
 	let { class: className = '', name, description, href, cta }: Props = $props();
 </script>
 
-<a
-	{href}
-	use:useLink
-	class={cn(
-		'group border-muted-foreground/50 hover:border-muted-foreground relative col-span-3 flex max-w-(--breakpoint-lg) flex-col border transition-all duration-1000',
-		className
-	)}
->
+<a {href} use:useLink class={bentoCard({ class: className })}>
 	<MoveRight
 		class="absolute top-8 right-12 z-10 transition-all duration-500 group-hover:right-8 group-hover:opacity-0"
 	/>
@@ -37,9 +32,9 @@
 	</div>
 
 	<div
-		class={cn(
-			'pointer-events-none absolute bottom-0 z-10 ml-2.5 flex w-max translate-y-10 transform-gpu flex-row items-center justify-center gap-2 p-6 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
-		)}
+		class={tv({
+			base: 'pointer-events-none absolute bottom-0 z-10 ml-2.5 flex w-max translate-y-10 transform-gpu flex-row items-center justify-center gap-2 p-6 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
+		})()}
 	>
 		{cta}
 		<MoveRight />

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Label as LabelPrimitive } from 'bits-ui';
-	import { cn } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	type $$Props = LabelPrimitive.Props;
 	type $$Events = LabelPrimitive.Events;
@@ -15,10 +15,9 @@
 </script>
 
 <LabelPrimitive.Root
-	class={cn(
-		'text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-		className
-	)}
+	class={tv({
+		base: 'text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+	})({ class: className as string })}
 	{...rest}
 	on:mousedown
 >

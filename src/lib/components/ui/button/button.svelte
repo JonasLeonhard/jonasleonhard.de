@@ -38,7 +38,6 @@
 </script>
 
 <script lang="ts">
-	import { cn } from '$lib/utils.js';
 	import { useLink } from '$lib';
 
 	let {
@@ -57,7 +56,7 @@
 	<a
 		bind:this={ref}
 		use:useLink
-		class={cn(buttonVariants({ variant, size, className }))}
+		class={buttonVariants({ variant, size, className })}
 		{href}
 		{...restProps}
 	>
@@ -66,7 +65,7 @@
 {:else}
 	<button
 		bind:this={ref}
-		class={cn(buttonVariants({ variant, size, className }))}
+		class={buttonVariants({ variant, size, className })}
 		{type}
 		{...restProps}
 	>

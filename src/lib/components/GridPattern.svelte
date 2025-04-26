@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { tv } from 'tailwind-variants';
+
 	let id = crypto.randomUUID().toString().slice(0, 8);
 
 	interface Props {
@@ -32,7 +33,9 @@
 
 <svg
 	aria-hidden="true"
-	class={cn('pointer-events-none absolute inset-0 -z-50 h-full w-full', className)}
+	class={tv({ base: 'pointer-events-none absolute inset-0 -z-50 h-full w-full' })({
+		class: className
+	})}
 	{...rest}
 	stroke={fillColor}
 	stroke-width={strokeWidth}

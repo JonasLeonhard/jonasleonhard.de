@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Select as SelectPrimitive } from 'bits-ui';
 	import { scale } from 'svelte/transition';
-	import { cn, flyAndScale } from '$lib/utils.js';
+	import { flyAndScale } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	type $$Props = SelectPrimitive.ContentProps;
 	type $$Events = SelectPrimitive.ContentEvents;
@@ -12,7 +13,7 @@
 		inTransitionConfig?: $$Props['inTransitionConfig'];
 		outTransition?: $$Props['outTransition'];
 		outTransitionConfig?: $$Props['outTransitionConfig'];
-		class?: $$Props['class'];
+		class?: string;
 		children?: import('svelte').Snippet;
 		[key: string]: any;
 	}
@@ -39,10 +40,9 @@
 	{outTransition}
 	{outTransitionConfig}
 	{sideOffset}
-	class={cn(
-		'bg-popover text-popover-foreground relative z-50 min-w-[8rem] overflow-hidden border shadow-md outline-hidden',
-		className
-	)}
+	class={tv({
+		base: 'bg-popover text-popover-foreground relative z-50 min-w-[8rem] overflow-hidden border shadow-md outline-hidden'
+	})({ class: className })}
 	{...rest}
 	on:keydown
 >

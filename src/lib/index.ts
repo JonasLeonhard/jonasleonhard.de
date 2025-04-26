@@ -31,7 +31,6 @@ import { Skeleton } from './components/ui/skeleton';
 import { Toaster } from './components/ui/sonner';
 import { send, receive } from './transition';
 import { useLink } from './useLink.svelte';
-import { useStickyProgress } from './useStickyProgress.svelte';
 
 import type { MetaData } from './types.d.ts';
 export {
@@ -69,7 +68,6 @@ export {
 	receive,
 	send,
 	useLink,
-	useStickyProgress,
 	type MetaData
 };
 export * from './utils';

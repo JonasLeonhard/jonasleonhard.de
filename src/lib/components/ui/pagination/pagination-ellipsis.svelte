@@ -2,7 +2,7 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import type { WithElementRef, WithoutChildren } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { cn } from '$lib/utils.js';
+	import { tv } from 'tailwind-variants';
 
 	let {
 		ref = $bindable(null),
@@ -14,7 +14,7 @@
 <span
 	bind:this={ref}
 	aria-hidden="true"
-	class={cn('flex size-9 items-center justify-center', className)}
+	class={tv({ base: 'flex size-9 items-center justify-center' })({ class: className })}
 	{...restProps}
 >
 	<Ellipsis class="size-4" />

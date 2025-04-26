@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Spring } from 'svelte/motion';
-	import { ClipboardCopy, MouseDrag, GridPattern, cn, useLink } from '$lib';
+	import { ClipboardCopy, MouseDrag, GridPattern, useLink } from '$lib';
 	import { Rss, Check } from 'lucide-svelte';
 	import Marqueeck from '@arisbh/marqueeck';
+	import { tv } from 'tailwind-variants';
 
 	const currentGitHash = import.meta.env.VITE_CURRENT_GIT_HASH;
 	const date = new Date().getFullYear();
@@ -273,9 +274,9 @@
 				<GridPattern
 					width={35}
 					height={35}
-					class={cn(
-						'mx-auto opacity-30 [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
-					)}
+					class={tv({
+						base: 'mx-auto opacity-30 [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
+					})()}
 				/>
 			</footer>
 		</div>
