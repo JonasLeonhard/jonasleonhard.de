@@ -11,7 +11,7 @@
 		cta: string;
 	}
 	const bentoCard = tv({
-		base: 'group border-muted-foreground/50 hover:border-muted-foreground relative col-span-3 flex max-w-(--breakpoint-lg) flex-col border transition-all duration-1000'
+		base: 'group border-muted-foreground/50 hover:border-muted-foreground relative col-span-1 md:col-span-3 flex max-w-full flex-col border transition-all duration-500'
 	});
 
 	let { class: className = '', name, description, href, cta }: Props = $props();

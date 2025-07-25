@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
 	import { dev } from '$app/environment';
-	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	import {
 		Folder,
@@ -72,9 +74,11 @@
 
 	let tags: PagefindFilter = $state({});
 	let unselectedTags: PagefindFilter = $state({});
+	let advancedSearchVisible = $state(false);
 
 	const paginationPageSize = 10;
 	const isDesktop = new MediaQuery('(min-width: 768px)');
+	const shouldShowAdvancedSearch = $derived(isDesktop.current || advancedSearchVisible);
 
 	let pagefind: Pagefind | null = $state(null);
 	let searchInput = $state('');
@@ -112,7 +116,39 @@
 		} else {
 			unselectedTags = filters.tag || {};
 		}
-		tags = {};
+
+		initializeFromUrl();
+	}
+
+	function initializeFromUrl() {
+		const url = new URL(page.url);
+		const urlTags = url.searchParams.getAll('tag');
+
+		if (urlTags.length > 0) {
+			urlTags.forEach((tag) => {
+				const variations = [tag, `_VISIBLE_${tag}`, tag.toUpperCase(), tag.toLowerCase()];
+
+				for (const variation of variations) {
+					if (variation in unselectedTags) {
+						tags[variation] = unselectedTags[variation];
+						delete unselectedTags[variation];
+						break;
+					}
+				}
+			});
+		}
+	}
+
+	function updateUrl() {
+		const url = new URL(page.url);
+		url.searchParams.delete('tag');
+
+		Object.keys(tags).forEach((tag) => {
+			const cleanTag = tag.replace('_VISIBLE_', '').toLowerCase();
+			url.searchParams.append('tag', cleanTag);
+		});
+
+		goto(url.toString(), { replaceState: true, noScroll: true });
 	}
 
 	async function lazyLoadPagefind(initialized: Pagefind | null) {
@@ -178,7 +214,20 @@
 
 		searchInput = '';
 		tags = {};
+		updateUrl();
 		performSearch(searchInput, tags, sortBy);
+	}
+
+	function selectTag(key: string, value: number) {
+		delete unselectedTags[key];
+		tags[key] = value;
+		updateUrl();
+	}
+
+	function deselectTag(key: string, value: number) {
+		delete tags[key];
+		unselectedTags[key] = value;
+		updateUrl();
 	}
 
 	onMount(() => {
@@ -225,60 +274,75 @@
 				<SearchPath searchTerm={searchInput} />
 				<Input class="mb-4" id="search" bind:value={searchInput} placeholder="Search Query..." />
 
-				<Select.Root bind:selected={sortBy}>
-					<Label for="sort">Sort by</Label>
-					<Select.Trigger class="mb-8 w-full @xl/search_results:w-[180px]">
-						<Select.Value id="sort" placeholder="-" />
-					</Select.Trigger>
-					<Select.Content>
-						<Select.Item value="publishDate-desc">Publish Date desc</Select.Item>
-						<Select.Item value="publishDate-asc">Publish Date asc</Select.Item>
-						<Select.Item value="title-desc">Title desc</Select.Item>
-						<Select.Item value="title-asc">Title asc</Select.Item>
-						<Select.Item value="updatedDate-desc">Updated Date desc</Select.Item>
-						<Select.Item selected value="updatedDate-asc">Updated Date asc</Select.Item>
-					</Select.Content>
-				</Select.Root>
+				<!-- Advanced Search Toggle (mobile only) -->
+				{#if !isDesktop.current}
+					<button
+						class="hover:text-accent mb-4 flex items-center gap-2 text-sm underline"
+						onclick={() => (advancedSearchVisible = !advancedSearchVisible)}
+					>
+						{advancedSearchVisible ? 'Hide' : 'Show'} Advanced Search
+						{#if advancedSearchVisible}
+							<ChevronUp class="h-4 w-4" />
+						{:else}
+							<ChevronDown class="h-4 w-4" />
+						{/if}
+					</button>
+				{/if}
 
-				<Folder class="mb-8" expanded name="Selected/">
-					<div class="flex flex-col gap-1">
-						{#each Object.entries(tags) as [key, value] (key)}
-							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
-								<Badge
-									class="cursor-pointer"
-									onmousedown={() => {
-										delete tags[key];
-										unselectedTags[key] = value;
-									}}
-								>
-									{key.replace('_VISIBLE_', '')}
-									{value}
-								</Badge>
+				<!-- Advanced Search (always visible on desktop, collapsible on mobile) -->
+				{#if shouldShowAdvancedSearch}
+					<div
+						class="border-muted-foreground/30 mb-4 border border-dashed p-4 @xl/search_results:w-[250px]"
+					>
+						<Select.Root bind:selected={sortBy}>
+							<Label for="sort">Sort by</Label>
+							<Select.Trigger class="mb-6 w-full @xl/search_results:w-[180px]">
+								<Select.Value id="sort" placeholder="-" />
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Item value="publishDate-desc">Publish Date desc</Select.Item>
+								<Select.Item value="publishDate-asc">Publish Date asc</Select.Item>
+								<Select.Item value="title-desc">Title desc</Select.Item>
+								<Select.Item value="title-asc">Title asc</Select.Item>
+								<Select.Item value="updatedDate-desc">Updated Date desc</Select.Item>
+								<Select.Item selected value="updatedDate-asc">Updated Date asc</Select.Item>
+							</Select.Content>
+						</Select.Root>
+
+						<Folder class="mb-6" expanded name="Selected Tags/">
+							<div class="flex flex-wrap gap-1">
+								{#each Object.entries(tags) as [key, value] (key)}
+									<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
+										<Badge class="cursor-pointer" onmousedown={() => deselectTag(key, value)}>
+											{key.replace('_VISIBLE_', '')}
+											{value}
+										</Badge>
+									</div>
+								{/each}
 							</div>
-						{/each}
-					</div>
-				</Folder>
+						</Folder>
 
-				<Folder class="mb-8" expanded name="Unselected/">
-					<div class="flex flex-col gap-1">
-						{#each Object.entries(unselectedTags) as [key, value] (key)}
-							<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
-								<Badge
-									class="cursor-pointer opacity-50"
-									onmousedown={() => {
-										delete unselectedTags[key];
-										tags[key] = value;
-									}}
-								>
-									{key.replace('_VISIBLE_', '')}
-									{value}
-								</Badge>
+						<Folder class="mb-6" expanded name="Available Tags/">
+							<div class="flex flex-wrap gap-1">
+								{#each Object.entries(unselectedTags) as [key, value] (key)}
+									<div animate:flip={{ duration: 600 }} in:receive={{ key }} out:send={{ key }}>
+										<Badge
+											class="cursor-pointer opacity-50 hover:opacity-100"
+											onmousedown={() => selectTag(key, value)}
+										>
+											{key.replace('_VISIBLE_', '')}
+											{value}
+										</Badge>
+									</div>
+								{/each}
 							</div>
-						{/each}
-					</div>
-				</Folder>
+						</Folder>
 
-				<button onmousedown={resetSearch} class="hover:text-accent underline">clear filters</button>
+						<button onmousedown={resetSearch} class="hover:text-accent text-sm underline">
+							Clear all filters
+						</button>
+					</div>
+				{/if}
 			</div>
 
 			<!-- Results Right -->

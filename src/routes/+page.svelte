@@ -393,7 +393,7 @@
 
 <section
 	id="intro-nav-bar"
-	class="fixed bottom-8 left-1/2 container flex w-full -translate-x-1/2 flex-wrap justify-between gap-4 transition-all duration-1000 lg:bottom-16 lg:gap-60"
+	class="fixed bottom-8 left-1/2 container flex w-full -translate-x-1/2 flex-wrap justify-between gap-4 transition-all duration-500 lg:bottom-16 lg:gap-60"
 >
 	<div
 		class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
@@ -538,7 +538,7 @@
 			scrambled={!overviewState.visible}
 		/>
 		<p
-			class="col-span-full transition-all delay-500 duration-1000 ease-in lg:col-span-4 lg:col-start-5"
+			class="col-span-full transition-all delay-250 duration-500 ease-in lg:col-span-4 lg:col-start-5"
 			class:opacity-0={!overviewState.visible}
 		>
 			In the grim darkness of our sprint backlog, there is only technical debt. A Dark Eldar torture
@@ -552,7 +552,7 @@
 	</div>
 
 	<div
-		class="col-span-full mb-8 w-full overflow-hidden transition-all delay-700 duration-1000 ease-in"
+		class="col-span-full mb-8 w-full overflow-hidden transition-all delay-350 duration-500 ease-in"
 		class:opacity-0={!overviewState.visible}
 	>
 		<Marqueeck
@@ -562,7 +562,7 @@
 		>
 			{#each ['FC St. Pauli', 'Buerkert', 'Hapeko', 'Futurium', 'Obi', 'Landesanstalt für Medien NRW', 'Merck', 'Aareal', 'Otto', 'Fintropolis', 'Gambit', 'Wasserried', 'Berenberg', 'Initiative Milch', 'VDP', 'Lufthansa Technik'] as company}
 				<div
-					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-1000 hover:grayscale-0"
+					class="text-accent flex items-center gap-1 text-3xl grayscale transition-all duration-500 hover:grayscale-0"
 				>
 					<Home />
 					{company}
@@ -573,7 +573,7 @@
 
 	<div class="container mx-auto grid grid-cols-8">
 		<p
-			class="col-span-full transition-all delay-1000 duration-1000 ease-in lg:col-span-4 lg:col-start-5"
+			class="col-span-full transition-all delay-500 duration-500 ease-in lg:col-span-4 lg:col-start-5"
 			class:opacity-0={!overviewState.visible}
 		>
 			The truth hits harder than a "ERROR: Unhandled exception at 0x000FFDAE": The typical Hiring
@@ -613,7 +613,7 @@
 					description={post.description}
 					href={post.href || '/'}
 					cta="View Post"
-					class="col-span-3 {index % 4 === 0 || index % 4 === 3
+					class="col-span-1 md:col-span-3 {index % 4 === 0 || index % 4 === 3
 						? 'lg:col-span-1'
 						: 'lg:col-span-2'} transition-all opacity-{postsState.visible ? 1 : 0} delay-[{index *
 						200}ms]"

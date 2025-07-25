@@ -124,4 +124,63 @@
 	mark {
 		@apply bg-accent;
 	}
+
+	/* Mobile text overflow fixes */
+	.prose {
+		@apply break-words max-w-none;
+	}
+
+	.prose h1,
+	.prose h2,
+	.prose h3,
+	.prose h4,
+	.prose h5,
+	.prose h6 {
+		@apply break-words hyphens-auto;
+	}
+
+	.prose p,
+	.prose li {
+		@apply break-words;
+	}
+
+	.prose pre {
+		@apply overflow-x-auto text-sm;
+	}
+
+	.prose code {
+		@apply break-words text-sm;
+	}
+
+	.prose table {
+		@apply block overflow-x-auto whitespace-nowrap;
+	}
+
+	/* Ensure long URLs and text don't overflow */
+	.prose a {
+		@apply break-words;
+	}
+
+	/* Responsive iframe container for YouTube videos */
+	.prose iframe {
+		@apply h-auto w-full max-w-full;
+		aspect-ratio: 16 / 9;
+	}
+
+	/* Additional responsive video wrapper */
+	.video-responsive {
+		position: relative;
+		padding-bottom: 56.25%; /* 16:9 aspect ratio */
+		height: 0;
+		overflow: hidden;
+		max-width: 100%;
+	}
+
+	.video-responsive iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
 }

@@ -82,9 +82,7 @@
 	<!-- Outline animation -->
 	{#if visibleOutline.length > 0}
 		<T.Mesh>
-			{#key visibleOutline.length}
-				<MeshLineGeometry points={visibleOutline} shape="custom" />
-			{/key}
+			<MeshLineGeometry points={visibleOutline} shape="custom" />
 			<MeshLineMaterial
 				color={OUTLINE_COLOR}
 				width={OUTLINE_WIDTH}

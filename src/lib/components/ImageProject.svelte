@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
-	import { Texture, TextureLoader, Uniform } from 'three';
+	import { Texture, TextureLoader, Uniform, LinearFilter } from 'three';
 	import type { ProjectState } from '../../routes/+page.svelte';
 	import vertexShader from '$lib/three/imageProjectVertex.glsl?raw';
 	import fragmentShader from '$lib/three/imageProjectFragment.glsl?raw';
@@ -22,24 +22,51 @@
 	let imageNext = $state<Texture | null>(null);
 	let mixRatio = $state(0); // 0 to 1
 
+	// Preload limiter to prevent excessive texture loading
+	let loadingTextures = $state(new Set<string>());
+
 	$effect(() => {
 		const projects = Object.entries(allProjects).toReversed();
-		const activeProjectIdx = projects.findIndex(([_proj_id, project]) => project.progress > 0);
+		const activeProjectIdx = projects.findIndex(([, project]) => project.progress > 0);
 
 		const [cId, currentProject] = projects.at(activeProjectIdx) || [];
 		const [nId, nextProject] = projects.at(activeProjectIdx - 1) || [];
 
-		// 1. Load Textures
-		if (cId && currentProject && !projectTextures[cId]) {
-			textureLoader.load(currentProject.imagePath, (loaded) => {
-				projectTextures[cId] = loaded;
-			});
+		// 1. Load Textures (with loading state management)
+		if (cId && currentProject && !projectTextures[cId] && !loadingTextures.has(cId)) {
+			loadingTextures.add(cId);
+			textureLoader.load(
+				currentProject.imagePath,
+				(loaded) => {
+					// Optimize texture for mobile
+					loaded.generateMipmaps = false;
+					loaded.minFilter = LinearFilter;
+					projectTextures[cId] = loaded;
+					loadingTextures.delete(cId);
+				},
+				undefined,
+				() => {
+					loadingTextures.delete(cId);
+				}
+			);
 		}
 
-		if (nId && nextProject && !projectTextures[nId]) {
-			textureLoader.load(nextProject.imagePath, (loaded) => {
-				projectTextures[nId] = loaded;
-			});
+		if (nId && nextProject && !projectTextures[nId] && !loadingTextures.has(nId)) {
+			loadingTextures.add(nId);
+			textureLoader.load(
+				nextProject.imagePath,
+				(loaded) => {
+					// Optimize texture for mobile
+					loaded.generateMipmaps = false;
+					loaded.minFilter = LinearFilter;
+					projectTextures[nId] = loaded;
+					loadingTextures.delete(nId);
+				},
+				undefined,
+				() => {
+					loadingTextures.delete(nId);
+				}
+			);
 		}
 
 		if (cId) {

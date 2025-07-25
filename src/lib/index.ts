@@ -19,6 +19,7 @@ import Hero from './components/Hero.svelte';
 import MouseDrag from './components/MouseDrag.svelte';
 import ProjectTeaser from './components/ProjectTeaser.svelte';
 import ImageOutline from './components/ImageOutline.svelte';
+import ResponsiveIframe from './components/ResponsiveIframe.svelte';
 import Search from './components/Search.svelte';
 import SearchPath from './components/SearchPath.svelte';
 import SearchTeaser from './components/SearchTeaser.svelte';
@@ -57,6 +58,7 @@ export {
 	Pagination,
 	ProjectTeaser,
 	ImageOutline,
+	ResponsiveIframe,
 	Search,
 	SearchPath,
 	SearchTeaser,

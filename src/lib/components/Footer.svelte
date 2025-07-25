@@ -275,7 +275,7 @@
 					width={35}
 					height={35}
 					class={tv({
-						base: 'mx-auto opacity-30 [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] '
+						base: 'mx-auto [mask-image:linear-gradient(to_top_right,white,transparent,transparent)] opacity-30 '
 					})()}
 				/>
 			</footer>

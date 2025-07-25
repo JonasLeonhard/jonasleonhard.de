@@ -123,52 +123,53 @@
 {/snippet}
 
 {#snippet liItem(item: Item, index: number)}
-	<li class="inline-flex flex-wrap items-center">
+	<li class="inline-flex flex-shrink items-center max-w-[120px] md:max-w-none">
 		{#if item.href}
 			<a
 				use:useLink
 				href={item.href}
-				class="inline-flex w-full items-center text-sm font-medium text-ellipsis"
+				class="inline-flex items-center text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap"
 				class:hover:dark:text-accent={item.href}
 				class:hover:underline={item.href}
 				class:hover:text-accent={item.href}
 			>
-				{#if index === 0}
-					{@render pacMan()}
-				{:else if index === 1}
-					{@render blinky()}
-				{:else if index === 2}
-					{@render pinky()}
-				{:else if index === 3}
-					{@render inky()}
-				{:else if index === 4}
-					{@render clyde()}
-				{:else}
-					/
-				{/if}
-				{item.text}
+				<span class="flex-shrink-0">
+					{#if index === 0}
+						{@render pacMan()}
+					{:else if index === 1}
+						{@render blinky()}
+					{:else if index === 2}
+						{@render pinky()}
+					{:else if index === 3}
+						{@render inky()}
+					{:else if index === 4}
+						{@render clyde()}
+					{:else}
+						/
+					{/if}
+				</span>
+				<span class="truncate">{item.text}</span>
 			</a>
 		{:else}
 			<div
-				class="inline-flex w-full items-center text-sm font-medium text-ellipsis"
-				class:hover:dark:text-accent={item.href}
-				class:hover:underline={item.href}
-				class:hover:text-accent={item.href}
+				class="inline-flex items-center text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap"
 			>
-				{#if index === 0}
-					{@render pacMan()}
-				{:else if index === 1}
-					{@render blinky()}
-				{:else if index === 2}
-					{@render pinky()}
-				{:else if index === 3}
-					{@render inky()}
-				{:else if index === 4}
-					{@render clyde()}
-				{:else}
-					/
-				{/if}
-				{item.text}
+				<span class="flex-shrink-0">
+					{#if index === 0}
+						{@render pacMan()}
+					{:else if index === 1}
+						{@render blinky()}
+					{:else if index === 2}
+						{@render pinky()}
+					{:else if index === 3}
+						{@render inky()}
+					{:else if index === 4}
+						{@render clyde()}
+					{:else}
+						/
+					{/if}
+				</span>
+				<span class="truncate">{item.text}</span>
 			</div>
 		{/if}
 	</li>

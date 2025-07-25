@@ -18,10 +18,10 @@
 
 <div
 	role="presentation"
-	class="group border-muted-foreground/50 hover:border-muted-foreground relative max-w-(--breakpoint-lg) border transition-all duration-1000"
+	class="group border-muted-foreground/50 hover:border-muted-foreground relative max-w-(--breakpoint-lg) border transition-all duration-500"
 >
 	<div
-		class="animate-border-width absolute top-0 left-[50%] z-10 h-[1px] -translate-x-[50%] rounded-full bg-linear-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-1000 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
+		class="animate-border-width absolute top-0 left-[50%] z-10 h-[1px] -translate-x-[50%] rounded-full bg-linear-to-r from-[rgba(230,230,230,0)] via-black to-[rgba(230,230,230,0)] transition-all duration-500 dark:from-[rgba(17,17,17,0)] dark:via-white dark:to-[rgba(17,17,17,0)]"
 	></div>
 
 	<MoveRight class="absolute top-8 right-12 z-10 transition-all duration-500 group-hover:right-8" />

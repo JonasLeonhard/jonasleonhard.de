@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="group border-muted-foreground/50 hover:border-muted-foreground relative col-span-12 mb-10 border text-left transition-all duration-1000"
+	class="group border-muted-foreground/50 hover:border-muted-foreground relative col-span-12 mb-10 border text-left transition-all duration-500"
 >
 	<MoveRight class="absolute top-8 right-12 z-10 transition-all duration-500 group-hover:right-8" />
 	<div class="relative flex flex-col overflow-hidden pt-8 pr-8 pl-8">

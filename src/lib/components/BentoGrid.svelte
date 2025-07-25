@@ -7,7 +7,7 @@
 		children: Snippet;
 	}
 	const { class: className = '', children }: Props = $props();
-	const bentoGrid = tv({ base: 'grid w-full auto-rows-[20rem] grid-cols-3 gap-8' });
+	const bentoGrid = tv({ base: 'grid w-full auto-rows-[20rem] grid-cols-1 md:grid-cols-3 gap-4 md:gap-8' });
 </script>
 
 <div class={bentoGrid({ class: className })}>

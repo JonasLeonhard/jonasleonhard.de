@@ -25,7 +25,7 @@
 		{/if}
 	</div>
 
-	<div class="flex gap-2">
+	<div class="flex flex-wrap gap-2">
 		{#if metadata.draft}
 			<Badge variant="destructive">#draft</Badge>
 		{/if}

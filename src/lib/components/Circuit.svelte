@@ -17,8 +17,9 @@
 	const { dissolveProgress }: Props = $props();
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 
-	const TARGET_PARTICLE_SPACING = 0.03; // Adjust this value to control density
+	// Adjust particle density based on device capability
 	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
+	const TARGET_PARTICLE_SPACING = $derived(isDesktop.current ? 0.03 : 0.06); // Less particles on mobile
 
 	const curves = $state(
 		computedSvg.curves.map(
@@ -112,7 +113,8 @@
 	let mouseTrailCanvasTexture: CanvasTexture | undefined = $state();
 
 	function handleMouseMove(event: MouseEvent) {
-		if (!$camera || !raycastPlane || !renderer || !mouseTrailCanvas) return;
+		// Skip mouse tracking on mobile devices for better performance
+		if (!isDesktop.current || !$camera || !raycastPlane || !renderer || !mouseTrailCanvas) return;
 
 		const rect = renderer.domElement.getBoundingClientRect();
 		mousePosition.x = (event.clientX / rect.width) * 2 - 1;
@@ -137,7 +139,8 @@
 	});
 
 	onMount(() => {
-		if (!mouseTrailCanvas) {
+		// Only initialize mouse trail canvas on desktop for performance
+		if (!mouseTrailCanvas || !isDesktop.current) {
 			return;
 		}
 		mouseTrailCtx = mouseTrailCanvas.getContext('2d');
@@ -149,31 +152,32 @@
 			time += delta;
 		}
 
-		if (isDesktop.current)
-			if (
-				mouseTrailCanvas &&
-				mouseTrailCtx &&
-				glowImage.complete &&
-				planeIntersection &&
-				mouseTrailCanvasTexture
-			) {
-				mouseTrailCtx.globalCompositeOperation = 'source-over';
-				mouseTrailCtx.globalAlpha = 0.04;
-				mouseTrailCtx.fillRect(0, 0, mouseTrailCanvas.width, mouseTrailCanvas.height);
+		// Only update mouse trail on desktop and throttle updates for performance
+		if (
+			isDesktop.current &&
+			mouseTrailCanvas &&
+			mouseTrailCtx &&
+			glowImage.complete &&
+			planeIntersection &&
+			mouseTrailCanvasTexture
+		) {
+			mouseTrailCtx.globalCompositeOperation = 'source-over';
+			mouseTrailCtx.globalAlpha = 0.04;
+			mouseTrailCtx.fillRect(0, 0, mouseTrailCanvas.width, mouseTrailCanvas.height);
 
-				const glowSize = mouseTrailCanvas.width * 0.1;
-				mouseTrailCtx.globalCompositeOperation = 'lighten';
-				mouseTrailCtx.globalAlpha = 1;
-				mouseTrailCtx.drawImage(
-					glowImage,
-					planeIntersection.x - glowSize / 2,
-					planeIntersection.y - glowSize / 2,
-					glowSize,
-					glowSize
-				);
+			const glowSize = mouseTrailCanvas.width * 0.1;
+			mouseTrailCtx.globalCompositeOperation = 'lighten';
+			mouseTrailCtx.globalAlpha = 1;
+			mouseTrailCtx.drawImage(
+				glowImage,
+				planeIntersection.x - glowSize / 2,
+				planeIntersection.y - glowSize / 2,
+				glowSize,
+				glowSize
+			);
 
-				mouseTrailCanvasTexture.needsUpdate = true;
-			}
+			mouseTrailCanvasTexture.needsUpdate = true;
+		}
 	});
 </script>
 
@@ -241,10 +245,13 @@
 </T.Points>
 
 <Portal target="body">
-	<canvas
-		class="border-primary fixed top-0 left-0 hidden border"
-		bind:this={mouseTrailCanvas}
-		width={innerWidth * 0.25}
-		height={innerHeight * 0.25}
-	></canvas>
+	<!-- Only render mouse trail canvas on desktop -->
+	{#if isDesktop.current}
+		<canvas
+			class="border-primary fixed top-0 left-0 hidden border"
+			bind:this={mouseTrailCanvas}
+			width={innerWidth * 0.25}
+			height={innerHeight * 0.25}
+		></canvas>
+	{/if}
 </Portal>
