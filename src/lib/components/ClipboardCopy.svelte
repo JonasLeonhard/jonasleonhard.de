@@ -18,8 +18,10 @@
 	const onCopyToClipboard = () => {
 		navigator.clipboard.writeText(clipboard);
 		copiedToClipboard = true;
-		// @ts-expect-error type works
-		toast(toastMsg || 'Copied to Clipboard: ', { icon: copy, description: clipboard });
+
+		toast(toastMsg || 'Copied to Clipboard: ', {
+			description: clipboard
+		});
 
 		setTimeout(() => {
 			copiedToClipboard = false;
@@ -33,11 +35,11 @@
 		onclick={onCopyToClipboard}
 	>
 		{#if copiedToClipboard}
-			<div class="absolute top-[50%] -translate-y-[50%]" transition:scale>
+			<div class="absolute top-[50%] translate-y-[-50%]" transition:scale>
 				{@render copied?.()}
 			</div>
 		{:else}
-			<div class="absolute top-[50%] -translate-y-[50%]" transition:scale>
+			<div class="absolute top-[50%] translate-y-[-50%]" transition:scale>
 				{@render copy?.()}
 			</div>
 		{/if}

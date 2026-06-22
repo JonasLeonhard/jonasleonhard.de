@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Tween } from 'svelte/motion';
 	import { tv } from 'tailwind-variants';
+	import { untrack } from 'svelte'; // <-- Import untrack
+
 	interface Props {
 		class?: string;
 		text: string;
@@ -9,6 +11,7 @@
 		revealDuration?: number;
 		charset?: string;
 	}
+
 	let {
 		text,
 		class: className = '',
@@ -20,51 +23,69 @@
 
 	const hackedText = tv({ base: 'font-mono text-nowrap' });
 
-	let prevScrambled = $state(scrambled);
+	let prevScrambled = untrack(() => scrambled);
 
-	let widthTween = new Tween(scrambled ? 0 : 1, { duration: widthDuration });
-	let revealTween = new Tween(scrambled ? 0 : 1, { duration: revealDuration });
+	let widthTween = new Tween(untrack(() => (scrambled ? 0 : 1)));
+	let revealTween = new Tween(untrack(() => (scrambled ? 0 : 1)));
 
 	let visibleWidth = $derived(Math.ceil(widthTween.current * text.length));
 	let revealedChars = $derived(Math.ceil(revealTween.current * visibleWidth));
-	let randomChars = $state(
-		Array(text.length)
-			.fill('')
-			.map(() => getRandomChar())
+
+	let randomChars = $state<string[]>(
+		untrack(() =>
+			Array(text.length)
+				.fill('')
+				.map(() => getRandomChar())
+		)
 	);
-	let interval: Timer;
+
+	$effect(() => {
+		const len = text.length;
+		untrack(() => {
+			if (randomChars.length !== len) {
+				randomChars = Array(len)
+					.fill('')
+					.map(() => getRandomChar());
+			}
+		});
+	});
+
+	let interval: ReturnType<typeof setInterval>;
 
 	function getRandomChar() {
 		return charset[Math.floor(Math.random() * charset.length)];
 	}
 
 	$effect(() => {
-		if (prevScrambled !== scrambled) {
-			const animate = async () => {
-				if (scrambled) {
-					// First reset reveal, then width
-					await revealTween.set(0);
-					await widthTween.set(0);
-				} else {
-					// First expand width, then reveal
-					await widthTween.set(1);
-					await revealTween.set(1);
-				}
-			};
+		const currentScrambled = scrambled;
 
-			animate();
-		}
-
-		prevScrambled = scrambled;
+		untrack(() => {
+			if (prevScrambled !== currentScrambled) {
+				const animate = async () => {
+					if (currentScrambled) {
+						await revealTween.set(0, { duration: revealDuration });
+						await widthTween.set(0, { duration: widthDuration });
+					} else {
+						await widthTween.set(1, { duration: widthDuration });
+						await revealTween.set(1, { duration: revealDuration });
+					}
+				};
+				animate();
+			}
+			prevScrambled = currentScrambled;
+		});
 	});
 
 	$effect(() => {
 		clearInterval(interval);
-		if (visibleWidth > revealedChars) {
+
+		const vWidth = visibleWidth;
+		const rChars = revealedChars;
+
+		if (vWidth > rChars) {
 			interval = setInterval(() => {
 				randomChars = randomChars.map((_, i) => {
-					// Only update random chars for positions that are visible but not yet revealed
-					if (i >= revealedChars && i < visibleWidth) {
+					if (i >= rChars && i < vWidth) {
 						return getRandomChar();
 					}
 					return randomChars[i];
@@ -74,32 +95,29 @@
 		return () => clearInterval(interval);
 	});
 
-	function getDisplayText() {
+	let displayText = $derived.by(() => {
+		if (!text) return '';
 		return text
 			.split('')
 			.map((char, index) => {
 				if (index < revealedChars) {
-					// Show the actual character if it's been revealed
 					return char;
 				} else if (index < visibleWidth) {
-					// Show a random character if it's in the scrambled part
 					return randomChars[index];
 				} else {
-					// Hide characters beyond the visible width
 					return '';
 				}
 			})
 			.join('');
-	}
+	});
 </script>
 
 {#snippet Text()}
-	{@const text = getDisplayText()}
 	<div class={hackedText({ class: className })}>
-		{#if text === ''}
-			<p class="w-0 overflow-hidden">{@html '&nbsp'}</p>
+		{#if displayText === ''}
+			<p class="w-0 overflow-hidden">{@html '&nbsp;'}</p>
 		{:else}
-			<p>{text}</p>
+			<p>{displayText}</p>
 		{/if}
 	</div>
 {/snippet}

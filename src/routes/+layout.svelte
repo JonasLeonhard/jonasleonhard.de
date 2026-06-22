@@ -15,7 +15,12 @@
 	/>
 	<link rel="canonical" href={`${import.meta.env.VITE_CANONICAL_URL}${$page.url.pathname}`} />
 	{#if data.metadata}
-		<meta data-pagefind-meta="author[content]" name="author" content={data.metadata.author} />
+		<meta
+			data-pagefind-meta="author[content]"
+			data-pagefind-filter="author[content]"
+			name="author"
+			content={data.metadata.author}
+		/>
 		<meta property="og:title" data-pagefind-sort="title[content]" content={data.metadata.title} />
 		<meta
 			data-pagefind-meta="description[content]"

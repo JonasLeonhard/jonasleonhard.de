@@ -5,8 +5,7 @@
 			Hi! Im Jonas Leonhard. A developer currently working for <a href="https://fork.de/"
 				>Fork Unstable Media</a
 			>
-			in Hamburg, Germany. You can reach me at
-			<a href="mailto:mail@jonasleonhard.de">mail@jonasleonhard.de</a>.
+			in Hamburg, Germany.
 		</p>
 	</div>
 </section>

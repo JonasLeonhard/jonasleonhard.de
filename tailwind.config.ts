@@ -4,6 +4,8 @@ import typography from '@tailwindcss/typography';
 
 import type { Config } from 'tailwindcss';
 
+// TODO: could remove this old file in favour of css variable set
+
 const config: Config = {
 	darkMode: ['class'],
 	content: ['./src/**/*.{html,js,svelte,svx,ts}'],

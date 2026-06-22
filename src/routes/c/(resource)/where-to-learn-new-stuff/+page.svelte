@@ -94,8 +94,8 @@
 						Clean Code
 					</a>
 					is a book that is considered a classic by some, and hated by others. As always the truth lies
-					somewhere inbetween. You can definetly get some decent advice out of it, but don't blindly
-					do everything bob says. Otherwise you'll have 10 levels of indirection and five line functions
+					somewhere inbetween. You can definetly get some decent advice out of it, but don't blindly do
+					everything bob says. Otherwise you'll have 10 levels of indirection and five line functions
 					everywhere.
 				</li>
 				<li>
@@ -112,11 +112,6 @@
 					> is a good read if you are interested in Gamedev related design patterns.
 				</li>
 			</ul>
-		</li>
-
-		<li>
-			I think <a href="https://www.youtube.com/@t3dotgg">Theo's</a> videos on Web Development are excellent
-			and you should check them out.
 		</li>
 
 		<li>
