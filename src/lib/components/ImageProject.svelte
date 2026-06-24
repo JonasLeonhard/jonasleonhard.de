@@ -80,7 +80,7 @@
 		galleryMix: new Uniform(1.0),
 		opacity: new Uniform(0.0),
 		uTime: new Uniform(0.0),
-		uResolution: new Uniform(new Vector2(1, 1)),
+		uAspect: new Uniform(1.0),
 		uMouse: new Uniform(smoothMouseUniform),
 		uAccentColor: accentColorUniform,
 		uForegroundColor: foregroundColorUniform,
@@ -95,6 +95,17 @@
             vec3 pos = position;
             pos.z += sin(uv.x * 2.0 + uTime * 0.5) * cos(uv.y * 2.0 + uTime * 0.4) * 1.5;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+    `;
+
+	const bgVertexShader = `
+        varying vec2 vUv;
+        varying vec2 vScreenUv;
+        void main() {
+            vUv = uv;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_Position = projectionMatrix * mvPosition;
+            vScreenUv = gl_Position.xy / gl_Position.w * 0.5 + 0.5;
         }
     `;
 
@@ -155,7 +166,7 @@
 
 	const bgCanvasFragmentShader = `
         uniform float uTime;
-        uniform vec2 uResolution;
+        uniform float uAspect;
         uniform vec2 uMouse;
         uniform float galleryMix;
         uniform float scrollMix;
@@ -164,10 +175,39 @@
         uniform vec3 uForegroundColor;
         uniform vec3 uBgColor;
         varying vec2 vUv;
+        varying vec2 vScreenUv;
 
-        const vec3 CYBER_BLUE_DEEP = vec3(0.0, 0.35, 0.85);
-        const vec3 CYBER_BLUE_NEON = vec3(0.0, 0.80, 1.0);
-        const vec3 CYBER_CYAN = vec3(0.0, 1.0, 0.85);
+        // =========================================================================
+        // TUNABLE DESIGN LEVERS & CONSTANTS
+        // =========================================================================
+        // --- MATRIX GEOMETRY & PACKING DENSITY ---
+        const float SCALE_GRID_UNITS   = 50.0;    // General density scale of motherboard wafer
+        const float CLAMP_BUS_THICK    = 0.96;    // Thickness of Horiz/Vert traces (closer to 1.0 = thinner)
+        const float CLAMP_DIAG_THICK   = 0.96;    // Thickness of Diagonal traces (closer to 1.0 = thinner)
+        const float CLAMP_CELL_THICK   = 0.96;   // Structural grid borders thickness metric
+
+        // --- MICRO-TRACE RUN LENGTHS ---
+        const float RUN_LENGTH_VERT    = 110.0;    // Number of vertical block cells traversed before an explicit break
+        const float RUN_LENGTH_HORIZ   = 90.0;    // Number of horizontal block cells traversed before an explicit break
+        const float RUN_LENGTH_DIAG    = 60.0;    // Number of diagonal trajectory cells traversed before an explicit break
+
+        // --- SPAWNING PROBABILITIES ---
+        const float PROBABILITY_VERT   = 0.45;    // Chance a vertical segment generates inside its layout block
+        const float PROBABILITY_HORIZ  = 0.35;    // Chance a horizontal segment generates inside its layout block
+        const float PROBABILITY_DIAG   = 0.12;    // Chance a continuous diagonal segment generates inside its block
+
+        // --- ENVIRONMENT INTERACTION RATES ---
+        const float IMPACT_RAD_CURV    = 0.4;    // Lens convex factor for the vintage fisheye geometry warp
+        const float IMPACT_RAD_HOVER   = 0.45;    // Screen space mouse interaction fallout radius
+        const float FORCE_LIGHTNING    = 2.5;     // Amplitude scaling factor of the global crackle line lightning wave
+        const float AMPLIFY_GLOW_DARK  = 0.28;    // Baseline dark mode element glowing profile factor
+
+        // --- CORE SILICON PALETTES ---
+        const vec3 CYBER_BLUE_DEEP     = vec3(0.0, 0.35, 0.85);
+        const vec3 CYBER_BLUE_NEON     = vec3(0.0, 0.80, 1.0);
+        const vec3 CYBER_CYAN          = vec3(0.0, 1.0, 0.85);
+        const vec3 INK_SURGE_SAPPHIRE  = vec3(0.0, 0.22, 0.65); // High contrast tech-blue vector track for light sheets
+        // =========================================================================
 
         float rand(vec2 p) {
             return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -188,22 +228,15 @@
         }
 
         void main() {
-            vec2 rawUv = gl_FragCoord.xy / uResolution;
-            
-            // Subdued Barrel Fisheye
-            vec2 ndc = rawUv * 2.0 - 1.0; 
+            vec2 ndc = vScreenUv * 2.0 - 1.0; 
             float lensRadiusSq = ndc.x * ndc.x + ndc.y * ndc.y;
-            float distortionStrength = 0.08; 
-            vec2 distortedNdc = ndc * (1.0 + distortionStrength * lensRadiusSq);
+            vec2 distortedNdc = ndc * (1.0 + IMPACT_RAD_CURV * lensRadiusSq);
             vec2 screenUv = (distortedNdc + 1.0) * 0.5;
 
-            float aspect = uResolution.x / uResolution.y;
-            float slowCrawlTime = uTime * 0.12;
             float isLightMode = step(0.5, (uBgColor.r + uBgColor.g + uBgColor.b) / 3.0);
 
-            // Kinetic Signal Surge Shockwaves
             vec2 cursorDiff = screenUv - uMouse;
-            cursorDiff.x *= aspect;
+            cursorDiff.x *= uAspect;
             float distanceToCursor = length(cursorDiff);
             
             float cursorAngle = atan(cursorDiff.y, cursorDiff.x);
@@ -213,25 +246,31 @@
             float interactionActivity = sin(galleryMix * 3.1415) + sin(scrollMix * 3.1415);
             float globalCrackleLine = step(0.84, sin(screenUv.y * 14.0 + screenUv.x * 6.0 - uTime * 8.0 + discreteSpikeNoise * 3.5));
             float globalSurgeWave = globalCrackleLine * discreteSpikeNoise * (0.02 + interactionActivity * 3.2);
-            float staticHoverForce = smoothstep(0.45, 0.0, distanceToCursor);
+            float staticHoverForce = smoothstep(IMPACT_RAD_HOVER, 0.0, distanceToCursor);
 
-            // FIXED HORIZONTAL MOBILE COMPRESSION: Multiplies screen bounds by step factors to maintain square dimensions
-            vec2 busUv = screenUv * vec2(40.0 * aspect, 40.0);
+            // COMPACTED WAFER TRACK RUN GENERATORS
+            vec2 busUv = screenUv * vec2(SCALE_GRID_UNITS * uAspect, SCALE_GRID_UNITS);
             vec2 busFraction = fract(busUv);
             vec2 busIndex = floor(busUv);
             
-            float circuitWireX = step(0.97, busFraction.x) * step(rand(vec2(busIndex.x, 13.0)), 0.38);
-            float circuitWireY = step(0.97, busFraction.y) * step(rand(vec2(17.0, busIndex.y)), 0.38);
-            float diagonalTrace = step(0.96, 1.0 - abs(busFraction.x - busFraction.y)) * step(rand(busIndex), 0.12);
+            // Build segmentation arrays to lock custom wire run bounds seamlessly
+            float vertSegment = floor(busIndex.y / RUN_LENGTH_VERT);
+            float horizSegment = floor(busIndex.x / RUN_LENGTH_HORIZ);
+            float diagId = busIndex.x - busIndex.y; 
+            float diagSegment = floor((busIndex.x + busIndex.y) / (RUN_LENGTH_DIAG * 2.0));
+            
+            float circuitWireX = step(CLAMP_BUS_THICK, busFraction.x) * step(rand(vec2(busIndex.x, vertSegment)), PROBABILITY_VERT);
+            float circuitWireY = step(CLAMP_BUS_THICK, busFraction.y) * step(rand(vec2(horizSegment, busIndex.y)), PROBABILITY_HORIZ);
+            float diagonalTrace = step(CLAMP_DIAG_THICK, 1.0 - abs(busFraction.x - busFraction.y)) * step(rand(vec2(diagId, diagSegment)), PROBABILITY_DIAG);
             float coreSiliconBusses = clamp(circuitWireX + circuitWireY + diagonalTrace, 0.0, 1.0);
 
-            vec2 transistorGrid = screenUv * vec2(42.0 * aspect, 42.0);
+            vec2 transistorGrid = screenUv * vec2((SCALE_GRID_UNITS + 5.0) * uAspect, SCALE_GRID_UNITS + 5.0);
             vec2 localGateUv = fract(transistorGrid);
             vec2 gateIdx = floor(transistorGrid);
 
             float cellSelector = rand(gateIdx);
             float telemetryPatternLayer = 0.0;
-            float localCellTimeMultiplier = slowCrawlTime + (uTime * 0.18 * staticHoverForce);
+            float localCellTimeMultiplier = uTime * 0.12 + (uTime * 0.18 * staticHoverForce);
 
             if (cellSelector < 0.22) {
                 telemetryPatternLayer = drawDataBitmask(localGateUv, localCellTimeMultiplier + rand(gateIdx)) * step(rand(gateIdx * 1.5), 0.35);
@@ -241,14 +280,14 @@
                 coreSiliconBusses = 0.0; 
             }
 
-            float mixT = fract(gateIdx.x * 0.02 + gateIdx.y * 0.015 + slowCrawlTime * 0.1);
+            float mixT = fract(gateIdx.x * 0.02 + gateIdx.y * 0.015 + uTime * 0.012);
             vec3 dynamicBlueSpectrum = mix(CYBER_BLUE_DEEP, mix(CYBER_BLUE_NEON, CYBER_CYAN, step(0.5, mixT)), mixT);
 
             float lumaValue = dot(dynamicBlueSpectrum, vec3(0.2126, 0.7152, 0.0722));
             float baselineShimmer = (0.5 + 0.5 * sin(uTime * 3.0 + gateIdx.x * 0.5)) * rand(gateIdx + floor(uTime * 6.0));
             vec3 grayscaleBaseColor = vec3(lumaValue * (0.5 + baselineShimmer * 0.35));
 
-            float activationMixer = clamp(staticHoverForce + (globalSurgeWave * 2.5), 0.0, 1.0);
+            float activationMixer = clamp(staticHoverForce + (globalSurgeWave * FORCE_LIGHTNING), 0.0, 1.0);
             vec3 processingColorProfile = mix(grayscaleBaseColor, dynamicBlueSpectrum * 1.65, activationMixer);
             vec3 activeCircuitColor = mix(processingColorProfile, uAccentColor * 1.2, staticHoverForce * 0.3);
 
@@ -258,16 +297,14 @@
             vec3 linesContrastShade = mix(activeCircuitColor * 2.2, lightModeLineColor, isLightMode);
             compositeColor = mix(compositeColor, linesContrastShade, coreSiliconBusses * 0.12);
             
-            float activePatternMask = max(step(0.95, localGateUv.x) * step(0.95, localGateUv.y), telemetryPatternLayer);
+            float activePatternMask = max(step(CLAMP_CELL_THICK, localGateUv.x) * step(CLAMP_CELL_THICK, localGateUv.y), telemetryPatternLayer);
             
             vec3 finalPatternElement;
             if (isLightMode > 0.5) {
-                vec3 intenseSurgeSapphire = vec3(0.0, 0.22, 0.65);
                 vec3 passiveInk = mix(uBgColor, uForegroundColor * 0.38, mix(0.12, 0.48, baselineShimmer));
-                finalPatternElement = mix(passiveInk, intenseSurgeSapphire, clamp(globalSurgeWave * 4.5 + staticHoverForce * 0.6, 0.0, 1.0));
+                finalPatternElement = mix(passiveInk, INK_SURGE_SAPPHIRE, clamp(globalSurgeWave * 4.5 + staticHoverForce * 0.6, 0.0, 1.0));
             } else {
-                float baseGlow = 0.28;
-                float glowPower = (baseGlow + globalSurgeWave * 5.5 + staticHoverForce * 1.10);
+                float glowPower = (AMPLIFY_GLOW_DARK + globalSurgeWave * 5.5 + staticHoverForce * 1.10);
                 finalPatternElement = mix(activeCircuitColor, activeCircuitColor * 1.8, isLightMode) * glowPower;
             }
             
@@ -320,8 +357,8 @@
 		const hitTargets = raycaster.intersectObjects(scene.children, true);
 
 		if (hitTargets.length > 0) {
-			const hitMesh = hitTargets.find((hit) => hit.object.type === 'Mesh');
-			if (hitMesh && hitMesh.uv) {
+			const hitCard = hitTargets.find((hit) => hit.object.name === 'projectCard');
+			if (hitCard) {
 				const totalGalleryCount = allProjects[activeKey].imagePaths.length;
 				if (totalGalleryCount > 1) {
 					allProjects[activeKey].currentImageIndex =
@@ -335,8 +372,6 @@
 		const trigger = textureTrigger;
 		const projects = Object.entries(allProjects);
 
-		// CONTINUOUS TIMELINE INDEX SELECTOR
-		// Scans chronological progress to prevent index finders from falling through gaps
 		let activeIdx = projects.findIndex(
 			([, p]) => p.visible || (p.progress > 0.0 && p.progress < 0.99)
 		);
@@ -351,7 +386,6 @@
 		activeKey = cId;
 		siblingKey = nId;
 
-		// FIXED MOBILE OVERSHOOT CLAMP: Defensively locks the float values between 0.0 and 1.0
 		const activeProgress = currentProject
 			? Math.max(0.0, Math.min(currentProject.progress, 1.0))
 			: 0;
@@ -380,11 +414,10 @@
 			}
 		});
 
-		// Compute crossfade values reliably
 		let currentScrollMix = 0.0;
 		if (cId && nId && currentProject) {
 			currentScrollMix = activeProgress <= 0.75 ? 0.0 : (activeProgress - 0.75) / 0.25;
-			currentScrollMix = Math.max(0.0, Math.min(currentScrollMix, 1.0)); // Strict normalization clamp
+			currentScrollMix = Math.max(0.0, Math.min(currentScrollMix, 1.0));
 		}
 
 		const currentTextures = cId ? projectTextureMap[cId] : null;
@@ -412,8 +445,9 @@
 		if (typeof window !== 'undefined') {
 			const width = window.innerWidth;
 			const height = window.innerHeight;
+
 			consoleUniforms.uResolution.value.set(width, height);
-			bgCanvasUniforms.uResolution.value.set(width, height);
+			bgCanvasUniforms.uAspect.value = width / (height || 1);
 
 			const isDark =
 				document.documentElement.classList.contains('dark') ||
@@ -447,7 +481,7 @@
 
 <T.Group position={[0, 13, 0]} rotation={[0, 0, Math.PI / 2]}>
 	{#if activeGalleryTex}
-		<T.Mesh position={[0, 0, 0]}>
+		<T.Mesh name="projectCard" position={[0, 0, 0]}>
 			<T.PlaneGeometry args={[currentCardSize, currentCardSize, 16, 16]} />
 			<T.ShaderMaterial
 				transparent
@@ -467,7 +501,7 @@
 		transparent
 		depthTest={false}
 		depthWrite={false}
-		vertexShader={consoleVertexShader}
+		vertexShader={bgVertexShader}
 		fragmentShader={bgCanvasFragmentShader}
 		uniforms={bgCanvasUniforms}
 	/>
