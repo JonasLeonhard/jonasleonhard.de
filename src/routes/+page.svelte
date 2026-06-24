@@ -2,7 +2,6 @@
 	export interface ProjectState {
 		visible: boolean;
 		progress: number;
-
 		title: string;
 		subtitle: string;
 		role: string;
@@ -228,7 +227,7 @@
 			}
 		});
 
-		// Team: Triggers display visibility quickly as elements enter viewport window base
+		// Team Dynamic Viewport Bounds
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: `#team`,
@@ -255,7 +254,7 @@
 			}
 		});
 
-		// Projects
+		// Projects Mapping
 		Object.keys(projectsState).forEach((projectId) => {
 			gsap.timeline({
 				scrollTrigger: {
@@ -584,7 +583,7 @@
 			</Marqueeck>
 		</div>
 
-		<section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+		<section class="src-layout w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
 			<div class="grid grid-cols-1 lg:grid-cols-12">
 				<p
 					class="col-span-full lg:col-span-7 lg:col-start-6 text-muted-foreground/60 text-sm md:text-base italic transition-all duration-700 ease-out delay-300 font-sans"

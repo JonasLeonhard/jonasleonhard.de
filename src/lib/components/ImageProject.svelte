@@ -28,7 +28,6 @@
 	const PLANE_WIDTH = 135;
 	const PLANE_HEIGHT = 135;
 
-	// Simple un-warped pass-through vertex shader for fullscreen rendering
 	const cleanBgVertexShader = `
         varying vec2 vUv;
         void main() {
@@ -56,11 +55,9 @@
 	let loadingTextures = $state(new Set<string>());
 	let totalElapsedTime = 0;
 
-	// Camera tracker states
 	let bgTrackX = $state(0);
 	let bgTrackY = $state(0);
 
-	// Dynamic Resolution and Theme Trackers fed directly into WebGL
 	const resolutionUniform = new Uniform(new Vector2(1920, 1080));
 	const bgColorUniform = new Uniform(new Color('#ffffff'));
 
@@ -78,6 +75,29 @@
 		obi: 'https://vjs.zencdn.net/v/oceans.mp4'
 	};
 
+	// Stable Clean uniform objects for passing securely to Threlte components
+	const projectUniforms = {
+		imageCurrent: new Uniform(null),
+		imageNext: new Uniform(null),
+		mixRatio: new Uniform(0.0),
+		fadeIn: new Uniform(0.0),
+		fadeOut: new Uniform(0.0),
+		scrollY: new Uniform(0.0),
+		time: new Uniform(0.0)
+	};
+
+	const bgUniforms = {
+		time: new Uniform(0.0),
+		fadeIn: new Uniform(0.0),
+		fadeOut: new Uniform(0.0),
+		mixRatio: new Uniform(0.0),
+		videoCurrent: new Uniform(null),
+		videoNext: new Uniform(null),
+		uMouse: mouseUniform,
+		uResolution: resolutionUniform,
+		uBgColor: bgColorUniform
+	};
+
 	function initVideoTexture(id: string, url: string) {
 		if (projectVideos[id]) return;
 
@@ -88,19 +108,38 @@
 		video.muted = true;
 		video.playsInline = true;
 		video.autoplay = true;
-		video.setAttribute('webkit-playsinline', 'webkit-playsinline');
+		video.setAttribute('playsinline', 'true');
+		video.setAttribute('webkit-playsinline', 'true');
 		video.setAttribute('preload', 'auto');
+
+		// iOS Engine requires the source inside the DOM stack to preserve playback loops
+		video.style.position = 'absolute';
+		video.style.width = '0px';
+		video.style.height = '0px';
+		video.style.opacity = '0';
+		video.style.pointerEvents = 'none';
+		document.body.appendChild(video);
 
 		activeVideoElements.push(video);
 
-		video
-			.play()
-			.then(() => {
-				const videoTex = new VideoTexture(video);
-				videoTex.minFilter = LinearFilter;
-				projectVideos[id] = videoTex;
-			})
-			.catch((err) => console.warn('Video waiting on user interaction: ', err));
+		const executePlay = () => {
+			video
+				.play()
+				.then(() => {
+					if (!projectVideos[id]) {
+						const videoTex = new VideoTexture(video);
+						videoTex.minFilter = LinearFilter;
+						projectVideos[id] = videoTex;
+					}
+				})
+				.catch((err) => console.warn('Context waiting for user gesture event trigger:', err));
+		};
+
+		executePlay();
+
+		// Safe Fallbacks to capture gestures and instantly unlock mobile audio/video contexts
+		window.addEventListener('touchstart', executePlay, { once: true });
+		window.addEventListener('click', executePlay, { once: true });
 	}
 
 	useTask((delta) => {
@@ -115,15 +154,14 @@
 			bgTrackY = cam.position.y;
 		}
 
-		// Keep resolution and theme bindings synchronized perfectly without memory leaks
 		if (typeof window !== 'undefined') {
 			resolutionUniform.value.set(window.innerWidth, window.innerHeight);
 			const computedBg = window.getComputedStyle(document.body).backgroundColor;
 			bgColorUniform.value.setStyle(computedBg);
 		}
 
-		if (imageMaterial) imageMaterial.uniforms.time.value = totalElapsedTime;
-		if (bgMaterial) bgMaterial.uniforms.time.value = totalElapsedTime;
+		projectUniforms.time.value = totalElapsedTime;
+		bgUniforms.time.value = totalElapsedTime;
 	});
 
 	function handlePointerMove(e: PointerEvent) {
@@ -177,11 +215,30 @@
 		}
 	});
 
+	// Synchronize values into uniform references reactively
+	$effect(() => {
+		projectUniforms.imageCurrent.value = imageCurrent;
+		projectUniforms.imageNext.value = imageNext;
+		projectUniforms.mixRatio.value = mixRatio;
+		projectUniforms.fadeIn.value = imageFadeIn;
+		projectUniforms.fadeOut.value = imageFadeOut;
+		projectUniforms.scrollY.value = scrollY;
+	});
+
+	$effect(() => {
+		bgUniforms.videoCurrent.value = videoCurrent;
+		bgUniforms.videoNext.value = videoNext;
+		bgUniforms.mixRatio.value = mixRatio;
+		bgUniforms.fadeIn.value = imageFadeIn;
+		bgUniforms.fadeOut.value = imageFadeOut;
+	});
+
 	onDestroy(() => {
 		activeVideoElements.forEach((vid) => {
 			vid.pause();
 			vid.src = '';
 			vid.load();
+			if (vid.parentNode) vid.parentNode.removeChild(vid);
 		});
 	});
 </script>
@@ -198,21 +255,7 @@
 			depthWrite={false}
 			{vertexShader}
 			{fragmentShader}
-			uniforms={{
-				imageCurrent: new Uniform(null),
-				imageNext: new Uniform(null),
-				mixRatio: new Uniform(0.0),
-				fadeIn: new Uniform(0.0),
-				fadeOut: new Uniform(0.0),
-				scrollY: new Uniform(0.0),
-				time: new Uniform(0.0)
-			}}
-			uniforms.imageCurrent.value={imageCurrent}
-			uniforms.imageNext.value={imageNext}
-			uniforms.mixRatio.value={mixRatio}
-			uniforms.fadeIn.value={imageFadeIn}
-			uniforms.fadeOut.value={imageFadeOut}
-			uniforms.scrollY.value={scrollY}
+			uniforms={projectUniforms}
 		/>
 	</T.Mesh>
 </T.Group>
@@ -226,21 +269,6 @@
 		depthWrite={false}
 		vertexShader={cleanBgVertexShader}
 		fragmentShader={bgFragmentShader}
-		uniforms={{
-			time: new Uniform(0.0),
-			fadeIn: new Uniform(0.0),
-			fadeOut: new Uniform(0.0),
-			mixRatio: new Uniform(0.0),
-			videoCurrent: new Uniform(null),
-			videoNext: new Uniform(null),
-			uMouse: mouseUniform,
-			uResolution: resolutionUniform,
-			uBgColor: bgColorUniform
-		}}
-		uniforms.fadeIn.value={imageFadeIn}
-		uniforms.fadeOut.value={imageFadeOut}
-		uniforms.mixRatio.value={mixRatio}
-		uniforms.videoCurrent.value={videoCurrent}
-		uniforms.videoNext.value={videoNext}
+		uniforms={bgUniforms}
 	/>
 </T.Mesh>
