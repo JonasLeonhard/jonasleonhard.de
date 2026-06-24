@@ -105,7 +105,7 @@
 	let planeIntersection: Vector2 | undefined = $state(undefined);
 	const raycaster = new Raycaster();
 	const { camera, renderer } = useThrelte();
-	let raycastPlane: Plane;
+	const raycastPlane = new Plane(new Vector3(0, 0, 1), 0);
 
 	let mouseTrailCanvas: HTMLCanvasElement | undefined = $state();
 	let mouseTrailCtx: CanvasRenderingContext2D | null = $state(null);
@@ -182,16 +182,6 @@
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth bind:scrollY on:mousemove={handleMouseMove} />
-<T.Plane
-	args={[new Vector3(0, 0, 1), 0]}
-	visible={false}
-	attach={({ ref }) => {
-		raycastPlane = ref;
-		return () => {
-			raycastPlane = undefined;
-		};
-	}}
-/>
 <T.Points>
 	<T.BufferGeometry>
 		<T.BufferAttribute
