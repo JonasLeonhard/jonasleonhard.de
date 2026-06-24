@@ -192,7 +192,7 @@
 				endTrigger: '#team',
 				start: 'top 0%',
 				end: 'bottom 100%',
-				scrub: 1,
+				scrub: true,
 				// markers: true, // Uncomment for debugging
 				onUpdate: (self) => {
 					let progress = self.progress;
@@ -263,7 +263,7 @@
 				trigger: `#team`,
 				start: 'top 0%',
 				end: 'bottom 0%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					teamState.progress = self.progress;
 					teamState.visible = self.isActive;
@@ -276,7 +276,7 @@
 				trigger: '#team',
 				start: 'top 0%',
 				end: 'bottom 0%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					outlineProgress = self.progress;
 				}
@@ -290,7 +290,7 @@
 					trigger: `#${projectId}`,
 					start: 'top 0%',
 					end: 'bottom 0%',
-					scrub: 1,
+					scrub: true,
 					onUpdate: (self) => {
 						projectsState[projectId].progress = self.progress;
 						projectsState[projectId].visible = self.isActive;
@@ -305,7 +305,7 @@
 				trigger: `#overview`,
 				start: 'top 50%',
 				end: 'bottom 0%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					overviewState.visible = self.isActive;
 				}
@@ -318,7 +318,7 @@
 				trigger: `#team-done`,
 				start: 'top 0%',
 				end: 'bottom 50%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					imageFadeIn = self.progress;
 				}
@@ -329,7 +329,7 @@
 				trigger: '#overview',
 				start: 'top 100%',
 				end: 'bottom 20%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					imageFadeOut = self.progress * 2;
 				}
@@ -341,7 +341,7 @@
 				trigger: `#posts`,
 				start: 'top 50%',
 				end: 'bottom 0%',
-				scrub: 1,
+				scrub: true,
 				onUpdate: (self) => {
 					postsState.visible = self.isActive;
 				}
