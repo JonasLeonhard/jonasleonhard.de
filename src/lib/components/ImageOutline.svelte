@@ -2,55 +2,57 @@
 	import { T } from '@threlte/core';
 	import { Vector3 } from 'three';
 	import { MeshLineGeometry, MeshLineMaterial } from '@threlte/extras';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	interface Props {
 		outlineProgress: number;
+		imageFadeIn: number;
 	}
 
-	const { outlineProgress }: Props = $props();
+	const { outlineProgress, imageFadeIn = 0 }: Props = $props();
 
 	const OUTLINE_COLOR = '#00ffff';
-	const OUTLINE_WIDTH = 1.5; // Clean, thin industrial console wire width
-	const PLANE_WIDTH = 135;
-	const PLANE_HEIGHT = 135;
+	const OUTLINE_WIDTH = 1.5;
 
-	// Generates a completely sharp, squared vector tracking route path
-	const createSquarePath = () => {
-		const w = PLANE_WIDTH / 2;
-		const h = PLANE_HEIGHT / 2;
+	// RESPONSIVE BOUNDS CONTROLLER: Switches targets dynamically to fit vertical viewports
+	const isDesktop = new MediaQuery('(min-width: 1140px)');
+	const startSize = $derived(isDesktop.current ? 135.0 : 90.0);
+	const targetSize = $derived(isDesktop.current ? 225.0 : 135.0);
+
+	const currentWidth = $derived(startSize + (targetSize - startSize) * imageFadeIn);
+	const currentHeight = $derived(startSize + (targetSize - startSize) * imageFadeIn);
+
+	const squarePoints = $derived.by(() => {
+		const w = currentWidth / 2.0;
+		const h = currentHeight / 2.0;
 
 		return [
 			new Vector3(-w, -h, 0), // Bottom Left
 			new Vector3(w, -h, 0), // Bottom Right
 			new Vector3(w, h, 0), // Top Right
 			new Vector3(-w, h, 0), // Top Left
-			new Vector3(-w, -h, 0) // Closed path anchor link loop
+			new Vector3(-w, -h, 0) // Closed path anchor loop
 		];
-	};
+	});
 
-	const squarePoints = createSquarePath();
+	function getVisibleLinePoints(progress: number, pointsSource: Vector3[]) {
+		if (progress <= 0) return [];
+		if (progress >= 1) return pointsSource;
 
-	function getVisibleLinePoints() {
-		if (outlineProgress <= 0) return [];
-		if (outlineProgress >= 1) return squarePoints;
-
-		// Trace linear interpolation steps across the 4 perimeter segments
 		const totalSegments = 4;
-		const segmentProgress = outlineProgress * totalSegments;
+		const segmentProgress = progress * totalSegments;
 		const currentSegmentIdx = Math.floor(segmentProgress);
 		const currentSegmentFactor = segmentProgress - currentSegmentIdx;
 
 		const points = [];
 
-		// Add complete tracking paths for traversed sections
 		for (let i = 0; i <= currentSegmentIdx; i++) {
-			points.push(squarePoints[i]);
+			points.push(pointsSource[i]);
 		}
 
-		// Calculate the real-time drawing position vector of the active segment line
 		if (currentSegmentIdx < totalSegments) {
-			const pStart = squarePoints[currentSegmentIdx];
-			const pEnd = squarePoints[currentSegmentIdx + 1];
+			const pStart = pointsSource[currentSegmentIdx];
+			const pEnd = pointsSource[currentSegmentIdx + 1];
 
 			const pActive = new Vector3().lerpVectors(pStart, pEnd, currentSegmentFactor);
 			points.push(pActive);
@@ -59,7 +61,7 @@
 		return points;
 	}
 
-	const visibleOutline = $derived(getVisibleLinePoints());
+	const visibleOutline = $derived(getVisibleLinePoints(outlineProgress, squarePoints));
 </script>
 
 <T.Group position={[0, 13, 0.1]} rotation={[0, 0, Math.PI / 2]}>

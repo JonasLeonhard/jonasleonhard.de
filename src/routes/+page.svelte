@@ -7,7 +7,8 @@
 		role: string;
 		roleKey: string;
 		alignment: 'left' | 'right';
-		imagePath: string;
+		imagePaths: string[]; // Updated to accept arrays of images
+		currentImageIndex: number; // Active index tracking indicator
 	}
 </script>
 
@@ -54,6 +55,7 @@
 		'Suck it uncle bob!'
 	];
 
+	// Initialized layout data using multi-image array strings
 	const projectsData: Record<string, ProjectState> = {
 		stPauli: {
 			visible: false,
@@ -63,17 +65,26 @@
 			role: 'Lead Frontend',
 			roleKey: '▌',
 			alignment: 'left',
-			imagePath: 'https://placehold.co/400x400/FF4136/FFFFFF?text=St.Pauli'
+			imagePaths: [
+				'https://placehold.co/400x400/FF4136/FFFFFF?text=St.Pauli+Main',
+				'https://placehold.co/400x400/8B4513/FFFFFF?text=St.Pauli+Alt+1',
+				'https://placehold.co/400x400/333333/FFFFFF?text=St.Pauli+Alt+2'
+			],
+			currentImageIndex: 0
 		},
 		buerkert: {
 			visible: false,
 			progress: 0,
 			title: 'Buerkert',
-			subtitle: 'Eccomerce',
+			subtitle: 'Ecommerce',
 			role: 'Lead Frontend',
 			roleKey: '▄',
 			alignment: 'right',
-			imagePath: 'https://placehold.co/400x400/0074D9/FFFFFF?text=Buerkert'
+			imagePaths: [
+				'https://placehold.co/400x400/0074D9/FFFFFF?text=Buerkert+Main',
+				'https://placehold.co/400x400/001F3F/FFFFFF?text=Buerkert+Alt+1'
+			],
+			currentImageIndex: 0
 		},
 		hapeko: {
 			visible: false,
@@ -83,7 +94,11 @@
 			role: 'Frontend & Backend',
 			roleKey: '▀',
 			alignment: 'left',
-			imagePath: 'https://placehold.co/400x400/2ECC40/FFFFFF?text=Hapeko'
+			imagePaths: [
+				'https://placehold.co/400x400/2ECC40/FFFFFF?text=Hapeko+Main',
+				'https://placehold.co/400x400/01FF70/333333?text=Hapeko+Alt'
+			],
+			currentImageIndex: 0
 		},
 		vw: {
 			visible: false,
@@ -93,7 +108,11 @@
 			role: 'Frontend',
 			roleKey: '▐',
 			alignment: 'right',
-			imagePath: 'https://placehold.co/400x400/FFDC00/333333?text=VW'
+			imagePaths: [
+				'https://placehold.co/400x400/FFDC00/333333?text=VW+Main',
+				'https://placehold.co/400x400/AAAAAA/333333?text=VW+Alt'
+			],
+			currentImageIndex: 0
 		},
 		futurium: {
 			visible: false,
@@ -103,7 +122,11 @@
 			role: 'Frontend & Backend',
 			roleKey: '▄',
 			alignment: 'left',
-			imagePath: 'https://placehold.co/400x400/B10DC9/FFFFFF?text=Futurium'
+			imagePaths: [
+				'https://placehold.co/400x400/B10DC9/FFFFFF?text=Futurium+Main',
+				'https://placehold.co/400x400/F012BE/FFFFFF?text=Futurium+Alt'
+			],
+			currentImageIndex: 0
 		},
 		zebra: {
 			visible: false,
@@ -113,7 +136,8 @@
 			role: 'Frontend & Backend',
 			roleKey: '▀',
 			alignment: 'right',
-			imagePath: 'https://placehold.co/400x400/01FF70/333333?text=Zebra'
+			imagePaths: ['https://placehold.co/400x400/01FF70/333333?text=Zebra+Main'],
+			currentImageIndex: 0
 		},
 		obi: {
 			visible: false,
@@ -123,7 +147,11 @@
 			role: 'Frontend & Backend',
 			roleKey: '▐',
 			alignment: 'left',
-			imagePath: 'https://placehold.co/400x400/FF851B/FFFFFF?text=OBI'
+			imagePaths: [
+				'https://placehold.co/400x400/FF851B/FFFFFF?text=OBI+Main',
+				'https://placehold.co/400x400/FF4136/FFFFFF?text=OBI+Alt'
+			],
+			currentImageIndex: 0
 		}
 	};
 
@@ -254,7 +282,7 @@
 			}
 		});
 
-		// Projects
+		// Projects Mapping Loop
 		Object.keys(projectsState).forEach((projectId) => {
 			gsap.timeline({
 				scrollTrigger: {
@@ -415,8 +443,8 @@
 				<Circuit dissolveProgress={imageFadeIn} />
 			{/if}
 
-			<ImageOutline outlineProgress={outlineProgress - imageFadeOut} />
-			<ImageProject allProjects={projectsState} {imageFadeIn} {imageFadeOut} {scrollY} />
+			<ImageOutline outlineProgress={outlineProgress - imageFadeOut} {imageFadeIn} />
+			<ImageProject bind:allProjects={projectsState} {imageFadeIn} {imageFadeOut} {scrollY} />
 
 			<T.PerspectiveCamera
 				makeDefault
@@ -510,6 +538,16 @@
 								scrambled={!project.visible}
 							/>
 						{/if}
+
+						{#if project.imagePaths.length > 1}
+							<p
+								class="mt-2 font-mono text-[11px] uppercase tracking-widest text-accent/80 animate-pulse"
+							>
+								[ Click to Browse Project Image ({project.currentImageIndex + 1}/{project.imagePaths
+									.length}) ]
+							</p>
+						{/if}
+
 						<div class="mt-6 w-full max-w-md {project.alignment === 'right' ? 'ml-auto' : ''}">
 							<AsciiProgressBar class="text-xs md:text-sm" {progress} />
 						</div>
