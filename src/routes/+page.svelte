@@ -227,7 +227,7 @@
 			}
 		});
 
-		// Team Dynamic Viewport Bounds
+		// Team
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: `#team`,
@@ -254,7 +254,7 @@
 			}
 		});
 
-		// Projects Mapping
+		// Projects
 		Object.keys(projectsState).forEach((projectId) => {
 			gsap.timeline({
 				scrollTrigger: {
@@ -340,20 +340,24 @@
 <svelte:window bind:scrollY />
 
 <div class="w-full max-w-full overflow-x-hidden text-foreground select-none font-sans">
-	<section class="container mx-auto flex flex-col pt-32 pb-60 px-4 sm:px-6 lg:px-8 relative z-10">
+	<section
+		class="container mx-auto flex flex-col pt-24 pb-44 sm:pt-32 sm:pb-60 px-4 sm:px-6 lg:px-8 relative z-10"
+	>
 		<h3
-			class="w-max max-w-full border border-dashed border-border bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text p-4 text-5xl font-bold text-transparent sm:text-6xl md:text-7xl lg:text-8xl"
+			class="w-max max-w-full border border-dashed border-border bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text p-4 text-4xl font-bold text-transparent sm:text-6xl md:text-7xl lg:text-8xl"
 		>
 			Jonas
 		</h3>
 
-		<div class="relative h-[120px] max-w-full overflow-hidden mt-4">
+		<div
+			class="relative h-[170px] xs:h-[140px] sm:h-[120px] md:h-[160px] lg:h-[220px] max-w-full overflow-hidden mt-4"
+		>
 			{#each descriptions as description, index}
 				{#if index === currentDescIndex}
 					<h3
 						in:fly={{ y: 20, duration: 300 }}
 						out:fade={{ duration: 200 }}
-						class="absolute top-0 left-0 z-10 max-w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-5xl font-medium text-transparent sm:text-6xl md:text-7xl lg:text-8xl break-words"
+						class="absolute top-0 left-0 z-10 max-w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-3xl font-medium text-transparent leading-tight break-words xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl"
 					>
 						{description}
 					</h3>
@@ -364,10 +368,10 @@
 
 	<section
 		id="intro-nav-bar"
-		class="fixed bottom-8 left-1/2 container flex w-full -translate-x-1/2 flex-wrap justify-between gap-4 transition-all duration-500 lg:bottom-16 lg:gap-60 px-4 sm:px-6 lg:px-8 z-40"
+		class="fixed bottom-4 left-1/2 container flex w-full -translate-x-1/2 flex-wrap justify-between gap-x-4 gap-y-2 transition-all duration-500 sm:bottom-8 lg:bottom-16 lg:gap-60 px-4 sm:px-6 lg:px-8 z-40"
 	>
 		<div
-			class="md:text-1xl mt-auto mr-auto flex flex-wrap gap-4 text-lg sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
+			class="mt-auto mr-auto flex flex-wrap gap-x-4 gap-y-1 text-base sm:gap-6 sm:text-xl md:gap-10 lg:gap-14 lg:text-2xl"
 		>
 			<a
 				href="/c"
@@ -495,13 +499,13 @@
 							scrambled={!project.visible}
 						/>
 						<HackedText
-							class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block overflow-hidden"
+							class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block overflow-hidden leading-tight"
 							text={project.title}
 							scrambled={!project.visible}
 						/>
 						{#if project.subtitle}
 							<HackedText
-								class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block mt-1 overflow-hidden"
+								class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block mt-1 overflow-hidden leading-tight"
 								text={project.subtitle}
 								scrambled={!project.visible}
 							/>
