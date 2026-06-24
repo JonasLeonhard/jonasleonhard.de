@@ -127,7 +127,7 @@
 
 	/* Mobile text overflow fixes */
 	.prose {
-		@apply break-words max-w-none;
+		@apply max-w-none break-words;
 	}
 
 	.prose h1,
@@ -149,7 +149,7 @@
 	}
 
 	.prose code {
-		@apply break-words text-sm;
+		@apply text-sm break-words;
 	}
 
 	.prose table {
@@ -183,4 +183,8 @@
 		width: 100%;
 		height: 100%;
 	}
+}
+
+.svelte-nbs0zk {
+	margin-bottom: -24px !important;
 }
