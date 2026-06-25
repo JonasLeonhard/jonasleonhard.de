@@ -39,7 +39,6 @@
 
 	let globalElapsedTime = 0;
 	let transitionTimeline = $state(1.0);
-	let fpsAccumulator = 0;
 
 	let rawMouseX = 0.5;
 	let rawMouseY = 0.5;
@@ -97,66 +96,105 @@
 		uBgColor: backgroundColorUniform
 	};
 
-	useTask((delta) => {
-		if (!isDesktop.current) {
-			fpsAccumulator += delta;
-			if (fpsAccumulator < 1 / 24) return;
-			fpsAccumulator = 0;
-		}
+	const { invalidate } = useThrelte();
+	let renderAccumulator = 0;
+	const INVERSE_TARGET_FPS = 1 / 45; // Caps heavy computations at 45 FPS max during motion
 
-		globalElapsedTime += delta;
-		consoleUniforms.uTime.value = globalElapsedTime;
-		bgCanvasUniforms.uTime.value = globalElapsedTime;
+	// Track state mutations to see if things are actually changing
+	let lastScrollY = 0;
+	let lastMouseX = 0.5;
+	let lastMouseY = 0.5;
 
-		smoothMouseUniform.x += (rawMouseX - smoothMouseUniform.x) * 0.045;
-		smoothMouseUniform.y += (rawMouseY - smoothMouseUniform.y) * 0.045;
-		consoleUniforms.uMouse.value.copy(smoothMouseUniform);
-		bgCanvasUniforms.uMouse.value.copy(smoothMouseUniform);
+	useTask(
+		(delta) => {
+			// 1. Always process internal vector math smoothly so transitions don't break
+			globalElapsedTime += delta;
+			consoleUniforms.uTime.value = globalElapsedTime;
+			bgCanvasUniforms.uTime.value = globalElapsedTime;
 
-		const cam = $activeCamera;
+			smoothMouseUniform.x += (rawMouseX - smoothMouseUniform.x) * 0.045;
+			smoothMouseUniform.y += (rawMouseY - smoothMouseUniform.y) * 0.045;
+			consoleUniforms.uMouse.value.copy(smoothMouseUniform);
+			bgCanvasUniforms.uMouse.value.copy(smoothMouseUniform);
 
-		// Raycasting and hover movement logic strictly locked to when image is active (imageFadeIn > 0.95)
-		if (isDesktop.current && activeGalleryTex && cam && imageFadeIn > 0.95) {
-			const raycastMouse = new Vector2(rawMouseX * 2.0 - 1.0, rawMouseY * 2.0 - 1.0);
-			raycaster.setFromCamera(raycastMouse, cam);
-			const targets = raycaster.intersectObjects(scene.children, true);
-			const isHit = targets.some((t) => t.object.name === 'projectCard');
+			const cam = $activeCamera;
+			const currentProject = activeKey ? allProjects[activeKey] : null;
+			const isProjectInteractive =
+				currentProject && currentProject.progress <= 0.75 && imageFadeOut <= 0.05;
 
-			if (isHit !== isHovered) {
-				isHovered = isHit;
-				if (typeof document !== 'undefined') {
-					document.body.style.cursor = isHit ? 'pointer' : 'default';
+			if (
+				isDesktop.current &&
+				activeGalleryTex &&
+				cam &&
+				imageFadeIn > 0.95 &&
+				isProjectInteractive
+			) {
+				const raycastMouse = new Vector2(rawMouseX * 2.0 - 1.0, rawMouseY * 2.0 - 1.0);
+				raycaster.setFromCamera(raycastMouse, cam);
+				const targets = raycaster.intersectObjects(scene.children, true);
+				const isHit = targets.some((t) => t.object.name === 'projectCard');
+
+				if (isHit !== isHovered) {
+					isHovered = isHit;
+					if (typeof document !== 'undefined')
+						document.body.style.cursor = isHit ? 'pointer' : 'default';
 				}
+			} else {
+				if (isHovered && typeof document !== 'undefined') document.body.style.cursor = 'default';
+				isHovered = false;
 			}
-		} else {
-			if (isHovered && typeof document !== 'undefined') {
-				document.body.style.cursor = 'default';
+
+			const targetScale = isHovered && isDesktop.current ? 1.06 : 1.0;
+			hoverScaleFactor += (targetScale - hoverScaleFactor) * 0.14;
+
+			let targetOffsetX = 0;
+			let targetOffsetY = 0;
+			if (isDesktop.current && imageFadeIn > 0.95 && isProjectInteractive) {
+				targetOffsetX = (smoothMouseUniform.x - 0.5) * 45.0;
+				targetOffsetY = (smoothMouseUniform.y - 0.5) * 45.0;
 			}
-			isHovered = false;
-		}
 
-		const targetScale = isHovered && isDesktop.current ? 1.06 : 1.0;
-		hoverScaleFactor += (targetScale - hoverScaleFactor) * 0.14;
+			meshOffsetX += (targetOffsetX - meshOffsetX) * 0.14;
+			meshOffsetY += (targetOffsetY - meshOffsetY) * 0.14;
 
-		let targetOffsetX = 0;
-		let targetOffsetY = 0;
-		if (isDesktop.current && imageFadeIn > 0.95) {
-			targetOffsetX = (smoothMouseUniform.x - 0.5) * 45.0;
-			targetOffsetY = (smoothMouseUniform.y - 0.5) * 45.0;
-		}
+			if (cam) {
+				bgTrackX = cam.position.x;
+				bgTrackY = cam.position.y;
+			}
 
-		meshOffsetX += (targetOffsetX - meshOffsetX) * 0.14;
-		meshOffsetY += (targetOffsetY - meshOffsetY) * 0.14;
+			if (transitionTimeline < 1.0) {
+				transitionTimeline = Math.min(transitionTimeline + delta * 2.0, 1.0);
+			}
 
-		if (cam) {
-			bgTrackX = cam.position.x;
-			bgTrackY = cam.position.y;
-		}
+			// 2. DELTA-THROTTLED INVALIDATION MANAGER
+			if (globalAlpha > 0.0) {
+				// Check if there has been ANY physical state adjustment since the last cycle
+				const hasScrolled = Math.abs(scrollY - lastScrollY) > 0.1;
+				const hasMouseMoved =
+					Math.abs(rawMouseX - lastMouseX) > 0.001 || Math.abs(rawMouseY - lastMouseY) > 0.001;
+				const isAnimatingCard = transitionTimeline < 1.0;
 
-		if (transitionTimeline < 1.0) {
-			transitionTimeline = Math.min(transitionTimeline + delta * 2.0, 1.0);
-		}
-	});
+				// Cache current state positions
+				lastScrollY = scrollY;
+				lastMouseX = rawMouseX;
+				lastMouseY = rawMouseY;
+
+				// If an action is actively occurring, handle timing thresholds carefully
+				if (hasScrolled || hasMouseMoved || isAnimatingCard || isHovered) {
+					renderAccumulator += delta;
+
+					if (renderAccumulator >= INVERSE_TARGET_FPS) {
+						invalidate(); // Trigger single frame redraw pass
+						renderAccumulator %= INVERSE_TARGET_FPS; // Maintain time precision tracking
+					}
+				}
+			} else {
+				// Drop variables if page goes idle to protect memory space
+				renderAccumulator = 0;
+			}
+		},
+		{ autoInvalidate: false }
+	);
 
 	function handlePointerMove(e: PointerEvent) {
 		if (!isDesktop.current) return;
@@ -167,7 +205,18 @@
 	}
 
 	function handleConsolePanelClick(e: MouseEvent) {
-		if (!activeKey || !allProjects[activeKey] || imageFadeIn < 0.95 || globalAlpha < 0.4) return;
+		if (!activeKey || !allProjects[activeKey]) return;
+
+		const currentProject = allProjects[activeKey];
+
+		if (
+			imageFadeIn < 0.95 ||
+			currentProject.progress > 0.75 ||
+			imageFadeOut > 0.05 ||
+			globalAlpha < 0.4
+		)
+			return;
+
 		const cam = $activeCamera;
 		if (!cam) return;
 
@@ -182,17 +231,16 @@
 		if (hitTargets.length > 0) {
 			const hitCard = hitTargets.find((hit) => hit.object.name === 'projectCard');
 			if (hitCard) {
-				const totalGalleryCount = allProjects[activeKey].imagePaths.length;
+				const totalGalleryCount = currentProject.imagePaths.length;
 				if (totalGalleryCount > 1) {
-					allProjects[activeKey].currentImageIndex =
-						(allProjects[activeKey].currentImageIndex + 1) % totalGalleryCount;
+					currentProject.currentImageIndex =
+						(currentProject.currentImageIndex + 1) % totalGalleryCount;
 				}
 			}
 		}
 	}
 
 	$effect(() => {
-		const trigger = textureTrigger;
 		const projects = Object.entries(allProjects);
 
 		let activeIdx = projects.findIndex(

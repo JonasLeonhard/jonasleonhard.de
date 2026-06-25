@@ -378,7 +378,7 @@
 
 <svelte:window bind:scrollY />
 
-<div class="w-full max-w-full overflow-x-hidden text-foreground select-none font-sans">
+<div class="w-full max-w-full overflow-x-hidden text-foreground font-sans">
 	<section
 		class="container mx-auto flex flex-col pt-24 pb-44 sm:pt-32 sm:pb-60 px-4 sm:px-6 lg:px-8 relative z-10"
 	>
@@ -587,12 +587,12 @@
 		class="relative z-30 w-full max-w-full bg-background border-t border-border shadow-[0_-30px_60px_rgba(0,0,0,0.5)] overflow-hidden font-mono"
 	>
 		<div
-			class="absolute top-4 left-6 text-[10px] text-muted-foreground select-none hidden md:block tracking-widest"
+			class="absolute top-4 left-6 text-[10px] text-muted-foreground hidden md:block tracking-widest"
 		>
 			SYS.LOC // <span class="text-accent">CORE_MINIMAL_PROD</span>
 		</div>
 		<div
-			class="absolute top-4 right-6 text-[10px] text-muted-foreground select-none hidden md:block tracking-wider"
+			class="absolute top-4 right-6 text-[10px] text-muted-foreground hidden md:block tracking-wider"
 		>
 			STATUS: <span class="text-primary">● STABLE</span>
 		</div>
