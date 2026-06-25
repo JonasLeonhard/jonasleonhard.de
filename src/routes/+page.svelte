@@ -7,8 +7,8 @@
 		role: string;
 		roleKey: string;
 		alignment: 'left' | 'right';
-		imagePaths: string[]; // Updated to accept arrays of images
-		currentImageIndex: number; // Active index tracking indicator
+		imagePaths: string[];
+		currentImageIndex: number;
 	}
 </script>
 
@@ -55,7 +55,6 @@
 		'Suck it uncle bob!'
 	];
 
-	// Initialized layout data using multi-image array strings
 	const projectsData: Record<string, ProjectState> = {
 		stPauli: {
 			visible: false,
@@ -158,6 +157,10 @@
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 	let scrollY = $state(0);
 
+	// Dynamic style values populated on mount to freeze mobile height bounds
+	let lockWidth = $state('100%');
+	let lockHeight = $state('100vh');
+
 	const desktopPositions = {
 		start: { position: [-200, 0, 620], rotation: [0, 0, 0] },
 		team: { position: [0, 0, 550], rotation: [0, 0, Math.PI / 12] },
@@ -183,6 +186,11 @@
 	let postsState = $state({ visible: false });
 	let currentDescIndex = $state(0);
 	let loadedPage = $state(false);
+
+	let isHovered = $state(false);
+	let meshOffsetX = $state(0);
+	let meshOffsetY = $state(0);
+	let hoverScaleFactor = $state(1.0);
 	let outlineProgress = $state(0);
 	let imageFadeIn = $state(0);
 	let imageFadeOut = $state(0);
@@ -190,17 +198,21 @@
 	onMount(() => {
 		loadedPage = true;
 
+		if (!isDesktop.current) {
+			lockWidth = `${window.innerWidth}px`;
+			lockHeight = `${window.innerHeight}px`;
+		}
+
 		const interval = setInterval(() => {
 			currentDescIndex = (currentDescIndex + 1) % descriptions.length;
 		}, 4500);
 
-		// CameraMovement
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: 'body',
 				endTrigger: '#team',
-				start: 'top 0%',
-				end: 'bottom 100%',
+				start: 'top top',
+				end: 'bottom bottom',
 				scrub: 0.5,
 				onUpdate: (self) => {
 					let progress = self.progress;
@@ -255,13 +267,12 @@
 			}
 		});
 
-		// Team
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: `#team`,
-				start: 'top 85%',
+				start: 'top 80%',
 				end: 'bottom bottom',
-				scrub: true,
+				scrub: 0.5,
 				onUpdate: (self) => {
 					teamState.progress = self.progress;
 					teamState.visible = self.isActive;
@@ -269,27 +280,39 @@
 			}
 		});
 
-		// Team - image outline
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: '#team',
-				start: 'top 85%',
+				start: 'top 80%',
 				end: 'bottom bottom',
-				scrub: true,
+				scrub: 0.5,
 				onUpdate: (self) => {
 					outlineProgress = self.progress;
 				}
 			}
 		});
 
-		// Projects Mapping Loop
+		// Fixed image fade logic: Tied directly to scroll context instead of hidden layout blocks
+		gsap.timeline({
+			scrollTrigger: {
+				trigger: '#team',
+				start: 'bottom 90%',
+				end: 'bottom 20%',
+				scrub: 0.5,
+				onUpdate: (self) => {
+					imageFadeIn = self.progress;
+				}
+			}
+		});
+
 		Object.keys(projectsState).forEach((projectId) => {
 			gsap.timeline({
 				scrollTrigger: {
 					trigger: `#${projectId}`,
-					start: 'top 85%',
-					end: 'bottom bottom',
-					scrub: true,
+					start: 'top 75%',
+					end: 'bottom 25%',
+					scrub: 0.5,
+					invalidateOnRefresh: true,
 					onUpdate: (self) => {
 						projectsState[projectId].progress = self.progress;
 						projectsState[projectId].visible = self.isActive;
@@ -298,26 +321,12 @@
 			});
 		});
 
-		// Animate Image opacity in
-		gsap.timeline({
-			scrollTrigger: {
-				trigger: `#team-done`,
-				start: 'top top',
-				end: 'bottom center',
-				scrub: true,
-				onUpdate: (self) => {
-					imageFadeIn = self.progress;
-				}
-			}
-		});
-
-		// Core content deck tracking controllers
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: '#content-deck',
 				start: 'top 95%',
 				end: 'top top',
-				scrub: true,
+				scrub: 0.5,
 				onUpdate: (self) => {
 					imageFadeOut = self.progress * 2;
 				}
@@ -326,7 +335,7 @@
 
 		ScrollTrigger.create({
 			trigger: '#overview',
-			start: 'top 75%',
+			start: 'top 80%',
 			once: true,
 			onEnter: () => {
 				overviewState.visible = true;
@@ -335,14 +344,13 @@
 
 		ScrollTrigger.create({
 			trigger: '#posts',
-			start: 'top 75%',
+			start: 'top 80%',
 			once: true,
 			onEnter: () => {
 				postsState.visible = true;
 			}
 		});
 
-		// fade out the nav-bar
 		gsap.to('#intro-nav-bar', {
 			scrollTrigger: {
 				trigger: 'body',
@@ -437,14 +445,33 @@
 		</p>
 	</section>
 
-	<div class="pointer-events-none fixed top-0 left-0 -z-50 h-screen w-full transform-gpu">
+	<div
+		class="pointer-events-none fixed top-0 left-0 -z-50 transform-gpu"
+		style="width: {lockWidth}; height: {lockHeight};"
+	>
 		<Canvas>
-			{#if scrollY < 3700}
+			{#if scrollY < 4500}
 				<Circuit dissolveProgress={imageFadeIn} />
 			{/if}
 
-			<ImageOutline outlineProgress={outlineProgress - imageFadeOut} {imageFadeIn} />
-			<ImageProject bind:allProjects={projectsState} {imageFadeIn} {imageFadeOut} {scrollY} />
+			<ImageOutline
+				outlineProgress={outlineProgress - imageFadeOut}
+				{imageFadeIn}
+				{isHovered}
+				{meshOffsetX}
+				{meshOffsetY}
+				{hoverScaleFactor}
+			/>
+			<ImageProject
+				bind:allProjects={projectsState}
+				{imageFadeIn}
+				{imageFadeOut}
+				{scrollY}
+				bind:isHovered
+				bind:meshOffsetX
+				bind:meshOffsetY
+				bind:hoverScaleFactor
+			/>
 
 			<T.PerspectiveCamera
 				makeDefault
@@ -455,7 +482,7 @@
 		</Canvas>
 	</div>
 
-	<section class="relative container mx-auto h-[200vh] px-4 sm:px-6 lg:px-8" id="team">
+	<section class="relative container mx-auto h-[110vh] md:h-[200vh] px-4 sm:px-6 lg:px-8" id="team">
 		<div
 			class="sticky top-0 flex h-screen w-full items-center justify-center transition-opacity duration-300 transform-gpu"
 			class:opacity-100={teamState.visible}
@@ -498,14 +525,17 @@
 		</div>
 	</section>
 
-	<section id="team-done" class="h-screen"></section>
-
 	{#each Object.entries(projectsState) as [projectId, project]}
 		{@const progress = Math.min(project.progress * 2, 1)}
-		{@const textOpacity =
-			project.progress < 0.45 ? 1 : Math.max(0, 1 - (project.progress - 0.45) * 3)}
 
-		<section class="relative h-[200vh] px-4 sm:px-6 lg:px-8" id={projectId}>
+		{@const textOpacity =
+			project.progress <= 0.15
+				? project.progress / 0.15
+				: project.progress >= 0.8
+					? Math.max(0, 1 - (project.progress - 0.8) / 0.2)
+					: 1}
+
+		<section class="relative h-[140vh] md:h-[200vh] px-4 sm:px-6 lg:px-8" id={projectId}>
 			<div
 				class="sticky top-0 w-full h-screen flex items-center justify-center transition-opacity duration-150 ease-out transform-gpu"
 				style="opacity: {project.visible ? textOpacity : 0}; pointer-events: {project.visible &&

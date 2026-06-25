@@ -1,15 +1,6 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
-	import {
-		Texture,
-		TextureLoader,
-		LinearFilter,
-		ShaderMaterial,
-		Uniform,
-		Raycaster,
-		Vector2,
-		Color
-	} from 'three';
+	import { Texture, TextureLoader, LinearFilter, Uniform, Raycaster, Vector2, Color } from 'three';
 	import type { ProjectState } from '../../routes/+page.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 
@@ -18,8 +9,20 @@
 		imageFadeIn: number;
 		imageFadeOut: number;
 		scrollY: number;
+		isHovered: boolean;
+		meshOffsetX: number;
+		meshOffsetY: number;
+		hoverScaleFactor: number;
 	}
-	let { allProjects = $bindable(), imageFadeIn = 0, imageFadeOut = 0 }: Props = $props();
+	let {
+		allProjects = $bindable(),
+		imageFadeIn = 0,
+		imageFadeOut = 0,
+		isHovered = $bindable(false),
+		meshOffsetX = $bindable(0),
+		meshOffsetY = $bindable(0),
+		hoverScaleFactor = $bindable(1.0)
+	}: Props = $props();
 
 	const textureLoader = new TextureLoader();
 	const { camera: activeCamera, scene } = useThrelte();
@@ -31,6 +34,7 @@
 
 	let globalElapsedTime = 0;
 	let transitionTimeline = $state(1.0);
+	let fpsAccumulator = 0;
 
 	let rawMouseX = 0.5;
 	let rawMouseY = 0.5;
@@ -38,8 +42,6 @@
 
 	let activeKey = $state<string | null>(null);
 	let siblingKey = $state<string | null>(null);
-	let projectProgress = $state(0);
-	let scrollTransitionMix = $state(0);
 
 	let previousGalleryTex = $state<Texture | null>(null);
 	let activeGalleryTex = $state<Texture | null>(null);
@@ -53,7 +55,10 @@
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 	const startSize = $derived(isDesktop.current ? 135.0 : 90.0);
 	const targetSize = $derived(isDesktop.current ? 225.0 : 135.0);
-	const currentCardSize = $derived(startSize + (targetSize - startSize) * imageFadeIn);
+
+	const currentCardSize = $derived(
+		(startSize + (targetSize - startSize) * imageFadeIn) * hoverScaleFactor
+	);
 
 	const globalAlpha = $derived(imageFadeIn * (1.0 - imageFadeOut));
 
@@ -99,68 +104,11 @@
     `;
 
 	const bgVertexShader = `
-        varying vec2 vUv;
         varying vec2 vScreenUv;
         void main() {
-            vUv = uv;
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
             gl_Position = projectionMatrix * mvPosition;
             vScreenUv = gl_Position.xy / gl_Position.w * 0.5 + 0.5;
-        }
-    `;
-
-	const consoleFragmentShader = `
-        uniform sampler2D texCurrent;
-        uniform sampler2D texNext;
-        uniform float scrollMix;
-        uniform sampler2D galleryFrom;
-        uniform sampler2D galleryTo;
-        uniform float galleryMix;
-        uniform float opacity;
-        uniform float uTime;
-        uniform vec2 uResolution;
-        uniform vec2 uMouse;
-        uniform vec3 uAccentColor;
-        varying vec2 vUv;
-
-        float noise(vec2 co) {
-            return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
-        }
-
-        void main() {
-            vec2 uv = vUv;
-            vec2 textParallaxOffset = (uMouse - 0.5) * 0.005;
-            vec2 affectedUv = uv + textParallaxOffset;
-
-            float imageAspect = 1.0;
-            float canvasAspect = uResolution.x / uResolution.y;
-            if (canvasAspect > imageAspect) {
-                affectedUv.y = 0.5 + (affectedUv.y - 0.5) * (imageAspect / canvasAspect);
-            } else {
-                affectedUv.x = 0.5 + (affectedUv.x - 0.5) * (canvasAspect / imageAspect);
-            }
-
-            float timeStep = floor(uTime * 15.0) / 15.0;
-            float transitionWave = sin(galleryMix * 3.14159265);
-            float rowSlice = step(0.95, noise(vec2(floor(affectedUv.y * 60.0), timeStep)));
-            vec2 finalSampleUv = clamp(affectedUv + vec2((rowSlice * transitionWave * 0.04) + (sin(scrollMix * 3.1415) * rowSlice * 0.02), 0.0), 0.001, 0.999);
-
-            float totalCa = 0.004 + (transitionWave * 0.012);
-            vec3 colorBuffer = vec3(
-                mix(texture2D(galleryFrom, finalSampleUv + vec2(totalCa, 0.0)), texture2D(galleryTo, finalSampleUv + vec2(totalCa, 0.0)), galleryMix).r,
-                mix(texture2D(galleryFrom, finalSampleUv), texture2D(galleryTo, finalSampleUv), galleryMix).g,
-                mix(texture2D(galleryFrom, finalSampleUv - vec2(totalCa, 0.0)), texture2D(galleryTo, finalSampleUv - vec2(totalCa, 0.0)), galleryMix).b
-            );
-            vec3 nextProj = texture2D(texNext, finalSampleUv).rgb;
-            vec3 finalWorkColor = mix(colorBuffer, nextProj, scrollMix);
-
-            float fineGridLines = sin(uv.y * 400.0) * cos(uv.x * 400.0);
-            finalWorkColor.rgb += fineGridLines * 0.03;
-
-            float outerFrameMask = smoothstep(0.497, 0.493, max(abs(uv.x - 0.5), abs(uv.y - 0.5)));
-            finalWorkColor = mix(uAccentColor, finalWorkColor, outerFrameMask);
-
-            gl_FragColor = vec4(finalWorkColor, opacity);
         }
     `;
 
@@ -174,40 +122,30 @@
         uniform vec3 uAccentColor;
         uniform vec3 uForegroundColor;
         uniform vec3 uBgColor;
-        varying vec2 vUv;
         varying vec2 vScreenUv;
 
-        // =========================================================================
-        // TUNABLE DESIGN LEVERS & CONSTANTS
-        // =========================================================================
-        // --- MATRIX GEOMETRY & PACKING DENSITY ---
-        const float SCALE_GRID_UNITS   = 50.0;    // General density scale of motherboard wafer
-        const float CLAMP_BUS_THICK    = 0.96;    // Thickness of Horiz/Vert traces (closer to 1.0 = thinner)
-        const float CLAMP_DIAG_THICK   = 0.96;    // Thickness of Diagonal traces (closer to 1.0 = thinner)
-        const float CLAMP_CELL_THICK   = 0.96;   // Structural grid borders thickness metric
+        const float SCALE_GRID_UNITS   = 50.0;    
+        const float CLAMP_BUS_THICK    = 0.96;    
+        const float CLAMP_DIAG_THICK   = 0.96;    
+        const float CLAMP_CELL_THICK   = 0.96;   
 
-        // --- MICRO-TRACE RUN LENGTHS ---
-        const float RUN_LENGTH_VERT    = 110.0;    // Number of vertical block cells traversed before an explicit break
-        const float RUN_LENGTH_HORIZ   = 90.0;    // Number of horizontal block cells traversed before an explicit break
-        const float RUN_LENGTH_DIAG    = 60.0;    // Number of diagonal trajectory cells traversed before an explicit break
+        const float RUN_LENGTH_VERT    = 110.0;    
+        const float RUN_LENGTH_HORIZ   = 90.0;    
+        const float RUN_LENGTH_DIAG    = 60.0;    
 
-        // --- SPAWNING PROBABILITIES ---
-        const float PROBABILITY_VERT   = 0.45;    // Chance a vertical segment generates inside its layout block
-        const float PROBABILITY_HORIZ  = 0.35;    // Chance a horizontal segment generates inside its layout block
-        const float PROBABILITY_DIAG   = 0.12;    // Chance a continuous diagonal segment generates inside its block
+        const float PROBABILITY_VERT   = 0.45;    
+        const float PROBABILITY_HORIZ  = 0.35;    
+        const float PROBABILITY_DIAG   = 0.12;    
 
-        // --- ENVIRONMENT INTERACTION RATES ---
-        const float IMPACT_RAD_CURV    = 0.4;    // Lens convex factor for the vintage fisheye geometry warp
-        const float IMPACT_RAD_HOVER   = 0.45;    // Screen space mouse interaction fallout radius
-        const float FORCE_LIGHTNING    = 2.5;     // Amplitude scaling factor of the global crackle line lightning wave
-        const float AMPLIFY_GLOW_DARK  = 0.28;    // Baseline dark mode element glowing profile factor
+        const float IMPACT_RAD_CURV    = 0.4;    
+        const float IMPACT_RAD_HOVER   = 0.45;    
+        const float FORCE_LIGHTNING    = 2.5;    
+        const float AMPLIFY_GLOW_DARK  = 0.62;    
 
-        // --- CORE SILICON PALETTES ---
         const vec3 CYBER_BLUE_DEEP     = vec3(0.0, 0.35, 0.85);
         const vec3 CYBER_BLUE_NEON     = vec3(0.0, 0.80, 1.0);
         const vec3 CYBER_CYAN          = vec3(0.0, 1.0, 0.85);
-        const vec3 INK_SURGE_SAPPHIRE  = vec3(0.0, 0.22, 0.65); // High contrast tech-blue vector track for light sheets
-        // =========================================================================
+        const vec3 INK_SURGE_SAPPHIRE = vec3(0.0, 0.22, 0.65); 
 
         float rand(vec2 p) {
             return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -228,10 +166,12 @@
         }
 
         void main() {
-            vec2 ndc = vScreenUv * 2.0 - 1.0; 
+            vec2 screenUv = vScreenUv;
+
+            vec2 ndc = screenUv * 2.0 - 1.0; 
             float lensRadiusSq = ndc.x * ndc.x + ndc.y * ndc.y;
             vec2 distortedNdc = ndc * (1.0 + IMPACT_RAD_CURV * lensRadiusSq);
-            vec2 screenUv = (distortedNdc + 1.0) * 0.5;
+            screenUv = (distortedNdc + 1.0) * 0.5;
 
             float isLightMode = step(0.5, (uBgColor.r + uBgColor.g + uBgColor.b) / 3.0);
 
@@ -241,19 +181,16 @@
             
             float cursorAngle = atan(cursorDiff.y, cursorDiff.x);
             float discreteSpikeNoise = rand(vec2(floor(cursorAngle * 24.0), floor(uTime * 14.0))) * 0.14;
-            float irregularEnergyRadius = distanceToCursor + discreteSpikeNoise;
 
             float interactionActivity = sin(galleryMix * 3.1415) + sin(scrollMix * 3.1415);
             float globalCrackleLine = step(0.84, sin(screenUv.y * 14.0 + screenUv.x * 6.0 - uTime * 8.0 + discreteSpikeNoise * 3.5));
             float globalSurgeWave = globalCrackleLine * discreteSpikeNoise * (0.02 + interactionActivity * 3.2);
             float staticHoverForce = smoothstep(IMPACT_RAD_HOVER, 0.0, distanceToCursor);
 
-            // COMPACTED WAFER TRACK RUN GENERATORS
             vec2 busUv = screenUv * vec2(SCALE_GRID_UNITS * uAspect, SCALE_GRID_UNITS);
             vec2 busFraction = fract(busUv);
             vec2 busIndex = floor(busUv);
             
-            // Build segmentation arrays to lock custom wire run bounds seamlessly
             float vertSegment = floor(busIndex.y / RUN_LENGTH_VERT);
             float horizSegment = floor(busIndex.x / RUN_LENGTH_HORIZ);
             float diagId = busIndex.x - busIndex.y; 
@@ -292,10 +229,9 @@
             vec3 activeCircuitColor = mix(processingColorProfile, uAccentColor * 1.2, staticHoverForce * 0.3);
 
             vec3 compositeColor = uBgColor;
-            
             vec3 lightModeLineColor = mix(uForegroundColor * 0.16, vec3(0.0, 0.25, 0.70), clamp(globalSurgeWave * 5.0, 0.0, 1.0));
             vec3 linesContrastShade = mix(activeCircuitColor * 2.2, lightModeLineColor, isLightMode);
-            compositeColor = mix(compositeColor, linesContrastShade, coreSiliconBusses * 0.12);
+            compositeColor = mix(compositeColor, linesContrastShade, coreSiliconBusses * 0.38);
             
             float activePatternMask = max(step(CLAMP_CELL_THICK, localGateUv.x) * step(CLAMP_CELL_THICK, localGateUv.y), telemetryPatternLayer);
             
@@ -315,7 +251,67 @@
         }
     `;
 
+	const consoleFragmentShader = `
+        uniform sampler2D texCurrent;
+        uniform sampler2D texNext;
+        uniform float scrollMix;
+        uniform sampler2D galleryFrom;
+        uniform sampler2D galleryTo;
+        uniform float galleryMix;
+        uniform float opacity;
+        uniform float uTime;
+        uniform vec2 uResolution;
+        uniform vec2 uMouse;
+        uniform vec3 uAccentColor;
+        varying vec2 vUv;
+
+        float noise(vec2 co) {
+            return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        void main() {
+            vec2 uv = vUv;
+            vec2 affectedUv = uv;
+
+            float imageAspect = 1.0;
+            float canvasAspect = uResolution.x / uResolution.y;
+            if (canvasAspect > imageAspect) {
+                affectedUv.y = 0.5 + (affectedUv.y - 0.5) * (imageAspect / canvasAspect);
+            } else {
+                affectedUv.x = 0.5 + (affectedUv.x - 0.5) * (canvasAspect / imageAspect);
+            }
+
+            float timeStep = floor(uTime * 15.0) / 15.0;
+            float transitionWave = sin(galleryMix * 3.14159265);
+            float rowSlice = step(0.95, noise(vec2(floor(affectedUv.y * 60.0), timeStep)));
+            vec2 finalSampleUv = clamp(affectedUv + vec2((rowSlice * transitionWave * 0.04) + (sin(scrollMix * 3.1415) * rowSlice * 0.02), 0.0), 0.001, 0.999);
+
+            float totalCa = 0.004 + (transitionWave * 0.012);
+            vec3 colorBuffer = vec3(
+                mix(texture2D(galleryFrom, finalSampleUv + vec2(totalCa, 0.0)), texture2D(galleryTo, finalSampleUv + vec2(totalCa, 0.0)), galleryMix).r,
+                mix(texture2D(galleryFrom, finalSampleUv), texture2D(galleryTo, finalSampleUv), galleryMix).g,
+                mix(texture2D(galleryFrom, finalSampleUv - vec2(totalCa, 0.0)), texture2D(galleryTo, finalSampleUv - vec2(totalCa, 0.0)), galleryMix).b
+            );
+            vec3 nextProj = texture2D(texNext, finalSampleUv).rgb;
+            vec3 finalWorkColor = mix(colorBuffer, nextProj, scrollMix);
+
+            float fineGridLines = sin(uv.y * 400.0) * cos(uv.x * 400.0);
+            finalWorkColor.rgb += fineGridLines * 0.03;
+
+            float outerFrameMask = smoothstep(0.497, 0.493, max(abs(uv.x - 0.5), abs(uv.y - 0.5)));
+            finalWorkColor = mix(uAccentColor, finalWorkColor, outerFrameMask);
+
+            gl_FragColor = vec4(finalWorkColor, opacity);
+        }
+    `;
+
 	useTask((delta) => {
+		if (!isDesktop.current) {
+			fpsAccumulator += delta;
+			if (fpsAccumulator < 1 / 24) return;
+			fpsAccumulator = 0;
+		}
+
 		globalElapsedTime += delta;
 		consoleUniforms.uTime.value = globalElapsedTime;
 		bgCanvasUniforms.uTime.value = globalElapsedTime;
@@ -326,6 +322,40 @@
 		bgCanvasUniforms.uMouse.value.copy(smoothMouseUniform);
 
 		const cam = $activeCamera;
+
+		// Raycasting and hover movement logic strictly locked to when image is active (imageFadeIn > 0.95)
+		if (isDesktop.current && activeGalleryTex && cam && imageFadeIn > 0.95) {
+			const raycastMouse = new Vector2(rawMouseX * 2.0 - 1.0, rawMouseY * 2.0 - 1.0);
+			raycaster.setFromCamera(raycastMouse, cam);
+			const targets = raycaster.intersectObjects(scene.children, true);
+			const isHit = targets.some((t) => t.object.name === 'projectCard');
+
+			if (isHit !== isHovered) {
+				isHovered = isHit;
+				if (typeof document !== 'undefined') {
+					document.body.style.cursor = isHit ? 'pointer' : 'default';
+				}
+			}
+		} else {
+			if (isHovered && typeof document !== 'undefined') {
+				document.body.style.cursor = 'default';
+			}
+			isHovered = false;
+		}
+
+		const targetScale = isHovered && isDesktop.current ? 1.06 : 1.0;
+		hoverScaleFactor += (targetScale - hoverScaleFactor) * 0.14;
+
+		let targetOffsetX = 0;
+		let targetOffsetY = 0;
+		if (isDesktop.current && imageFadeIn > 0.95) {
+			targetOffsetX = (smoothMouseUniform.x - 0.5) * 45.0;
+			targetOffsetY = (smoothMouseUniform.y - 0.5) * 45.0;
+		}
+
+		meshOffsetX += (targetOffsetX - meshOffsetX) * 0.14;
+		meshOffsetY += (targetOffsetY - meshOffsetY) * 0.14;
+
 		if (cam) {
 			bgTrackX = cam.position.x;
 			bgTrackY = cam.position.y;
@@ -337,6 +367,7 @@
 	});
 
 	function handlePointerMove(e: PointerEvent) {
+		if (!isDesktop.current) return;
 		if (typeof window !== 'undefined') {
 			rawMouseX = e.clientX / window.innerWidth;
 			rawMouseY = 1.0 - e.clientY / window.innerHeight;
@@ -344,7 +375,7 @@
 	}
 
 	function handleConsolePanelClick(e: MouseEvent) {
-		if (!activeKey || !allProjects[activeKey] || globalAlpha < 0.2) return;
+		if (!activeKey || !allProjects[activeKey] || imageFadeIn < 0.95 || globalAlpha < 0.4) return;
 		const cam = $activeCamera;
 		if (!cam) return;
 
@@ -386,11 +417,6 @@
 		activeKey = cId;
 		siblingKey = nId;
 
-		const activeProgress = currentProject
-			? Math.max(0.0, Math.min(currentProject.progress, 1.0))
-			: 0;
-		projectProgress = activeProgress;
-
 		[cId, nId].forEach((id) => {
 			if (id && allProjects[id] && !projectTextureMap[id] && !loadingSet.has(id)) {
 				loadingSet.add(id);
@@ -416,7 +442,8 @@
 
 		let currentScrollMix = 0.0;
 		if (cId && nId && currentProject) {
-			currentScrollMix = activeProgress <= 0.75 ? 0.0 : (activeProgress - 0.75) / 0.25;
+			currentScrollMix =
+				currentProject.progress <= 0.75 ? 0.0 : (currentProject.progress - 0.75) / 0.25;
 			currentScrollMix = Math.max(0.0, Math.min(currentScrollMix, 1.0));
 		}
 
@@ -479,7 +506,7 @@
 
 <svelte:window onpointermove={handlePointerMove} onclick={handleConsolePanelClick} />
 
-<T.Group position={[0, 13, 0]} rotation={[0, 0, Math.PI / 2]}>
+<T.Group position={[meshOffsetX, 13 + meshOffsetY, 0]} rotation={[0, 0, Math.PI / 2]}>
 	{#if activeGalleryTex}
 		<T.Mesh name="projectCard" position={[0, 0, 0]}>
 			<T.PlaneGeometry args={[currentCardSize, currentCardSize, 16, 16]} />

@@ -17,9 +17,10 @@
 	const { dissolveProgress }: Props = $props();
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 
-	// Adjust particle density based on device capability
-	const CURVE_TIME_OFFSET = 0.2; // give a slight offset to each curve
-	const TARGET_PARTICLE_SPACING = $derived(isDesktop.current ? 0.03 : 0.06); // Less particles on mobile
+	const CURVE_TIME_OFFSET = 0.2;
+	const TARGET_PARTICLE_SPACING = $derived(isDesktop.current ? 0.03 : 0.06);
+
+	let fpsAccumulator = 0;
 
 	const curves = $state(
 		computedSvg.curves.map(
@@ -34,25 +35,15 @@
 
 		const newPositions = curves.flatMap((curve, curveIndex) => {
 			const points: number[] = [];
-			// Calculate the length of the curve
 			const curveLength = curve.getLength();
-
-			// Calculate how many particles this curve should have based on its length
-			// and the target spacing between particles
 			const particleCount = Math.max(1, Math.round(curveLength / TARGET_PARTICLE_SPACING));
-
-			// Add offset based on curve index
 			const curveOffset = curveIndex * CURVE_TIME_OFFSET;
 
 			for (let i = 0; i < particleCount; i++) {
 				const baseT = i / particleCount;
-				// Add curve offset to create staggered start times
 				const t =
 					(baseT + ((time * 0.1 + curveOffset) * TARGET_PARTICLE_SPACING) / curveLength) % 1;
-
-				// Get point at the current position
 				const point = curve.getPoint(t);
-
 				points.push(point.x * scaleX, point.y * scaleY, 0);
 			}
 			return points;
@@ -63,7 +54,6 @@
 
 	function getLineIndex() {
 		return new Float32Array(positions.length / 3).fill(0).map((_, i) => {
-			// Find which curve this particle belongs to
 			let particleSum = 0;
 			for (let curveIndex = 0; curveIndex < curves.length; curveIndex++) {
 				const curve = curves[curveIndex];
@@ -74,7 +64,7 @@
 					return curveIndex;
 				}
 			}
-			return curves.length - 1; // fallback to last curve
+			return curves.length - 1;
 		});
 	}
 
@@ -113,7 +103,6 @@
 	let mouseTrailCanvasTexture: CanvasTexture | undefined = $state();
 
 	function handleMouseMove(event: MouseEvent) {
-		// Skip mouse tracking on mobile devices for better performance
 		if (!isDesktop.current || !$camera || !raycastPlane || !renderer || !mouseTrailCanvas) return;
 
 		const rect = renderer.domElement.getBoundingClientRect();
@@ -123,7 +112,6 @@
 
 		const intersection = new Vector3();
 		if (raycaster.ray.intersectPlane(raycastPlane, intersection)) {
-			// Normalize based on renderer size 0 to 1
 			const normalizedX = event.clientX / rect.width;
 			const normalizedY = event.clientY / rect.height;
 
@@ -139,20 +127,22 @@
 	});
 
 	onMount(() => {
-		// Only initialize mouse trail canvas on desktop for performance
-		if (!mouseTrailCanvas || !isDesktop.current) {
-			return;
-		}
+		if (!mouseTrailCanvas || !isDesktop.current) return;
 		mouseTrailCtx = mouseTrailCanvas.getContext('2d');
 		mouseTrailCanvasTexture = new CanvasTexture(mouseTrailCanvas);
 	});
 
 	useTask((delta) => {
+		if (!isDesktop.current) {
+			fpsAccumulator += delta;
+			if (fpsAccumulator < 1 / 24) return;
+			fpsAccumulator = 0;
+		}
+
 		if (!hasTriggeredFadeout) {
 			time += delta;
 		}
 
-		// Only update mouse trail on desktop and throttle updates for performance
 		if (
 			isDesktop.current &&
 			mouseTrailCanvas &&
@@ -196,20 +186,14 @@
 			args={[opacity, 1]}
 			attach={({ parent, ref }) => {
 				parent.setAttribute('opacity', ref);
-				return () => {
-					// cleanup function called when ref changes or the component unmounts
-					// https://threlte.xyz/docs/reference/core/t#attach
-				};
+				return () => {};
 			}}
 		/>
 		<T.BufferAttribute
 			args={[lineIndex, 1]}
 			attach={({ parent, ref }) => {
 				parent.setAttribute('lineIndex', ref);
-				return () => {
-					// cleanup function called when ref changes or the component unmounts
-					// https://threlte.xyz/docs/reference/core/t#attach
-				};
+				return () => {};
 			}}
 		/>
 	</T.BufferGeometry>
@@ -235,7 +219,6 @@
 </T.Points>
 
 <Portal target="body">
-	<!-- Only render mouse trail canvas on desktop -->
 	{#if isDesktop.current}
 		<canvas
 			class="border-primary fixed top-0 left-0 hidden border"

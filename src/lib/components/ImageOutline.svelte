@@ -7,31 +7,45 @@
 	interface Props {
 		outlineProgress: number;
 		imageFadeIn: number;
+		isHovered: boolean;
+		meshOffsetX: number;
+		meshOffsetY: number;
+		hoverScaleFactor: number;
 	}
 
-	const { outlineProgress, imageFadeIn = 0 }: Props = $props();
+	const {
+		outlineProgress,
+		imageFadeIn = 0,
+		isHovered = false,
+		meshOffsetX = 0,
+		meshOffsetY = 0,
+		hoverScaleFactor = 1.0
+	}: Props = $props();
 
 	const OUTLINE_COLOR = '#00ffff';
 	const OUTLINE_WIDTH = 1.5;
 
-	// RESPONSIVE BOUNDS CONTROLLER: Switches targets dynamically to fit vertical viewports
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 	const startSize = $derived(isDesktop.current ? 135.0 : 90.0);
 	const targetSize = $derived(isDesktop.current ? 225.0 : 135.0);
 
-	const currentWidth = $derived(startSize + (targetSize - startSize) * imageFadeIn);
-	const currentHeight = $derived(startSize + (targetSize - startSize) * imageFadeIn);
+	const currentWidth = $derived(
+		(startSize + (targetSize - startSize) * imageFadeIn) * hoverScaleFactor
+	);
+	const currentHeight = $derived(
+		(startSize + (targetSize - startSize) * imageFadeIn) * hoverScaleFactor
+	);
 
 	const squarePoints = $derived.by(() => {
 		const w = currentWidth / 2.0;
 		const h = currentHeight / 2.0;
 
 		return [
-			new Vector3(-w, -h, 0), // Bottom Left
-			new Vector3(w, -h, 0), // Bottom Right
-			new Vector3(w, h, 0), // Top Right
-			new Vector3(-w, h, 0), // Top Left
-			new Vector3(-w, -h, 0) // Closed path anchor loop
+			new Vector3(-w, -h, 0),
+			new Vector3(w, -h, 0),
+			new Vector3(w, h, 0),
+			new Vector3(-w, h, 0),
+			new Vector3(-w, -h, 0)
 		];
 	});
 
@@ -64,7 +78,7 @@
 	const visibleOutline = $derived(getVisibleLinePoints(outlineProgress, squarePoints));
 </script>
 
-<T.Group position={[0, 13, 0.1]} rotation={[0, 0, Math.PI / 2]}>
+<T.Group position={[meshOffsetX, 13 + meshOffsetY, 0.1]} rotation={[0, 0, Math.PI / 2]}>
 	{#if visibleOutline.length > 0}
 		<T.Mesh>
 			<MeshLineGeometry points={visibleOutline} shape="custom" />
