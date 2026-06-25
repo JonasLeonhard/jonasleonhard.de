@@ -36,7 +36,11 @@
 
 	if (browser) {
 		gsap.registerPlugin(ScrollTrigger);
-		ScrollTrigger.config({ ignoreMobileResize: true });
+		// Completely locks down shifting mobile geometries on real touch screens
+		ScrollTrigger.config({
+			ignoreMobileResize: true,
+			autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load'
+		});
 	}
 
 	let { data } = $props();
@@ -157,7 +161,6 @@
 	const isDesktop = new MediaQuery('(min-width: 1140px)');
 	let scrollY = $state(0);
 
-	// Dynamic style values populated on mount to freeze mobile height bounds
 	let lockWidth = $state('100%');
 	let lockHeight = $state('100vh');
 
@@ -292,12 +295,12 @@
 			}
 		});
 
-		// Fixed image fade logic: Tied directly to scroll context instead of hidden layout blocks
+		// Safe explicit tracking boundaries: Prevents the background scaling from firing too fast on mobile
 		gsap.timeline({
 			scrollTrigger: {
 				trigger: '#team',
 				start: 'bottom 90%',
-				end: 'bottom 20%',
+				end: 'bottom 10%',
 				scrub: 0.5,
 				onUpdate: (self) => {
 					imageFadeIn = self.progress;
@@ -309,8 +312,8 @@
 			gsap.timeline({
 				scrollTrigger: {
 					trigger: `#${projectId}`,
-					start: 'top 75%',
-					end: 'bottom 25%',
+					start: 'top 85%',
+					end: 'bottom 15%',
 					scrub: 0.5,
 					invalidateOnRefresh: true,
 					onUpdate: (self) => {
@@ -482,7 +485,7 @@
 		</Canvas>
 	</div>
 
-	<section class="relative container mx-auto h-[110vh] md:h-[200vh] px-4 sm:px-6 lg:px-8" id="team">
+	<section class="relative container mx-auto h-[750px] md:h-[200vh] px-4 sm:px-6 lg:px-8" id="team">
 		<div
 			class="sticky top-0 flex h-screen w-full items-center justify-center transition-opacity duration-300 transform-gpu"
 			class:opacity-100={teamState.visible}
@@ -528,20 +531,12 @@
 	{#each Object.entries(projectsState) as [projectId, project]}
 		{@const progress = Math.min(project.progress * 2, 1)}
 
-		{@const textOpacity =
-			project.progress <= 0.15
-				? project.progress / 0.15
-				: project.progress >= 0.8
-					? Math.max(0, 1 - (project.progress - 0.8) / 0.2)
-					: 1}
+		{@const textOpacity = project.progress > 0.02 && project.progress < 0.98 ? 1 : 0}
 
-		<section class="relative h-[140vh] md:h-[200vh] px-4 sm:px-6 lg:px-8" id={projectId}>
+		<section class="relative h-[850px] md:h-[200vh] px-4 sm:px-6 lg:px-8" id={projectId}>
 			<div
 				class="sticky top-0 w-full h-screen flex items-center justify-center transition-opacity duration-150 ease-out transform-gpu"
-				style="opacity: {project.visible ? textOpacity : 0}; pointer-events: {project.visible &&
-				textOpacity > 0.1
-					? 'auto'
-					: 'none'};"
+				style="opacity: {textOpacity}; pointer-events: {textOpacity > 0.5 ? 'auto' : 'none'};"
 			>
 				<div
 					class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center overflow-hidden"
@@ -554,18 +549,18 @@
 						<HackedText
 							class="text-muted-foreground mb-2 inline-block border border-dashed border-border p-1 font-mono text-xs md:text-sm bg-background/40 backdrop-blur-xs"
 							text={`${project.role} // ${project.roleKey}`}
-							scrambled={!project.visible}
+							scrambled={project.progress <= 0.02}
 						/>
 						<HackedText
 							class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block overflow-hidden leading-tight"
 							text={project.title}
-							scrambled={!project.visible}
+							scrambled={project.progress <= 0.02}
 						/>
 						{#if project.subtitle}
 							<HackedText
 								class="w-full bg-gradient-to-br from-neutral-950 to-neutral-500 dark:from-neutral-50 dark:to-neutral-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl md:text-7xl lg:text-8xl block mt-1 overflow-hidden leading-tight"
 								text={project.subtitle}
-								scrambled={!project.visible}
+								scrambled={project.progress <= 0.02}
 							/>
 						{/if}
 
